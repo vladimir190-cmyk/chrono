@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>CHRONO-CUBE 3000: Nebula 8K Edition</title>
+  <title>CHRONO-CUBE 3000: Radiant 4K Constellation Edition</title>
   <style>
     :root {
       --bg: #010206;
       --primary: #00f3ff;
       --secondary: #ff007f;
       --gold: #ffd700;
-      --panel: rgba(6, 10, 20, 0.85);
+      --panel: rgba(6, 10, 20, 0.88);
       --font: 'Segoe UI', Roboto, sans-serif;
     }
 
@@ -23,7 +23,7 @@
     .hud { position: absolute; z-index: 10; pointer-events: none; display: flex; flex-direction: column; justify-content: space-between; padding: 10px; width: 100%; height: 100%; }
     .hud * { pointer-events: auto; }
 
-    header { display: flex; justify-content: space-between; align-items: center; gap: 6px; flex-wrap: wrap; }
+    header { display: flex; justify-content: space-between; align-items: center; gap: 6px; width: 100%; }
     
     .title-box {
       background: var(--panel);
@@ -37,44 +37,23 @@
     h1 { font-size: 0.95rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--primary); text-shadow: 0 0 10px var(--primary); }
     .sub { font-size: 0.55rem; color: #8a99ad; margin-top: 1px; }
 
-    .user-profile {
+    /* Kompaktné štatistiky UPRATANÉ VŠETKY HORE pre mobil aj PC */
+    .top-stats-compact {
       background: var(--panel);
-      border: 1px solid rgba(255, 0, 127, 0.5);
-      padding: 5px 8px;
-      border-radius: 10px;
-      backdrop-filter: blur(12px);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .user-profile label { font-size: 0.6rem; color: var(--secondary); text-transform: uppercase; font-weight: bold; }
-    .user-profile input {
-      background: rgba(0, 0, 0, 0.7);
-      border: 1px solid var(--primary);
-      color: #fff;
-      padding: 4px 6px;
-      border-radius: 4px;
-      font-family: inherit;
-      font-size: 0.7rem;
-      outline: none;
-      width: 90px;
-    }
-
-    /* Mobilný horný panel (štatistiky vyťahané hore, stred úplne voľný) */
-    .mobile-top-bar {
-      display: flex;
-      gap: 8px;
-      justify-content: space-around;
-      align-items: center;
-      background: var(--panel);
-      border: 1px solid rgba(0, 243, 255, 0.3);
+      border: 1px solid rgba(255, 215, 0, 0.4);
       padding: 6px 10px;
       border-radius: 10px;
       backdrop-filter: blur(12px);
-      margin-top: 4px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.15);
     }
+    .stat-item { font-size: 0.65rem; display: flex; flex-direction: column; align-items: flex-end; }
+    .stat-item span { color: #8a99ad; font-size: 0.55rem; text-transform: uppercase; }
+    .stat-item strong { color: #fff; font-size: 0.75rem; }
 
-    /* Desktopové štatistiky vpravo hore */
+    /* Desktopové štatistiky vpravo */
     .side-panel { position: absolute; right: 12px; top: 75px; display: flex; flex-direction: column; gap: 8px; width: 210px; z-index: 10; }
     .stat-card {
       background: var(--panel);
@@ -91,7 +70,7 @@
     .strain-bar-fill { height: 100%; width: 10%; background: linear-gradient(90deg, #00f3ff, #ff007f); }
 
     /* Spodný ovládací panel */
-    footer { display: flex; flex-direction: column; gap: 6px; align-items: center; width: 100%; margin-bottom: 2px; }
+    footer { display: flex; flex-direction: column; gap: 6px; align-items: center; width: 100%; margin-bottom: 4px; }
     
     .time-control {
       background: var(--panel);
@@ -138,14 +117,9 @@
 
     /* Media query pre mobil */
     @media (max-width: 768px) {
-      .side-panel { display: none; } /* Na mobile skryté panelové štatistiky */
-      .mobile-top-bar { display: flex; }
-      .btn { padding: 8px 4px; font-size: 0.65rem; min-width: 47%; }
-    }
-
-    .mobile-top-bar { display: none; }
-    @media (max-width: 768px) {
-      .mobile-top-bar { display: flex; }
+      .side-panel { display: none; }
+      .btn { padding: 9px 4px; font-size: 0.65rem; min-width: 47%; }
+      .top-stats-compact { padding: 4px 8px; }
     }
 
     /* Modal */
@@ -164,23 +138,27 @@
     <header>
       <div class="title-box">
         <h1>Chrono-Cube 3000</h1>
-        <div class="sub">Nebula 8K • Quantum Edition</div>
+        <div class="sub">4K Constellation Edition</div>
       </div>
 
-      <div class="user-profile">
-        <label for="player-name">Hráč:</label>
-        <input type="text" id="player-name" value="AGENT-3000" maxlength="12">
+      <!-- Všetky podstatné informácie vytiahnuté presne do HORNÉHO pravého rohu -->
+      <div class="top-stats-compact">
+        <div class="stat-item">
+          <span>Stav</span>
+          <strong id="phase-val-top" style="color:var(--primary);">PRESENT (t₀)</strong>
+        </div>
+        <div class="stat-item">
+          <span>Sieť</span>
+          <strong id="stab-val-top" style="color:var(--gold);">0%</strong>
+        </div>
+        <div class="stat-item">
+          <span>Ťahy</span>
+          <strong id="moves-val-top">0</strong>
+        </div>
       </div>
     </header>
 
-    <!-- Mobilný horný panel (žiadna lišta v strede, všetko hore) -->
-    <div class="mobile-top-bar">
-      <div style="font-size: 0.65rem;"><span style="color:#8a99ad">Stav:</span> <strong id="phase-val-m" style="color:var(--primary);">PRESENT (t₀)</strong></div>
-      <div style="font-size: 0.65rem;"><span style="color:#8a99ad">Stabilizácia:</span> <strong id="stab-val-m" style="color:var(--gold);">0%</strong></div>
-      <div style="font-size: 0.65rem;"><span style="color:#8a99ad">Ťahy:</span> <strong id="moves-val-m">0</strong></div>
-    </div>
-
-    <!-- Desktopové štatistiky vpravo hore -->
+    <!-- Desktopové podrobné štatistiky vpravo hore -->
     <div class="side-panel">
       <div class="stat-card">
         <div class="stat-label">Časový stav</div>
@@ -201,7 +179,7 @@
       </div>
     </div>
 
-    <!-- Spodný panel (časovač + tlačidlá) -->
+    <!-- Spodný panel: Časový posuvník + Tlačidlá dole -->
     <footer>
       <div class="time-control">
         <span style="font-size: 0.7rem; color: #8a99ad; font-weight: bold;">t₋₁</span>
@@ -284,7 +262,7 @@
             const osc = this.ctx.createOscillator();
             const gain = this.ctx.createGain();
             osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(900, this.ctx.currentTime);
+            osc.frequency.setValueAtTime(950, this.ctx.currentTime);
             osc.frequency.exponentialRampToValueAtTime(120, this.ctx.currentTime + 0.22);
             gain.gain.setValueAtTime(0.12, this.ctx.currentTime);
             gain.gain.linearRampToValueAtTime(0.01, this.ctx.currentTime + 0.22);
@@ -321,7 +299,7 @@
         setupThreeJS() {
           const container = document.getElementById('canvas-container');
           this.scene = new THREE.Scene();
-          this.scene.fog = new THREE.FogExp2(0x010206, 0.018);
+          this.scene.fog = new THREE.FogExp2(0x010206, 0.015);
 
           this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
           
@@ -331,36 +309,36 @@
           container.appendChild(this.renderer.domElement);
 
           // Osvetlenie
-          this.scene.add(new THREE.AmbientLight(0xffffff, 0.4));
-          const pointLight = new THREE.PointLight(0x00f3ff, 2.8, 70);
+          this.scene.add(new THREE.AmbientLight(0xffffff, 0.45));
+          const pointLight = new THREE.PointLight(0x00f3ff, 3, 80);
           pointLight.position.set(12, 12, 12);
           this.scene.add(pointLight);
 
-          const pointLight2 = new THREE.PointLight(0xff007f, 2.8, 70);
+          const pointLight2 = new THREE.PointLight(0xff007f, 3, 80);
           pointLight2.position.set(-12, -12, -12);
           this.scene.add(pointLight2);
 
-          // Vytvorenie Vesmírnej Hmloviny a Súhvezdia v pozadí
-          this.createNebulaAndConstellations();
+          // 4K Zlaté Súhvezdie & Žiara Pozadia
+          this.createRadiant4KConstellations();
 
           this.cubeGroup = new THREE.Group();
           this.scene.add(this.cubeGroup);
 
           // Centrálne kvantové jadro
           const coreGeo = new THREE.IcosahedronGeometry(0.75, 2);
-          const coreMat = new THREE.MeshPhongMaterial({ color: 0xff007f, emissive: 0xff007f, emissiveIntensity: 0.8, wireframe: true });
+          const coreMat = new THREE.MeshPhongMaterial({ color: 0xff007f, emissive: 0xff007f, emissiveIntensity: 0.9, wireframe: true });
           this.coreMesh = new THREE.Mesh(coreGeo, coreMat);
           this.cubeGroup.add(this.coreMesh);
 
           // Uzly hyperkocky
           this.nodeMeshes = [];
-          const sphereGeo = new THREE.SphereGeometry(0.4, 32, 32);
+          const sphereGeo = new THREE.SphereGeometry(0.42, 32, 32);
 
           _nodes.forEach(node => {
             const mat = new THREE.MeshPhongMaterial({
               color: node.phaseColors[1],
               emissive: node.phaseColors[1],
-              emissiveIntensity: 0.3,
+              emissiveIntensity: 0.35,
               shininess: 120,
               wireframe: true
             });
@@ -394,51 +372,89 @@
               let s = 1 + Math.sin(Date.now() * 0.0035) * 0.18;
               this.coreMesh.scale.set(s, s, s);
             }
-            if (this.nebulaGroup) {
-              this.nebulaGroup.rotation.y += 0.0003;
-              this.nebulaGroup.rotation.z += 0.0001;
+            if (this.constellationGroup) {
+              this.constellationGroup.rotation.y += 0.0003;
+              this.constellationGroup.rotation.x += 0.0001;
             }
             this.renderer.render(this.scene, this.camera);
           };
           animate();
         },
 
-        createNebulaAndConstellations() {
-          this.nebulaGroup = new THREE.Group();
+        createRadiant4KConstellations() {
+          this.constellationGroup = new THREE.Group();
 
-          // 1. Farebné mraky hmloviny (viacero prekrývajúcich sa časticových vrstiev)
-          const cloudColors = [0x00f3ff, 0xff007f, 0x7b2cbf, 0x3a0ca3];
-          cloudColors.forEach((col, idx) => {
-            const partGeo = new THREE.BufferGeometry();
-            const count = 400;
-            const positions = new Float32Array(count * 3);
-            for(let i=0; i<count*3; i+=3) {
-              positions[i] = (Math.random() - 0.5) * 60;
-              positions[i+1] = (Math.random() - 0.5) * 60;
-              positions[i+2] = (Math.random() - 0.5) * 60;
-            }
-            partGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-            const partMat = new THREE.PointsMaterial({
-              size: 0.8 + idx * 0.3,
-              color: col,
-              transparent: true,
-              opacity: 0.18,
-              blending: THREE.AdditiveBlending
-            });
-            const cloud = new THREE.Points(partGeo, partMat);
-            this.nebulaGroup.add(cloud);
+          // 1. Zlaté a neónové Hviezdy súhvezdia (4K efekt)
+          const starCount = 450;
+          const starGeo = new THREE.BufferGeometry();
+          const starPos = new Float32Array(starCount * 3);
+          const starColors = new Float32Array(starCount * 3);
+
+          const c1 = new THREE.Color(0x00f3ff);
+          const c2 = new THREE.Color(0xffd700);
+          const c3 = new THREE.Color(0xff007f);
+
+          for(let i=0; i<starCount*3; i+=3) {
+            starPos[i] = (Math.random() - 0.5) * 55;
+            starPos[i+1] = (Math.random() - 0.5) * 55;
+            starPos[i+2] = (Math.random() - 0.5) * 55;
+
+            let randCol = Math.random() > 0.6 ? c2 : (Math.random() > 0.3 ? c1 : c3);
+            starColors[i] = randCol.r;
+            starColors[i+1] = randCol.g;
+            starColors[i+2] = randCol.b;
+          }
+
+          starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+          starGeo.setAttribute('color', new THREE.BufferAttribute(starColors, 3));
+
+          const starMat = new THREE.PointsMaterial({
+            size: 0.12,
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.85
           });
 
-          // 2. Súhvezdie / Hviezdne prepojenia v 8K pozadí
-          const constGeo = new THREE.BufferGeometry();
-          const constCount = 300;
-          const constPos = new Float32Array(constCount * 3);
-          for(let i=0; i<constCount*3; i++) constPos[i] = (Math.random() - 0.5) * 50;
-          constGeo.setAttribute('position', new THREE.BufferAttribute(constPos, 3));
-          const stars = new THREE.Points(constGeo, new THREE.PointsMaterial({ size: 0.08, color: 0xffffff, transparent: true, opacity: 0.6 }));
-          this.nebulaGroup.add(stars);
+          const starField = new THREE.Points(starGeo, starMat);
+          this.constellationGroup.add(starField);
 
-          this.scene.add(this.nebulaGroup);
+          // 2. Prepojenia laserových línií medzi hlavnými hviezdami súhvezdia
+          const linePoints = [];
+          for(let i=0; i<30; i++) {
+            const idxA = Math.floor(Math.random() * starCount) * 3;
+            const idxB = Math.floor(Math.random() * starCount) * 3;
+            linePoints.push(new THREE.Vector3(starPos[idxA], starPos[idxA+1], starPos[idxA+2]));
+            linePoints.push(new THREE.Vector3(starPos[idxB], starPos[idxB+1], starPos[idxB+2]));
+          }
+
+          const constLinesGeo = new THREE.BufferGeometry().setFromPoints(linePoints);
+          const constLinesMat = new THREE.LineBasicMaterial({
+            color: 0xffd700,
+            transparent: true,
+            opacity: 0.15
+          });
+          const constLines = new THREE.LineSegments(constLinesGeo, constLinesMat);
+          this.constellationGroup.add(constLines);
+
+          // 3. Jemná radiálna 4K Žiara v pozadí za hyperkockou
+          const glowGeo = new THREE.PlaneGeometry(25, 25);
+          const glowCanvas = document.createElement('canvas');
+          glowCanvas.width = 512; glowCanvas.height = 512;
+          const gCtx = glowCanvas.getContext('2d');
+          const grad = gCtx.createRadialGradient(256, 256, 10, 256, 256, 250);
+          grad.addColorStop(0, 'rgba(0, 243, 255, 0.12)');
+          grad.addColorStop(0.5, 'rgba(255, 0, 127, 0.05)');
+          grad.addColorStop(1, 'rgba(1, 2, 6, 0)');
+          gCtx.fillStyle = grad;
+          gCtx.fillRect(0, 0, 512, 512);
+
+          const glowTex = new THREE.CanvasTexture(glowCanvas);
+          const glowMat = new THREE.MeshBasicMaterial({ map: glowTex, transparent: true, depthWrite: false });
+          const glowMesh = new THREE.Mesh(glowGeo, glowMat);
+          glowMesh.position.z = -10;
+          this.scene.add(glowMesh);
+
+          this.scene.add(this.constellationGroup);
         },
 
         setupEvents() {
@@ -447,10 +463,6 @@
             this.camera.updateProjectionMatrix();
             this.renderer.setSize(window.innerWidth, window.innerHeight);
             this.adjustCameraForScreen();
-          });
-
-          document.getElementById('player-name').addEventListener('input', (e) => {
-            _player = e.target.value || "AGENT-3000";
           });
 
           const handleTimeChange = (val) => {
@@ -626,19 +638,16 @@
           const currentPhaseText = phases[_timePhase + 1];
 
           document.getElementById('phase-val').innerText = currentPhaseText;
-          const mobilePhase = document.getElementById('phase-val-m');
-          if (mobilePhase) mobilePhase.innerText = currentPhaseText;
+          document.getElementById('phase-val-top').innerText = currentPhaseText;
 
           let activeInPhase = _nodes.filter(n => n.active[_timePhase + 1]).length;
           let percent = Math.round((activeInPhase / _nodes.length) * 100);
           
           document.getElementById('stab-val').innerText = `${percent}%`;
-          const mobileStab = document.getElementById('stab-val-m');
-          if (mobileStab) mobileStab.innerText = `${percent}%`;
+          document.getElementById('stab-val-top').innerText = `${percent}%`;
 
           document.getElementById('moves-val').innerText = _moves;
-          const mobileMoves = document.getElementById('moves-val-m');
-          if (mobileMoves) mobileMoves.innerText = _moves;
+          document.getElementById('moves-val-top').innerText = _moves;
 
           let strain = Math.min(100, Math.max(10, _moves * 4));
           document.getElementById('strain-fill').style.width = `${strain}%`;
