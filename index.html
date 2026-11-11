@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>CHRONO-CUBE 3000: Ultimate Futuristic FX Edition</title>
+  <title>CHRONO-CUBE 3000: Nebula 8K Edition</title>
   <style>
     :root {
-      --bg: #010409;
+      --bg: #010206;
       --primary: #00f3ff;
       --secondary: #ff007f;
       --gold: #ffd700;
-      --panel: rgba(8, 12, 24, 0.88);
+      --panel: rgba(6, 10, 20, 0.85);
       --font: 'Segoe UI', Roboto, sans-serif;
     }
 
@@ -20,50 +20,61 @@
     #canvas-container { width: 100vw; height: 100vh; position: absolute; top: 0; left: 0; z-index: 1; }
 
     /* HUD Overlay */
-    .hud { position: absolute; z-index: 10; pointer-events: none; display: flex; flex-direction: column; justify-content: space-between; padding: 12px; width: 100%; height: 100%; }
+    .hud { position: absolute; z-index: 10; pointer-events: none; display: flex; flex-direction: column; justify-content: space-between; padding: 10px; width: 100%; height: 100%; }
     .hud * { pointer-events: auto; }
 
-    header { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+    header { display: flex; justify-content: space-between; align-items: center; gap: 6px; flex-wrap: wrap; }
     
     .title-box {
       background: var(--panel);
       border: 1px solid rgba(0, 243, 255, 0.5);
-      padding: 8px 14px;
-      border-radius: 12px;
-      backdrop-filter: blur(15px);
-      flex: 1;
-      min-width: 170px;
-      box-shadow: 0 0 20px rgba(0, 243, 255, 0.25);
+      padding: 6px 12px;
+      border-radius: 10px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
     }
 
-    h1 { font-size: 1.1rem; letter-spacing: 2px; text-transform: uppercase; color: var(--primary); text-shadow: 0 0 12px var(--primary); }
-    .sub { font-size: 0.6rem; color: #8a99ad; margin-top: 2px; }
+    h1 { font-size: 0.95rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--primary); text-shadow: 0 0 10px var(--primary); }
+    .sub { font-size: 0.55rem; color: #8a99ad; margin-top: 1px; }
 
     .user-profile {
       background: var(--panel);
       border: 1px solid rgba(255, 0, 127, 0.5);
-      padding: 6px 10px;
-      border-radius: 12px;
-      backdrop-filter: blur(15px);
+      padding: 5px 8px;
+      border-radius: 10px;
+      backdrop-filter: blur(12px);
       display: flex;
       align-items: center;
       gap: 6px;
-      box-shadow: 0 0 15px rgba(255, 0, 127, 0.2);
     }
-    .user-profile label { font-size: 0.65rem; color: var(--secondary); text-transform: uppercase; font-weight: bold; }
+    .user-profile label { font-size: 0.6rem; color: var(--secondary); text-transform: uppercase; font-weight: bold; }
     .user-profile input {
       background: rgba(0, 0, 0, 0.7);
       border: 1px solid var(--primary);
       color: #fff;
-      padding: 5px 8px;
-      border-radius: 6px;
+      padding: 4px 6px;
+      border-radius: 4px;
       font-family: inherit;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       outline: none;
-      width: 100px;
+      width: 90px;
     }
 
-    /* Side Panel Stats (Desktop) */
+    /* Mobilný horný panel (štatistiky vyťahané hore, stred úplne voľný) */
+    .mobile-top-bar {
+      display: flex;
+      gap: 8px;
+      justify-content: space-around;
+      align-items: center;
+      background: var(--panel);
+      border: 1px solid rgba(0, 243, 255, 0.3);
+      padding: 6px 10px;
+      border-radius: 10px;
+      backdrop-filter: blur(12px);
+      margin-top: 4px;
+    }
+
+    /* Desktopové štatistiky vpravo hore */
     .side-panel { position: absolute; right: 12px; top: 75px; display: flex; flex-direction: column; gap: 8px; width: 210px; z-index: 10; }
     .stat-card {
       background: var(--panel);
@@ -72,7 +83,6 @@
       padding: 10px 14px;
       border-radius: 10px;
       backdrop-filter: blur(15px);
-      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
     }
     .stat-label { font-size: 0.65rem; color: #8a99ad; text-transform: uppercase; letter-spacing: 1px; }
     .stat-value { font-size: 1.1rem; font-weight: bold; color: #fff; margin-top: 3px; text-shadow: 0 0 8px rgba(255,255,255,0.4); }
@@ -80,82 +90,57 @@
     .strain-bar-bg { width: 100%; height: 5px; background: rgba(255, 255, 255, 0.1); border-radius: 3px; margin-top: 6px; overflow: hidden; }
     .strain-bar-fill { height: 100%; width: 10%; background: linear-gradient(90deg, #00f3ff, #ff007f); }
 
-    /* Footer & Tlačidlá (Desktop & Mobile Unified Structure) */
-    footer { display: flex; flex-direction: column; gap: 8px; align-items: center; width: 100%; margin-bottom: 5px; }
+    /* Spodný ovládací panel */
+    footer { display: flex; flex-direction: column; gap: 6px; align-items: center; width: 100%; margin-bottom: 2px; }
     
     .time-control {
       background: var(--panel);
-      padding: 10px 20px;
-      border-radius: 24px;
-      border: 1px solid rgba(0, 243, 255, 0.5);
-      backdrop-filter: blur(15px);
+      padding: 8px 16px;
+      border-radius: 20px;
+      border: 1px solid rgba(0, 243, 255, 0.4);
+      backdrop-filter: blur(12px);
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       width: 100%;
-      max-width: 400px;
+      max-width: 380px;
       justify-content: center;
-      box-shadow: 0 0 20px rgba(0,243,255,0.2);
+      box-shadow: 0 0 15px rgba(0,243,255,0.15);
     }
-    .time-slider { flex: 1; accent-color: var(--primary); cursor: pointer; height: 22px; }
+    .time-slider { flex: 1; accent-color: var(--primary); cursor: pointer; height: 20px; }
 
-    .btn-group { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; width: 100%; max-width: 600px; }
+    .btn-group { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; width: 100%; max-width: 600px; }
     
     .btn {
       background: rgba(0, 243, 255, 0.12);
       border: 1px solid var(--primary);
       color: var(--primary);
-      padding: 11px 16px;
-      border-radius: 10px;
+      padding: 9px 12px;
+      border-radius: 8px;
       cursor: pointer;
       font-family: inherit;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       font-weight: bold;
       text-transform: uppercase;
       letter-spacing: 1px;
-      transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      transition: all 0.2s;
       backdrop-filter: blur(10px);
       text-align: center;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
       flex: 1;
-      min-width: 120px;
+      min-width: 110px;
     }
-    .btn:hover {
-      transform: translateY(-2px) scale(1.02);
-      background: var(--primary);
-      color: #010409;
-      box-shadow: 0 0 20px var(--primary);
-    }
+    .btn:hover { background: var(--primary); color: #010206; box-shadow: 0 0 15px var(--primary); }
     .btn-secondary { border-color: var(--secondary); color: var(--secondary); background: rgba(255, 0, 127, 0.12); }
-    .btn-secondary:hover { background: var(--secondary); color: #fff; box-shadow: 0 0 20px var(--secondary); }
+    .btn-secondary:hover { background: var(--secondary); color: #fff; box-shadow: 0 0 15px var(--secondary); }
     .btn-gold { border-color: var(--gold); color: var(--gold); background: rgba(255, 215, 0, 0.12); }
-    .btn-gold:hover { background: var(--gold); color: #010409; box-shadow: 0 0 25px var(--gold); }
+    .btn-gold:hover { background: var(--gold); color: #010206; box-shadow: 0 0 20px var(--gold); }
 
-    /* Mobilné prispôsobenie: Tlačidlá kompletne hore aj dole, stred voľný pre 3D kocku */
+    /* Media query pre mobil */
     @media (max-width: 768px) {
-      .hud { padding: 8px; justify-content: space-between; }
-      .side-panel { display: none; } /* Na mobile skryté, nahradené čistým centrom */
-      
-      header { margin-bottom: 2px; }
-      
-      .mobile-top-bar {
-        display: flex;
-        width: 100%;
-        gap: 6px;
-        justify-content: space-between;
-        align-items: center;
-        background: var(--panel);
-        border: 1px solid rgba(0, 243, 255, 0.3);
-        padding: 6px 10px;
-        border-radius: 12px;
-        backdrop-filter: blur(15px);
-        margin-top: 4px;
-      }
-      
-      footer { gap: 6px; }
-      .time-control { max-width: 100%; padding: 6px 12px; }
-      .btn-group { gap: 6px; }
-      .btn { padding: 10px 6px; font-size: 0.68rem; min-width: 47%; }
+      .side-panel { display: none; } /* Na mobile skryté panelové štatistiky */
+      .mobile-top-bar { display: flex; }
+      .btn { padding: 8px 4px; font-size: 0.65rem; min-width: 47%; }
     }
 
     .mobile-top-bar { display: none; }
@@ -164,10 +149,10 @@
     }
 
     /* Modal */
-    .modal { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(1, 4, 9, 0.92); backdrop-filter: blur(20px); z-index: 100; display: none; justify-content: center; align-items: center; padding: 15px; }
-    .modal-content { background: #080c18; border: 1px solid var(--gold); border-radius: 18px; padding: 22px; max-width: 460px; width: 100%; text-align: center; box-shadow: 0 0 50px rgba(255, 215, 0, 0.35); }
-    .modal-title { color: var(--gold); font-size: 1.4rem; letter-spacing: 1.5px; margin-bottom: 10px; text-transform: uppercase; text-shadow: 0 0 12px var(--gold); }
-    #cert-canvas-container { width: 100%; height: 210px; margin: 12px 0; border-radius: 12px; border: 1px solid rgba(255, 215, 0, 0.4); background: #010409; }
+    .modal { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(1, 2, 6, 0.92); backdrop-filter: blur(20px); z-index: 100; display: none; justify-content: center; align-items: center; padding: 15px; }
+    .modal-content { background: #060a14; border: 1px solid var(--gold); border-radius: 16px; padding: 20px; max-width: 450px; width: 100%; text-align: center; box-shadow: 0 0 40px rgba(255, 215, 0, 0.3); }
+    .modal-title { color: var(--gold); font-size: 1.3rem; letter-spacing: 1.5px; margin-bottom: 10px; text-transform: uppercase; text-shadow: 0 0 10px var(--gold); }
+    #cert-canvas-container { width: 100%; height: 200px; margin: 10px 0; border-radius: 10px; border: 1px solid rgba(255, 215, 0, 0.3); background: #010206; }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
@@ -179,7 +164,7 @@
     <header>
       <div class="title-box">
         <h1>Chrono-Cube 3000</h1>
-        <div class="sub">Quantum Hypercube • Ultimate FX</div>
+        <div class="sub">Nebula 8K • Quantum Edition</div>
       </div>
 
       <div class="user-profile">
@@ -188,11 +173,11 @@
       </div>
     </header>
 
-    <!-- Mobilný horný panel so štatistikami a stavom stabilizácie -->
+    <!-- Mobilný horný panel (žiadna lišta v strede, všetko hore) -->
     <div class="mobile-top-bar">
-      <div style="font-size: 0.7rem;"><span style="color:#8a99ad">Stav:</span> <strong id="phase-val-m" style="color:var(--primary);">PRESENT (t₀)</strong></div>
-      <div style="font-size: 0.7rem;"><span style="color:#8a99ad">Stabilizácia:</span> <strong id="stab-val-m" style="color:var(--gold);">0%</strong></div>
-      <div style="font-size: 0.7rem;"><span style="color:#8a99ad">Ťahy:</span> <strong id="moves-val-m">0</strong></div>
+      <div style="font-size: 0.65rem;"><span style="color:#8a99ad">Stav:</span> <strong id="phase-val-m" style="color:var(--primary);">PRESENT (t₀)</strong></div>
+      <div style="font-size: 0.65rem;"><span style="color:#8a99ad">Stabilizácia:</span> <strong id="stab-val-m" style="color:var(--gold);">0%</strong></div>
+      <div style="font-size: 0.65rem;"><span style="color:#8a99ad">Ťahy:</span> <strong id="moves-val-m">0</strong></div>
     </div>
 
     <!-- Desktopové štatistiky vpravo hore -->
@@ -216,12 +201,12 @@
       </div>
     </div>
 
-    <!-- Spodný ovládací panel (časovač + tlačidlá usporiadané hore a dole na mobiloch aj PC) -->
+    <!-- Spodný panel (časovač + tlačidlá) -->
     <footer>
       <div class="time-control">
-        <span style="font-size: 0.75rem; color: #8a99ad; font-weight: bold;">t₋₁ (Minulosť)</span>
+        <span style="font-size: 0.7rem; color: #8a99ad; font-weight: bold;">t₋₁</span>
         <input type="range" min="-1" max="1" value="0" step="1" class="time-slider" id="time-slider">
-        <span style="font-size: 0.75rem; color: #8a99ad; font-weight: bold;">t₊₁ (Budúcnosť)</span>
+        <span style="font-size: 0.7rem; color: #8a99ad; font-weight: bold;">t₊₁</span>
       </div>
 
       <div class="btn-group">
@@ -237,11 +222,11 @@
   <div class="modal" id="cert-modal">
     <div class="modal-content">
       <div class="modal-title">✨ Kvantový Certifikát ✨</div>
-      <p style="font-size: 0.82rem; color: #a0aec0;">Stabilizácia kvantovej mriežky úspešne dokončená na 100%.</p>
+      <p style="font-size: 0.8rem; color: #a0aec0;">Stabilizácia mriežky dokončená na 100%.</p>
       
       <div id="cert-canvas-container"></div>
 
-      <div style="display: flex; gap: 8px; justify-content: center; margin-top: 12px;">
+      <div style="display: flex; gap: 8px; justify-content: center; margin-top: 10px;">
         <button class="btn btn-gold" id="download-cert-btn">Stiahnuť 3D Certifikát (PNG)</button>
         <button class="btn" id="close-cert-btn">Zatvoriť</button>
       </div>
@@ -328,7 +313,7 @@
 
         adjustCameraForScreen() {
           const isMobile = window.innerWidth <= 768;
-          const dist = isMobile ? 12.0 : 9.5;
+          const dist = isMobile ? 11.5 : 9.5;
           this.camera.position.set(dist * 0.65, dist * 0.65, dist);
           this.camera.lookAt(0, 0, 0);
         },
@@ -336,7 +321,7 @@
         setupThreeJS() {
           const container = document.getElementById('canvas-container');
           this.scene = new THREE.Scene();
-          this.scene.fog = new THREE.FogExp2(0x010409, 0.022);
+          this.scene.fog = new THREE.FogExp2(0x010206, 0.018);
 
           this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
           
@@ -345,20 +330,23 @@
           this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
           container.appendChild(this.renderer.domElement);
 
-          // Pokročilé osvetlenie pre úžasný 3D efekt
-          this.scene.add(new THREE.AmbientLight(0xffffff, 0.35));
-          const pointLight = new THREE.PointLight(0x00f3ff, 2.5, 60);
+          // Osvetlenie
+          this.scene.add(new THREE.AmbientLight(0xffffff, 0.4));
+          const pointLight = new THREE.PointLight(0x00f3ff, 2.8, 70);
           pointLight.position.set(12, 12, 12);
           this.scene.add(pointLight);
 
-          const pointLight2 = new THREE.PointLight(0xff007f, 2.5, 60);
+          const pointLight2 = new THREE.PointLight(0xff007f, 2.8, 70);
           pointLight2.position.set(-12, -12, -12);
           this.scene.add(pointLight2);
+
+          // Vytvorenie Vesmírnej Hmloviny a Súhvezdia v pozadí
+          this.createNebulaAndConstellations();
 
           this.cubeGroup = new THREE.Group();
           this.scene.add(this.cubeGroup);
 
-          // Výrazné pulzujúce kvantové jadro v strede
+          // Centrálne kvantové jadro
           const coreGeo = new THREE.IcosahedronGeometry(0.75, 2);
           const coreMat = new THREE.MeshPhongMaterial({ color: 0xff007f, emissive: 0xff007f, emissiveIntensity: 0.8, wireframe: true });
           this.coreMesh = new THREE.Mesh(coreGeo, coreMat);
@@ -395,15 +383,6 @@
             this.laserLines.push({ line, nodes: conn });
           });
 
-          // Bohaté časticové pole pre dokonalý vesmírny 3D efekt pozadia
-          const partGeo = new THREE.BufferGeometry();
-          const partCount = 800;
-          const posArray = new Float32Array(partCount * 3);
-          for(let i=0; i<partCount*3; i++) posArray[i] = (Math.random() - 0.5) * 40;
-          partGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-          this.particles = new THREE.Points(partGeo, new THREE.PointsMaterial({ size: 0.07, color: 0x00f3ff, transparent: true, opacity: 0.5 }));
-          this.scene.add(this.particles);
-
           this.raycaster = new THREE.Raycaster();
           this.mouse = new THREE.Vector2();
 
@@ -415,13 +394,51 @@
               let s = 1 + Math.sin(Date.now() * 0.0035) * 0.18;
               this.coreMesh.scale.set(s, s, s);
             }
-            if (this.particles) {
-              this.particles.rotation.y += 0.0005;
-              this.particles.rotation.x += 0.0002;
+            if (this.nebulaGroup) {
+              this.nebulaGroup.rotation.y += 0.0003;
+              this.nebulaGroup.rotation.z += 0.0001;
             }
             this.renderer.render(this.scene, this.camera);
           };
           animate();
+        },
+
+        createNebulaAndConstellations() {
+          this.nebulaGroup = new THREE.Group();
+
+          // 1. Farebné mraky hmloviny (viacero prekrývajúcich sa časticových vrstiev)
+          const cloudColors = [0x00f3ff, 0xff007f, 0x7b2cbf, 0x3a0ca3];
+          cloudColors.forEach((col, idx) => {
+            const partGeo = new THREE.BufferGeometry();
+            const count = 400;
+            const positions = new Float32Array(count * 3);
+            for(let i=0; i<count*3; i+=3) {
+              positions[i] = (Math.random() - 0.5) * 60;
+              positions[i+1] = (Math.random() - 0.5) * 60;
+              positions[i+2] = (Math.random() - 0.5) * 60;
+            }
+            partGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            const partMat = new THREE.PointsMaterial({
+              size: 0.8 + idx * 0.3,
+              color: col,
+              transparent: true,
+              opacity: 0.18,
+              blending: THREE.AdditiveBlending
+            });
+            const cloud = new THREE.Points(partGeo, partMat);
+            this.nebulaGroup.add(cloud);
+          });
+
+          // 2. Súhvezdie / Hviezdne prepojenia v 8K pozadí
+          const constGeo = new THREE.BufferGeometry();
+          const constCount = 300;
+          const constPos = new Float32Array(constCount * 3);
+          for(let i=0; i<constCount*3; i++) constPos[i] = (Math.random() - 0.5) * 50;
+          constGeo.setAttribute('position', new THREE.BufferAttribute(constPos, 3));
+          const stars = new THREE.Points(constGeo, new THREE.PointsMaterial({ size: 0.08, color: 0xffffff, transparent: true, opacity: 0.6 }));
+          this.nebulaGroup.add(stars);
+
+          this.scene.add(this.nebulaGroup);
         },
 
         setupEvents() {
@@ -457,7 +474,7 @@
           document.getElementById('oracle-btn').addEventListener('click', () => {
             AudioEngine.init();
             AudioEngine.playTone(900, 'square', 0.2);
-            alert(`[AI ORÁKULUM]: Pre stabilizáciu mriežky prepínaj časový posuvník a aktivuj kľúčové uzly v minulosti (t₋₁) aj prítomnosti (t₀)!`);
+            alert(`[AI ORÁKULUM]: Pre stabilizáciu mriežky prepínaj časový posuvník a aktivuj uzly v minula (t₋₁) aj prítomnosti (t₀)!`);
           });
 
           document.getElementById('challenge-btn').addEventListener('click', () => {
@@ -465,13 +482,13 @@
             AudioEngine.playTone(750, 'sine', 0.15);
             const seed = btoa(`${_player}_${Date.now()}_${_sessionSig.substr(0,5)}`);
             navigator.clipboard.writeText(window.location.href + `#challenge=${seed}`);
-            alert(`Výzva bola vygenerovaná a skopírovaná do schránky! Pošli ju priateľom.`);
+            alert(`Výzva bola skopírovaná do schránky!`);
           });
 
           document.getElementById('rage-btn').addEventListener('click', () => {
             AudioEngine.init();
             AudioEngine.playTone(150, 'sawtooth', 0.3);
-            alert(`[RAGE QUIT]: Hráč ${_player} predčasne opustil kvantovú os.`);
+            alert(`[RAGE QUIT]: Hráč ${_player} predčasne opustil os.`);
           });
 
           document.getElementById('close-cert-btn').addEventListener('click', () => {
@@ -653,7 +670,7 @@
           canvas.height = 640;
           const ctx = canvas.getContext('2d');
 
-          ctx.fillStyle = '#080c18';
+          ctx.fillStyle = '#060a14';
           ctx.fillRect(0, 0, 1024, 640);
 
           ctx.strokeStyle = '#ffd700';
