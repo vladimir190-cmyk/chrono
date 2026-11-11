@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CHRONO-CUBE 3000: The Impossible Quantum Hypercube</title>
+  <style>
+    :root {
+      --bg: #030712;
+      --primary: #00f3ff;
+      --secondary: #ff007f;
+      --gold: #ffd700;
+      --panel: rgba(10, 15, 30, 0.85);
+      --font: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    body, html { width: 100%; height: 100%; overflow: hidden; background: var(--bg); font-family: var(--font); color: #fff; }
+
+    #canvas-container { width: 100vw; height: 100vh; position: absolute; top: 0; left: 0; z-index: 1; }
+
+    /* HUD Overlay */
+    .hud { position: absolute; z-index: 10; pointer-events: none; display: flex; flex-direction: column; justify-content: space-between; padding: 20px; width: 100%; height: 100%; }
+    .hud * { pointer-events: auto; }
+
+    header { display: flex; justify-content: space-between; align-items: flex-start; }
+    .title-box { background: var(--panel); border: 1px solid rgba(0, 243, 255, 0.3); padding: 12px 20px; border-radius: 8px; backdrop-filter: blur(10px); box-shadow: 0 0 20px rgba(0, 243, 255, 0.15); }
+    h1 { font-size: 1.4rem; letter-spacing: 2px; text-transform: uppercase; color: var(--primary); text-shadow: 0 0 8px var(--primary); }
+    .sub { font-size: 0.75rem; color: #8a99ad; margin-top: 4px; }
+
+    .user-profile { background: var(--panel); border: 1px solid rgba(255, 0, 127, 0.3); padding: 10px 16px; border-radius: 8px; backdrop-filter: blur(10px); display: flex; align-items: center; gap: 10px; }
+    .user-profile label { font-size: 0.75rem; color: var(--secondary); text-transform: uppercase; font-weight: bold; }
+    .user-profile input { background: rgba(0, 0, 0, 0.5); border: 1px solid var(--primary); color: #fff; padding: 6px 10px; border-radius: 4px; font-family: inherit; font-size: 0.85rem; outline: none; width: 140px; }
+    .user-profile input:focus { border-color: var(--gold); box-shadow: 0 0 8px var(--gold); }
+
+    /* Side Panel Stats */
+    .side-panel { position: absolute; right: 20px; top: 100px; display: flex; flex-direction: column; gap: 12px; width: 220px; }
+    .stat-card { background: var(--panel); border: 1px solid rgba(255, 255, 255, 0.1); border-left: 3px solid var(--primary); padding: 10px 14px; border-radius: 6px; backdrop-filter: blur(10px); }
+    .stat-label { font-size: 0.7rem; color: #8a99ad; text-transform: uppercase; }
+    .stat-value { font-size: 1.2rem; font-weight: bold; color: #fff; margin-top: 2px; }
+
+    /* Brain Strain Meter */
+    .strain-bar-bg { width: 100%; height: 6px; background: rgba(255, 255, 255, 0.1); border-radius: 3px; margin-top: 6px; overflow: hidden; }
+    .strain-bar-fill { height: 100%; width: 10%; background: linear-gradient(90deg, #00f3ff, #ff007f); transition: width 0.3s; }
+
+    /* Bottom Controls */
+    footer { display: flex; justify-content: center; align-items: center; gap: 20px; flex-wrap: wrap; margin-bottom: 10px; }
+    .time-control { background: var(--panel); padding: 12px 24px; border-radius: 30px; border: 1px solid rgba(0, 243, 255, 0.4); backdrop-filter: blur(10px); display: flex; align-items: center; gap: 15px; }
+    .time-slider { width: 180px; accent-color: var(--primary); cursor: pointer; }
+
+    .btn { background: rgba(0, 243, 255, 0.1); border: 1px solid var(--primary); color: var(--primary); padding: 8px 16px; border-radius: 6px; cursor: pointer; font-family: inherit; font-size: 0.8rem; font-weight: bold; text-transform: uppercase; transition: all 0.2s; backdrop-filter: blur(5px); }
+    .btn:hover { background: var(--primary); color: #000; box-shadow: 0 0 15px var(--primary); }
+    .btn-secondary { border-color: var(--secondary); color: var(--secondary); }
+    .btn-secondary:hover { background: var(--secondary); color: #fff; box-shadow: 0 0 15px var(--secondary); }
+    .btn-gold { border-color: var(--gold); color: var(--gold); }
+    .btn-gold:hover { background: var(--gold); color: #000; box-shadow: 0 0 15px var(--gold); }
+
+    /* Modal Styling */
+    .modal { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(15px); z-index: 100; display: none; justify-content: center; align-items: center; }
+    .modal-content { background: #0b1120; border: 1px solid var(--gold); border-radius: 12px; padding: 30px; max-width: 500px; width: 90%; text-align: center; box-shadow: 0 0 40px rgba(255, 215, 0, 0.2); position: relative; }
+    .modal-title { color: var(--gold); font-size: 1.6rem; letter-spacing: 2px; margin-bottom: 15px; text-transform: uppercase; }
+
+    /* 3D Certificate Container */
+    #cert-canvas-container { width: 100%; height: 260px; margin: 15px 0; border-radius: 8px; border: 1px solid rgba(255, 215, 0, 0.3); background: #050a14; position: relative; }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+
+  <div id="canvas-container"></div>
+
+  <div class="hud">
+    <header>
+      <div class="title-box">
+        <h1>Chrono-Cube 3000</h1>
+        <div class="sub">Quantum Hypercube Puzzle • 3rd Millennium Edition</div>
+      </div>
+
+      <div class="user-profile">
+        <label for="player-name">Riešiteľ:</label>
+        <input type="text" id="player-name" value="AGENT-3000" maxlength="16">
+      </div>
+    </header>
+
+    <div class="side-panel">
+      <div class="stat-card">
+        <div class="stat-label">Časový stav (Time Phase)</div>
+        <div class="stat-value" id="phase-val" style="color: var(--primary);">PRESENT (t₀)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Stabilizácia Siete</div>
+        <div class="stat-value" id="stab-val">0%</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Brain Strain Rating</div>
+        <div class="stat-value" id="strain-val">IQ 145</div>
+        <div class="strain-bar-bg"><div class="strain-bar-fill" id="strain-fill"></div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Počet ťahov</div>
+        <div class="stat-value" id="moves-val">0</div>
+      </div>
+    </div>
+
+    <footer>
+      <div class="time-control">
+        <span style="font-size: 0.8rem; color: #8a99ad;">PAST (t₋₁)</span>
+        <input type="range" min="-1" max="1" value="0" step="1" class="time-slider" id="time-slider">
+        <span style="font-size: 0.8rem; color: #8a99ad;">FUTURE (t₊₁)</span>
+      </div>
+
+      <button class="btn" id="reset-cam-btn">Reset Pohľadu</button>
+      <button class="btn btn-secondary" id="oracle-btn">AI Orákulum</button>
+      <button class="btn btn-secondary" id="challenge-btn">Vygenerovať Výzvu</button>
+      <button class="btn btn-gold" id="rage-btn">Rage Quit / Meme</button>
+    </footer>
+  </div>
+
+  <!-- Certificate Modal -->
+  <div class="modal" id="cert-modal">
+    <div class="modal-content">
+      <div class="modal-title">✨ Kvantový Certifikát Úspechu ✨</div>
+      <p style="font-size: 0.85rem; color: #a0aec0;">Týmto sa potvrdzuje, že riešiteľ úspešne stabilizoval hlavolam 3. tisícročia.</p>
+      
+      <div id="cert-canvas-container"></div>
+
+      <div style="display: flex; gap: 10px; justify-content: center; margin-top: 15px;">
+        <button class="btn btn-gold" id="download-cert-btn">Stiahnuť 3D Certifikát (PNG)</button>
+        <button class="btn" id="close-cert-btn">Zatvoriť</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Lexical Closure Game Engine
+    const QuantumGameEngine = (function() {
+      // Private Variables & Cryptographic State
+      let _sessionSig = Math.random().toString(36).substring(2) + Date.now().toString(36);
+      let _player = "AGENT-3000";
+      let _timePhase = 0; // -1: Past, 0: Present, 1: Future
+      let _moves = 0;
+      let _isSolved = false;
+
+      // Node Web Structure across 3 Time Phases
+      const _nodes = [
+        { id: 0, pos: [-2, 2, 2], phaseColors: [0x00f3ff, 0xff007f, 0xffd700], active: [false, false, false] },
+        { id: 1, pos: [2, 2, 2], phaseColors: [0xff007f, 0x00f3ff, 0xffd700], active: [false, false, false] },
+        { id: 2, pos: [2, -2, 2], phaseColors: [0xffd700, 0xff007f, 0x00f3ff], active: [false, false, false] },
+        { id: 3, pos: [-2, -2, 2], phaseColors: [0x00f3ff, 0xffd700, 0xff007f], active: [false, false, false] },
+        { id: 4, pos: [-2, 2, -2], phaseColors: [0xff007f, 0xffd700, 0x00f3ff], active: [false, false, false] },
+        { id: 5, pos: [2, 2, -2], phaseColors: [0x00f3ff, 0xff007f, 0xffd700], active: [false, false, false] },
+        { id: 6, pos: [2, -2, -2], phaseColors: [0xffd700, 0x00f3ff, 0xff007f], active: [false, false, false] },
+        { id: 7, pos: [-2, -2, -2], phaseColors: [0xff007f, 0x00f3ff, 0xffd700], active: [false, false, false] }
+      ];
+
+      const _connections = [
+        [0,1], [1,2], [2,3], [3,0],
+        [4,5], [5,6], [6,7], [7,4],
+        [0,4], [1,5], [2,6], [3,7]
+      ];
+
+      // Web Audio API Synthesizer
+      const AudioEngine = {
+        ctx: null,
+        init() {
+          if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+        },
+        playBeep(freq = 440, duration = 0.1) {
+          if (!this.ctx) return;
+          try {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.frequency.value = freq;
+            osc.type = 'sine';
+            gain.gain.setValueAtTime(0.1, this.ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + duration);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start();
+            osc.stop(this.ctx.currentTime + duration);
+          } catch(e) {}
+        },
+        playFanfare() {
+          if (!this.ctx) return;
+          const notes = [523.25, 659.25, 783.99, 1046.50];
+          notes.forEach((n, i) => {
+            setTimeout(() => this.playBeep(n, 0.3), i * 150);
+          });
+        }
+      };
+
+      return {
+        init() {
+          this.setupThreeJS();
+          this.setupEvents();
+          this.updateHUD();
+        },
+
+        setupThreeJS() {
+          const container = document.getElementById('canvas-container');
+          this.scene = new THREE.Scene();
+          this.scene.fog = new THREE.FogExp2(0x030712, 0.03);
+
+          this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+          this.camera.position.set(6, 6, 9);
+          this.camera.lookAt(0, 0, 0);
+
+          this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
+          this.renderer.setSize(window.innerWidth, window.innerHeight);
+          this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+          container.appendChild(this.renderer.domElement);
+
+          // Lights
+          const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+          this.scene.add(ambientLight);
+
+          const pointLight = new THREE.PointLight(0x00f3ff, 1.5, 50);
+          pointLight.position.set(10, 10, 10);
+          this.scene.add(pointLight);
+
+          // Group for Hypercube
+          this.cubeGroup = new THREE.Group();
+          this.scene.add(this.cubeGroup);
+
+          // Build Nodes
+          this.nodeMeshes = [];
+          const sphereGeo = new THREE.SphereGeometry(0.35, 32, 32);
+
+          _nodes.forEach(node => {
+            const mat = new THREE.MeshPhongMaterial({
+              color: node.phaseColors[1],
+              emissive: node.phaseColors[1],
+              emissiveIntensity: 0.3,
+              shininess: 100,
+              wireframe: true
+            });
+            const mesh = new THREE.Mesh(sphereGeo, mat);
+            mesh.position.set(...node.pos);
+            mesh.userData = { id: node.id };
+            this.cubeGroup.add(mesh);
+            this.nodeMeshes.push(mesh);
+          });
+
+          // Build Connection Lasers
+          this.laserLines = [];
+          _connections.forEach(conn => {
+            const posA = new THREE.Vector3(..._nodes[conn[0]].pos);
+            const posB = new THREE.Vector3(..._nodes[conn[1]].pos);
+            const geo = new THREE.BufferGeometry().setFromPoints([posA, posB]);
+            const mat = new THREE.LineBasicMaterial({ color: 0x1a2638, transparent: true, opacity: 0.4 });
+            const line = new THREE.Line(geo, mat);
+            this.cubeGroup.add(line);
+            this.laserLines.push({ line, nodes: conn });
+          });
+
+          // Background Particles
+          const partGeo = new THREE.BufferGeometry();
+          const partCount = 400;
+          const posArray = new Float32Array(partCount * 3);
+          for(let i=0; i<partCount*3; i++) {
+            posArray[i] = (Math.random() - 0.5) * 30;
+          }
+          partGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+          const partMat = new THREE.PointsMaterial({ size: 0.05, color: 0x00f3ff, transparent: true, opacity: 0.3 });
+          this.particles = new THREE.Points(partGeo, partMat);
+          this.scene.add(this.particles);
+
+          // Mouse Interaction Setup
+          this.raycaster = new THREE.Raycaster();
+          this.mouse = new THREE.Vector2();
+          this.isDragging = false;
+          this.previousMousePosition = { x: 0, y: 0 };
+
+          // Animation Loop
+          const animate = () => {
+            requestAnimationFrame(animate);
+            if (this.particles) this.particles.rotation.y += 0.0005;
+            this.renderer.render(this.scene, this.camera);
+          };
+          animate();
+        },
+
+        setupEvents() {
+          window.addEventListener('resize', () => {
+            this.camera.aspect = window.innerWidth / window.innerHeight;
+            this.camera.updateProjectionMatrix();
+            this.renderer.setSize(window.innerWidth, window.innerHeight);
+          });
+
+          // User Input Profile
+          document.getElementById('player-name').addEventListener('input', (e) => {
+            _player = e.target.value || "AGENT-3000";
+          });
+
+          // Slider Time Phase Control
+          document.getElementById('time-slider').addEventListener('input', (e) => {
+            _timePhase = parseInt(e.target.value);
+            AudioEngine.init();
+            AudioEngine.playBeep(300 + (_timePhase + 1) * 200, 0.08);
+            this.updateTimePhaseVisuals();
+          });
+
+          // Controls Buttons
+          document.getElementById('reset-cam-btn').addEventListener('click', () => {
+            this.camera.position.set(6, 6, 9);
+            this.camera.lookAt(0, 0, 0);
+            this.cubeGroup.rotation.set(0, 0, 0);
+          });
+
+          document.getElementById('oracle-btn').addEventListener('click', () => {
+            AudioEngine.init();
+            AudioEngine.playBeep(880, 0.15);
+            alert(`[QUANTUM AI ORACLE HINT]: Ak chcieš stabilizovať prítomnosť (t₀), najskôr prepoj uzly v minulosti (t₋₁) tak, aby vytvárali symetrickú fázovú rezonanciu.`);
+          });
+
+          document.getElementById('challenge-btn').addEventListener('click', () => {
+            const seed = btoa(`${_player}_${Date.now()}_${_sessionSig.substr(0,5)}`);
+            navigator.clipboard.writeText(window.location.href + `#challenge=${seed}`);
+            alert(`Výzva skopírovaná do schránky s kódom: ${seed}`);
+          });
+
+          document.getElementById('rage-btn').addEventListener('click', () => {
+            alert(`[RAGE QUIT GENERATED]: ${_player} sa vzdal v čase t=${_timePhase} pri ťahu č. ${_moves}. "Tento hlavolam porušuje fyzikálne zákony!"`);
+          });
+
+          document.getElementById('close-cert-btn').addEventListener('click', () => {
+            document.getElementById('cert-modal').style.display = 'none';
+          });
+
+          document.getElementById('download-cert-btn').addEventListener('click', () => {
+            this.downloadCertificate();
+          });
+
+          // 3D Mouse Interaction
+          const dom = this.renderer.domElement;
+          
+          dom.addEventListener('mousedown', (e) => {
+            AudioEngine.init();
+            this.isDragging = true;
+            this.previousMousePosition = { x: e.clientX, y: e.clientY };
+          });
+
+          dom.addEventListener('mousemove', (e) => {
+            if (this.isDragging) {
+              const deltaX = e.clientX - this.previousMousePosition.x;
+              const deltaY = e.clientY - this.previousMousePosition.y;
+
+              this.cubeGroup.rotation.y += deltaX * 0.008;
+              this.cubeGroup.rotation.x += deltaY * 0.008;
+
+              this.previousMousePosition = { x: e.clientX, y: e.clientY };
+            }
+          });
+
+          window.addEventListener('mouseup', (e) => {
+            if (this.isDragging) {
+              this.isDragging = false;
+            }
+          });
+
+          dom.addEventListener('click', (e) => {
+            this.mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+            this.mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+
+            this.raycaster.setFromCamera(this.mouse, this.camera);
+            const intersects = this.raycaster.intersectObjects(this.nodeMeshes);
+
+            if (intersects.length > 0) {
+              const nodeId = intersects[0].object.userData.id;
+              this.handleNodeClick(nodeId);
+            }
+          });
+        },
+
+        handleNodeClick(id) {
+          if (_isSolved) return;
+
+          const pIdx = _timePhase + 1; // 0, 1, 2
+          _nodes[id].active[pIdx] = !_nodes[id].active[pIdx];
+          _moves++;
+
+          AudioEngine.playBeep(400 + id * 50, 0.1);
+
+          // Past phase alters future phases dynamically
+          if (pIdx === 0 && _nodes[id].active[0]) {
+            _nodes[id].active[1] = !_nodes[id].active[1];
+          }
+
+          this.updateTimePhaseVisuals();
+          this.checkWinCondition();
+          this.updateHUD();
+        },
+
+        updateTimePhaseVisuals() {
+          const pIdx = _timePhase + 1;
+
+          this.nodeMeshes.forEach((mesh, idx) => {
+            const isActive = _nodes[idx].active[pIdx];
+            const activeColor = _nodes[idx].phaseColors[pIdx];
+
+            mesh.material.color.setHex(isActive ? activeColor : 0x223344);
+            mesh.material.emissive.setHex(isActive ? activeColor : 0x000000);
+            mesh.material.wireframe = !isActive;
+          });
+
+          this.laserLines.forEach(item => {
+            const [a, b] = item.nodes;
+            const activeA = _nodes[a].active[pIdx];
+            const activeB = _nodes[b].active[pIdx];
+
+            if (activeA && activeB) {
+              item.line.material.color.setHex(_nodes[a].phaseColors[pIdx]);
+              item.line.material.opacity = 0.9;
+            } else {
+              item.line.material.color.setHex(0x1a2638);
+              item.line.material.opacity = 0.2;
+            }
+          });
+        },
+
+        checkWinCondition() {
+          let totalActive = 0;
+          _nodes.forEach(n => {
+            if (n.active[0]) totalActive++;
+            if (n.active[1]) totalActive++;
+            if (n.active[2]) totalActive++;
+          });
+
+          const totalNodes = _nodes.length * 3;
+          const stabRatio = Math.round((totalActive / totalNodes) * 100);
+
+          if (stabRatio === 100 && !_isSolved) {
+            _isSolved = true;
+            AudioEngine.playFanfare();
+            setTimeout(() => this.triggerVictory(), 300);
+          }
+        },
+
+        updateHUD() {
+          const phases = ["PAST (t₋₁)", "PRESENT (t₀)", "FUTURE (t₊₁)"];
+          document.getElementById('phase-val').innerText = phases[_timePhase + 1];
+
+          let activeInPhase = _nodes.filter(n => n.active[_timePhase + 1]).length;
+          let percent = Math.round((activeInPhase / _nodes.length) * 100);
+          document.getElementById('stab-val').innerText = `${percent}%`;
+
+          document.getElementById('moves-val').innerText = _moves;
+
+          let strain = Math.min(100, Math.max(10, _moves * 4));
+          document.getElementById('strain-fill').style.width = `${strain}%`;
+          document.getElementById('strain-val').innerText = `IQ ${160 - Math.floor(strain / 3)}`;
+        },
+
+        triggerVictory() {
+          document.getElementById('cert-modal').style.display = 'flex';
+          this.build3DCertificate();
+        },
+
+        build3DCertificate() {
+          const container = document.getElementById('cert-canvas-container');
+          container.innerHTML = '';
+
+          const scene = new THREE.Scene();
+          const camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 100);
+          camera.position.set(0, 0, 5);
+
+          const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
+          renderer.setSize(container.clientWidth, container.clientHeight);
+          renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+          container.appendChild(renderer.domElement);
+
+          const plaqueGeo = new THREE.BoxGeometry(3.6, 2.2, 0.1);
+          
+          const canvas = document.createElement('canvas');
+          canvas.width = 1024;
+          canvas.height = 640;
+          const ctx = canvas.getContext('2d');
+
+          ctx.fillStyle = '#0a101f';
+          ctx.fillRect(0, 0, 1024, 640);
+
+          ctx.strokeStyle = '#ffd700';
+          ctx.lineWidth = 12;
+          ctx.strokeRect(20, 20, 984, 600);
+
+          ctx.fillStyle = '#ffd700';
+          ctx.font = 'bold 38px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText('QUANTUM HYPERCUBE MASTER', 512, 100);
+
+          ctx.fillStyle = '#00f3ff';
+          ctx.font = '28px sans-serif';
+          ctx.fillText('CERTIFIKÁT O VYRIEŠENÍ HLAVOLAMU', 512, 160);
+
+          ctx.fillStyle = '#ffffff';
+          ctx.font = 'bold 46px sans-serif';
+          ctx.fillText(_player, 512, 280);
+
+          ctx.fillStyle = '#a0aec0';
+          ctx.font = '22px sans-serif';
+          ctx.fillText(`Úspešne stabilizoval všetkých 24 kvantových uzlov`, 512, 360);
+          ctx.fillText(`Počet ťahov: ${_moves} • Časová rezonancia: 100%`, 512, 410);
+
+          const certHash = "SHA256-VERIFIED:" + btoa(`${_player}_${_moves}_${_sessionSig}`).substr(0, 20);
+          ctx.fillStyle = '#ff007f';
+          ctx.font = '16px monospace';
+          ctx.fillText(certHash, 512, 530);
+
+          const texture = new THREE.CanvasTexture(canvas);
+          const mat = new THREE.MeshPhongMaterial({ map: texture, shininess: 80 });
+          const plaque = new THREE.Mesh(plaqueGeo, mat);
+          scene.add(plaque);
+
+          const light1 = new THREE.PointLight(0xffd700, 1.2, 20);
+          light1.position.set(3, 3, 4);
+          scene.add(light1);
+
+          const light2 = new THREE.AmbientLight(0xffffff, 0.6);
+          scene.add(light2);
+
+          this.certRenderer = renderer;
+
+          const certAnimate = () => {
+            if (document.getElementById('cert-modal').style.display === 'flex') {
+              requestAnimationFrame(certAnimate);
+              plaque.rotation.y = Math.sin(Date.now() * 0.0015) * 0.2;
+              plaque.rotation.x = Math.cos(Date.now() * 0.0012) * 0.1;
+              renderer.render(scene, camera);
+            }
+          };
+          certAnimate();
+        },
+
+        downloadCertificate() {
+          if (!this.certRenderer) return;
+          const dataURL = this.certRenderer.domElement.toDataURL('image/png');
+          const link = document.createElement('a');
+          link.download = `ChronoCube_3000_Certificate_${_player}.png`;
+          link.href = dataURL;
+          link.click();
+        }
+      };
+    })();
+
+    // Start App when loaded
+    window.addEventListener('DOMContentLoaded', () => {
+      QuantumGameEngine.init();
+    });
+  </script>
+</body>
+</html>
