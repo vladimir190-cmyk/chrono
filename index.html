@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>CHRONO-CUBE 3000: Quantum Millennium FX Edition</title>
+  <title>CHRONO-CUBE 3000: Mobile Side-Controls FX Edition</title>
   <style>
     :root {
       --bg: #030712;
       --primary: #00f3ff;
       --secondary: #ff007f;
       --gold: #ffd700;
-      --panel: rgba(10, 15, 30, 0.82);
+      --panel: rgba(10, 15, 30, 0.85);
       --font: 'Segoe UI', Roboto, sans-serif;
     }
 
@@ -25,7 +25,6 @@
 
     header { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
     
-    /* Animované sklenené kartičky */
     .title-box {
       background: var(--panel);
       border: 1px solid rgba(0, 243, 255, 0.4);
@@ -33,45 +32,38 @@
       border-radius: 12px;
       backdrop-filter: blur(12px);
       flex: 1;
-      min-width: 180px;
+      min-width: 170px;
       box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
-      animation: pulseGlow 4s infinite alternate;
-    }
-    @keyframes pulseGlow {
-      0% { box-shadow: 0 0 10px rgba(0, 243, 255, 0.2); }
-      100% { box-shadow: 0 0 25px rgba(0, 243, 255, 0.5); }
     }
 
-    h1 { font-size: 1.1rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--primary); text-shadow: 0 0 10px var(--primary); }
-    .sub { font-size: 0.65rem; color: #8a99ad; margin-top: 2px; }
+    h1 { font-size: 1.05rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--primary); text-shadow: 0 0 10px var(--primary); }
+    .sub { font-size: 0.6rem; color: #8a99ad; margin-top: 2px; }
 
     .user-profile {
       background: var(--panel);
       border: 1px solid rgba(255, 0, 127, 0.4);
-      padding: 8px 12px;
+      padding: 6px 10px;
       border-radius: 12px;
       backdrop-filter: blur(12px);
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
-    .user-profile label { font-size: 0.7rem; color: var(--secondary); text-transform: uppercase; font-weight: bold; }
+    .user-profile label { font-size: 0.65rem; color: var(--secondary); text-transform: uppercase; font-weight: bold; }
     .user-profile input {
       background: rgba(0, 0, 0, 0.6);
       border: 1px solid var(--primary);
       color: #fff;
-      padding: 6px 10px;
+      padding: 4px 8px;
       border-radius: 6px;
       font-family: inherit;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       outline: none;
-      width: 110px;
-      transition: all 0.3s;
+      width: 95px;
     }
-    .user-profile input:focus { border-color: var(--gold); box-shadow: 0 0 8px var(--gold); }
 
-    /* Side Panel Stats */
-    .side-panel { position: absolute; right: 12px; top: 75px; display: flex; flex-direction: column; gap: 8px; width: 200px; }
+    /* Side Panel Stats (Desktop) */
+    .side-panel { position: absolute; right: 12px; top: 75px; display: flex; flex-direction: column; gap: 8px; width: 200px; z-index: 10; }
     .stat-card {
       background: var(--panel);
       border: 1px solid rgba(255, 255, 255, 0.15);
@@ -79,17 +71,15 @@
       padding: 8px 12px;
       border-radius: 8px;
       backdrop-filter: blur(12px);
-      transition: transform 0.3s;
     }
-    .stat-card:hover { transform: translateX(-4px); }
     .stat-label { font-size: 0.65rem; color: #8a99ad; text-transform: uppercase; }
     .stat-value { font-size: 1.05rem; font-weight: bold; color: #fff; margin-top: 2px; }
 
     .strain-bar-bg { width: 100%; height: 5px; background: rgba(255, 255, 255, 0.1); border-radius: 3px; margin-top: 4px; overflow: hidden; }
-    .strain-bar-fill { height: 100%; width: 10%; background: linear-gradient(90deg, #00f3ff, #ff007f); transition: width 0.3s; }
+    .strain-bar-fill { height: 100%; width: 10%; background: linear-gradient(90deg, #00f3ff, #ff007f); }
 
-    /* Footer & Animované Tlačidlá */
-    footer { display: flex; justify-content: center; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 5px; }
+    /* Footer & Tlačidlá (Desktop) */
+    .desktop-footer { display: flex; justify-content: center; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 5px; width: 100%; }
     
     .time-control {
       background: var(--panel);
@@ -103,13 +93,11 @@
       width: 100%;
       max-width: 340px;
       justify-content: center;
-      box-shadow: 0 0 10px rgba(0,243,255,0.15);
     }
     .time-slider { flex: 1; accent-color: var(--primary); cursor: pointer; height: 20px; }
 
-    .btn-group { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; width: 100%; }
+    .btn-group { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
     
-    /* POHYBLIVÉ A PULZUJÚCE TLAČIDLÁ */
     .btn {
       background: rgba(0, 243, 255, 0.12);
       border: 1px solid var(--primary);
@@ -121,40 +109,75 @@
       font-size: 0.75rem;
       font-weight: bold;
       text-transform: uppercase;
-      transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      transition: all 0.2s;
       backdrop-filter: blur(8px);
-      flex: 1;
-      min-width: 110px;
       text-align: center;
-      position: relative;
-      overflow: hidden;
       box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     }
-    .btn:hover {
-      transform: translateY(-3px) scale(1.03);
-      background: var(--primary);
-      color: #000;
-      box-shadow: 0 0 15px var(--primary);
-    }
-    .btn:active { transform: translateY(1px) scale(0.97); }
-
+    .btn:hover { background: var(--primary); color: #000; box-shadow: 0 0 15px var(--primary); }
     .btn-secondary { border-color: var(--secondary); color: var(--secondary); background: rgba(255, 0, 127, 0.12); }
     .btn-secondary:hover { background: var(--secondary); color: #fff; box-shadow: 0 0 15px var(--secondary); }
-
-    .btn-gold { border-color: var(--gold); color: var(--gold); background: rgba(255, 215, 0, 0.12); animation: goldPulse 2s infinite alternate; }
+    .btn-gold { border-color: var(--gold); color: var(--gold); background: rgba(255, 215, 0, 0.12); }
     .btn-gold:hover { background: var(--gold); color: #000; box-shadow: 0 0 20px var(--gold); }
-    @keyframes goldPulse {
-      0% { transform: translateY(0); box-shadow: 0 0 5px rgba(255, 215, 0, 0.2); }
-      100% { transform: translateY(-2px); box-shadow: 0 0 12px rgba(255, 215, 0, 0.6); }
+
+    /* Mobilný panel tlačidiel po bokoch (skrytý na PC) */
+    .mobile-side-controls { display: none; }
+
+    /* Responsive Mobile Layout: Tlačidla po bokoch, kocka v strede */
+    @media (max-width: 768px) {
+      .hud { padding: 6px; justify-content: flex-start; }
+      header { margin-bottom: 4px; }
+      .side-panel { display: none; } /* Úplne skryté alebo môžeme nechať v minimalistickej forme */
+      
+      .desktop-footer { display: none; } /* Vypneme klasický spodný panel */
+      
+      .mobile-side-controls {
+        display: flex;
+        position: absolute;
+        top: 60px;
+        bottom: 10px;
+        left: 0;
+        width: 100%;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 6px;
+        pointer-events: none;
+        z-index: 20;
+      }
+
+      .control-column {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        width: 90px;
+        pointer-events: auto;
+      }
+
+      .control-column .btn {
+        padding: 8px 4px;
+        font-size: 0.6rem;
+        width: 100%;
+        background: rgba(10, 15, 30, 0.9);
+      }
+
+      /* Mobilný časový posuvník priamo hore pod hlavičkou */
+      .mobile-top-time {
+        display: flex;
+        background: var(--panel);
+        border: 1px solid rgba(0, 243, 255, 0.3);
+        padding: 4px 10px;
+        border-radius: 12px;
+        align-items: center;
+        gap: 8px;
+        margin-top: 4px;
+        pointer-events: auto;
+      }
     }
 
-    /* Mobile Responsive */
+    /* Pre PC skryjeme mobilný horný časovač */
+    .mobile-top-time { display: none; }
     @media (max-width: 768px) {
-      .hud { padding: 8px; }
-      h1 { font-size: 0.9rem; }
-      .side-panel { position: relative; right: auto; top: auto; width: 100%; display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-top: 6px; }
-      .stat-card { padding: 6px 10px; }
-      .btn { padding: 12px 8px; font-size: 0.7rem; min-width: 45%; }
+      .mobile-top-time { display: flex; }
     }
 
     /* Modal */
@@ -173,15 +196,22 @@
     <header>
       <div class="title-box">
         <h1>Chrono-Cube 3000</h1>
-        <div class="sub">Quantum Hypercube • FX Millennium Edition</div>
+        <div class="sub">Quantum Hypercube • Mobile FX</div>
+      </div>
+
+      <div class="mobile-top-time">
+        <span style="font-size: 0.65rem; color: #8a99ad;">t₋₁</span>
+        <input type="range" min="-1" max="1" value="0" step="1" class="time-slider" id="time-slider-m">
+        <span style="font-size: 0.65rem; color: #8a99ad;">t₊₁</span>
       </div>
 
       <div class="user-profile">
-        <label for="player-name">Riešiteľ:</label>
-        <input type="text" id="player-name" value="AGENT-3000" maxlength="14">
+        <label for="player-name">Hráč:</label>
+        <input type="text" id="player-name" value="AGENT-3000" maxlength="12">
       </div>
     </header>
 
+    <!-- Desktopové štatistiky vpravo hore -->
     <div class="side-panel">
       <div class="stat-card">
         <div class="stat-label">Časový stav</div>
@@ -202,7 +232,20 @@
       </div>
     </div>
 
-    <footer>
+    <!-- Mobilné ovládacie prvky umiestnené presne PO BOKOCH displeja -->
+    <div class="mobile-side-controls">
+      <div class="control-column">
+        <button class="btn" id="reset-cam-btn-m">Reset Pohľadu</button>
+        <button class="btn btn-secondary" id="oracle-btn-m">AI Orákulum</button>
+      </div>
+      <div class="control-column">
+        <button class="btn btn-secondary" id="challenge-btn-m">Výzva</button>
+        <button class="btn btn-gold" id="rage-btn-m">Rage Quit</button>
+      </div>
+    </div>
+
+    <!-- Desktopový spodný panel -->
+    <footer class="desktop-footer">
       <div class="time-control">
         <span style="font-size: 0.75rem; color: #8a99ad;">t₋₁</span>
         <input type="range" min="-1" max="1" value="0" step="1" class="time-slider" id="time-slider">
@@ -258,7 +301,6 @@
         [0,4], [1,5], [2,6], [3,7]
       ];
 
-      // Pokročilý Synth Audio Engine s FX účinkami
       const AudioEngine = {
         ctx: null,
         init() {
@@ -331,7 +373,6 @@
           this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
           container.appendChild(this.renderer.domElement);
 
-          // Svetlá
           this.scene.add(new THREE.AmbientLight(0xffffff, 0.3));
           const pointLight = new THREE.PointLight(0x00f3ff, 2, 50);
           pointLight.position.set(10, 10, 10);
@@ -344,13 +385,11 @@
           this.cubeGroup = new THREE.Group();
           this.scene.add(this.cubeGroup);
 
-          // Kvantové jadro v strede
           const coreGeo = new THREE.IcosahedronGeometry(0.7, 2);
           const coreMat = new THREE.MeshPhongMaterial({ color: 0xff007f, emissive: 0xff007f, emissiveIntensity: 0.6, wireframe: true });
           this.coreMesh = new THREE.Mesh(coreGeo, coreMat);
           this.cubeGroup.add(this.coreMesh);
 
-          // Uzly
           this.nodeMeshes = [];
           const sphereGeo = new THREE.SphereGeometry(0.38, 32, 32);
 
@@ -369,7 +408,6 @@
             this.nodeMeshes.push(mesh);
           });
 
-          // Lasery
           this.laserLines = [];
           _connections.forEach(conn => {
             const posA = new THREE.Vector3(..._nodes[conn[0]].pos);
@@ -381,7 +419,6 @@
             this.laserLines.push({ line, nodes: conn });
           });
 
-          // Efekt 600 vesmírnych častíc
           const partGeo = new THREE.BufferGeometry();
           const partCount = 600;
           const posArray = new Float32Array(partCount * 3);
@@ -393,20 +430,15 @@
           this.raycaster = new THREE.Raycaster();
           this.mouse = new THREE.Vector2();
 
-          // 3D Render slučka s novými FX pohybmi
           const animate = () => {
             requestAnimationFrame(animate);
-            
-            // Otáčanie a pulzovanie jadra
             if (this.coreMesh) {
               this.coreMesh.rotation.x += 0.01;
               this.coreMesh.rotation.y += 0.015;
               let s = 1 + Math.sin(Date.now() * 0.003) * 0.15;
               this.coreMesh.scale.set(s, s, s);
             }
-
             if (this.particles) this.particles.rotation.y += 0.0004;
-
             this.renderer.render(this.scene, this.camera);
           };
           animate();
@@ -424,39 +456,53 @@
             _player = e.target.value || "AGENT-3000";
           });
 
-          document.getElementById('time-slider').addEventListener('input', (e) => {
-            _timePhase = parseInt(e.target.value);
+          const handleTimeChange = (val) => {
+            _timePhase = parseInt(val);
+            document.getElementById('time-slider').value = _timePhase;
+            document.getElementById('time-slider-m').value = _timePhase;
             AudioEngine.init();
             AudioEngine.playLaser();
             this.updateTimePhaseVisuals();
-          });
+            this.updateHUD();
+          };
 
-          document.getElementById('reset-cam-btn').addEventListener('click', () => {
+          document.getElementById('time-slider').addEventListener('input', (e) => handleTimeChange(e.target.value));
+          document.getElementById('time-slider-m').addEventListener('input', (e) => handleTimeChange(e.target.value));
+
+          const triggerReset = () => {
             AudioEngine.init();
             AudioEngine.playTone(600, 'sine', 0.1);
             this.adjustCameraForScreen();
             this.cubeGroup.rotation.set(0, 0, 0);
-          });
+          };
+          document.getElementById('reset-cam-btn').addEventListener('click', triggerReset);
+          document.getElementById('reset-cam-btn-m').addEventListener('click', triggerReset);
 
-          document.getElementById('oracle-btn').addEventListener('click', () => {
+          const triggerOracle = () => {
             AudioEngine.init();
             AudioEngine.playTone(900, 'square', 0.2);
-            alert(`[AI ORÁKULUM]: Pre stabilizáciu siete prepínaj dimenzie posuvníkom dole a aktivuj uzly v minula (t₋₁)!`);
-          });
+            alert(`[AI ORÁKULUM]: Pre stabilizáciu siete prepínaj dimenzie a aktivuj prepojenia v minulosti (t₋₁)!`);
+          };
+          document.getElementById('oracle-btn').addEventListener('click', triggerOracle);
+          document.getElementById('oracle-btn-m').addEventListener('click', triggerOracle);
 
-          document.getElementById('challenge-btn').addEventListener('click', () => {
+          const triggerChallenge = () => {
             AudioEngine.init();
             AudioEngine.playTone(750, 'sine', 0.15);
             const seed = btoa(`${_player}_${Date.now()}_${_sessionSig.substr(0,5)}`);
             navigator.clipboard.writeText(window.location.href + `#challenge=${seed}`);
-            alert(`Výzva skopírovaná! Posli ju priateľom.`);
-          });
+            alert(`Výzva skopírovaná do schránky!`);
+          };
+          document.getElementById('challenge-btn').addEventListener('click', triggerChallenge);
+          document.getElementById('challenge-btn-m').addEventListener('click', triggerChallenge);
 
-          document.getElementById('rage-btn').addEventListener('click', () => {
+          const triggerRage = () => {
             AudioEngine.init();
             AudioEngine.playTone(150, 'sawtooth', 0.3);
-            alert(`[RAGE QUIT]: Hráč ${_player} predčasne opustil časovú os.`);
-          });
+            alert(`[RAGE QUIT]: Hráč ${_player} opustil časovú os.`);
+          };
+          document.getElementById('rage-btn').addEventListener('click', triggerRage);
+          document.getElementById('rage-btn-m').addEventListener('click', triggerRage);
 
           document.getElementById('close-cert-btn').addEventListener('click', () => {
             document.getElementById('cert-modal').style.display = 'none';
@@ -466,7 +512,6 @@
             this.downloadCertificate();
           });
 
-          // Touch & Mouse Controls
           const dom = this.renderer.domElement;
           let isInteracting = false;
           let prevX = 0, prevY = 0;
