@@ -2,16 +2,17 @@
 <html lang="sk">
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://cdnjs.cloudflare.com; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:;">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>CHRONO-POLYHEDRON 3000: Sci-Fi Aura Edition</title>
+  <title>CHRONO-POLYHEDRON 3000: Andromeda 3D Edition</title>
   <style>
     :root {
-      --bg: #010206;
+      --bg: #000103;
       --primary: #00f3ff;
       --secondary: #ff007f;
       --gold: #ffd700;
       --purple: #9d4edd;
-      --panel: rgba(6, 10, 22, 0.85);
+      --panel: rgba(5, 8, 18, 0.86);
       --font: 'Segoe UI', Roboto, sans-serif;
     }
 
@@ -28,37 +29,38 @@
     
     .title-box {
       background: var(--panel);
-      border: 1px solid rgba(0, 243, 255, 0.6);
+      border: 1px solid rgba(0, 243, 255, 0.55);
       padding: 6px 12px;
       border-radius: 10px;
       backdrop-filter: blur(12px);
-      box-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
+      box-shadow: 0 0 18px rgba(0, 243, 255, 0.25);
     }
 
     h1 { font-size: 0.92rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--primary); text-shadow: 0 0 12px var(--primary); }
-    .sub { font-size: 0.55srem; color: #8a99ad; margin-top: 1px; }
+    .sub { font-size: 0.55rem; color: #8a99ad; margin-top: 1px; display: flex; align-items: center; gap: 5px; }
+    .sec-badge { color: #00ff88; font-weight: bold; }
 
     /* Kompaktné štatistiky HORE */
     .top-stats-compact {
       background: var(--panel);
-      border: 1px solid rgba(255, 215, 0, 0.5);
+      border: 1px solid rgba(255, 215, 0, 0.45);
       padding: 6px 10px;
       border-radius: 10px;
       backdrop-filter: blur(12px);
       display: flex;
       gap: 10px;
       align-items: center;
-      box-shadow: 0 0 18px rgba(255, 215, 0, 0.2);
+      box-shadow: 0 0 16px rgba(255, 215, 0, 0.18);
     }
     .stat-item { font-size: 0.65rem; display: flex; flex-direction: column; align-items: flex-end; }
     .stat-item span { color: #8a99ad; font-size: 0.52rem; text-transform: uppercase; }
     .stat-item strong { color: #fff; font-size: 0.72rem; }
 
     /* Desktopové štatistiky vpravo */
-    .side-panel { position: absolute; right: 12px; top: 75px; display: flex; flex-direction: column; gap: 8px; width: 220px; z-index: 10; }
+    .side-panel { position: absolute; right: 12px; top: 75px; display: flex; flex-direction: column; gap: 8px; width: 225px; z-index: 10; }
     .stat-card {
       background: var(--panel);
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.14);
       border-left: 3px solid var(--primary);
       padding: 10px 14px;
       border-radius: 10px;
@@ -73,7 +75,7 @@
     .player-input-box { display: flex; gap: 6px; margin-top: 4px; }
     .player-input {
       width: 100%;
-      background: rgba(0, 0, 0, 0.6);
+      background: rgba(0, 0, 0, 0.65);
       border: 1px solid rgba(0, 243, 255, 0.4);
       color: var(--gold);
       padding: 4px 8px;
@@ -98,7 +100,7 @@
       width: 100%;
       max-width: 400px;
       justify-content: center;
-      box-shadow: 0 0 20px rgba(0,243,255,0.25);
+      box-shadow: 0 0 20px rgba(0,243,255,0.2);
     }
     .time-slider { flex: 1; accent-color: var(--primary); cursor: pointer; height: 20px; }
 
@@ -123,11 +125,11 @@
       flex: 1;
       min-width: 115px;
     }
-    .btn:hover, .btn:active { background: var(--primary); color: #010206; box-shadow: 0 0 20px var(--primary); transform: translateY(-1px); }
+    .btn:hover, .btn:active { background: var(--primary); color: #000103; box-shadow: 0 0 20px var(--primary); transform: translateY(-1px); }
     .btn-secondary { border-color: var(--secondary); color: var(--secondary); background: rgba(255, 0, 127, 0.12); }
     .btn-secondary:hover, .btn-secondary:active { background: var(--secondary); color: #fff; box-shadow: 0 0 20px var(--secondary); }
     .btn-gold { border-color: var(--gold); color: var(--gold); background: rgba(255, 215, 0, 0.12); }
-    .btn-gold:hover, .btn-gold:active { background: var(--gold); color: #010206; box-shadow: 0 0 25px var(--gold); }
+    .btn-gold:hover, .btn-gold:active { background: var(--gold); color: #000103; box-shadow: 0 0 25px var(--gold); }
 
     @media (max-width: 768px) {
       .side-panel { display: none; }
@@ -141,7 +143,7 @@
       top: 68px;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(6, 10, 22, 0.95);
+      background: rgba(5, 8, 18, 0.96);
       border: 1px solid var(--primary);
       color: #fff;
       padding: 10px 16px;
@@ -155,12 +157,12 @@
     }
 
     /* Modal */
-    .modal { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(1, 2, 6, 0.92); backdrop-filter: blur(20px); z-index: 100; display: none; justify-content: center; align-items: center; padding: 15px; }
-    .modal-content { background: #060a14; border: 1px solid var(--gold); border-radius: 16px; padding: 20px; max-width: 460px; width: 100%; text-align: center; box-shadow: 0 0 45px rgba(255, 215, 0, 0.4); }
+    .modal { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 1, 3, 0.92); backdrop-filter: blur(20px); z-index: 100; display: none; justify-content: center; align-items: center; padding: 15px; }
+    .modal-content { background: #050812; border: 1px solid var(--gold); border-radius: 16px; padding: 20px; max-width: 460px; width: 100%; text-align: center; box-shadow: 0 0 45px rgba(255, 215, 0, 0.4); }
     .modal-title { color: var(--gold); font-size: 1.25rem; letter-spacing: 1.5px; margin-bottom: 8px; text-transform: uppercase; text-shadow: 0 0 12px var(--gold); }
-    #cert-canvas-container { width: 100%; height: 210px; margin: 10px 0; border-radius: 10px; border: 1px solid rgba(255, 215, 0, 0.35); background: #010206; }
+    #cert-canvas-container { width: 100%; height: 210px; margin: 10px 0; border-radius: 10px; border: 1px solid rgba(255, 215, 0, 0.35); background: #000103; }
   </style>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body>
 
@@ -171,7 +173,7 @@
     <header>
       <div class="title-box">
         <h1>Chrono-Polyhedron</h1>
-        <div class="sub">Sci-Fi Aura Edition • 3D</div>
+        <div class="sub">Andromeda M31 3D • <span class="sec-badge">SHA-256 SHIELD</span></div>
       </div>
 
       <div class="top-stats-compact">
@@ -195,7 +197,7 @@
       <div class="stat-card">
         <div class="stat-label">Volací znak riešiteľa</div>
         <div class="player-input-box">
-          <input type="text" id="player-name-input" class="player-input" value="AGENT-3000" maxlength="18">
+          <input type="text" id="player-name-input" class="player-input" value="AGENT-3000" maxlength="18" autocomplete="off">
         </div>
       </div>
       <div class="stat-card">
@@ -238,7 +240,7 @@
   <div class="modal" id="cert-modal">
     <div class="modal-content">
       <div class="modal-title">🏆 Polyhedron Master 🏆</div>
-      <p style="font-size: 0.8rem; color: #a0aec0;">Stabilizovali ste všetkých 36 kvantových uzlov polyédra!</p>
+      <p style="font-size: 0.8rem; color: #a0aec0;">Stabilizovali ste všetkých 36 kvantových uzlov v galaxii Andromeda!</p>
       
       <div id="cert-canvas-container"></div>
 
@@ -250,554 +252,651 @@
   </div>
 
   <script>
-    const QuantumPolyhedronEngine = (function() {
-      const _sessionSig = Math.random().toString(36).substring(2) + Date.now().toString(36);
-      let _player = "AGENT-3000";
-      let _timePhase = 0;
-      let _moves = 0;
-      let _isSolved = false;
-      let _toastTimer = null;
+    (function() {
+      'use strict';
 
-      // 12 hlavných vrcholov ikosaédra pre komplexný Polyéder
-      const phi = (1 + Math.sqrt(5)) / 2;
-      const scale = 1.8;
-      const rawPoints = [
-        [-1, phi, 0], [1, phi, 0], [-1, -phi, 0], [1, -phi, 0],
-        [0, -1, phi], [0, 1, phi], [0, -1, -phi], [0, 1, -phi],
-        [phi, 0, -1], [phi, 0, 1], [-phi, 0, -1], [-phi, 0, 1]
-      ];
+      // Bezpečnostné jadro (Anti-Tamper, Rate-Limiter & SHA-256 Integrita)
+      const SecurityCore = (function() {
+        const _secretSalt = crypto.getRandomValues(new Uint32Array(4)).join('-');
+        let _lastActionTime = 0;
+        const _auditTrail = [];
 
-      const _nodes = rawPoints.map((pt, idx) => ({
-        id: idx,
-        pos: [pt[0] * scale, pt[1] * scale, pt[2] * scale],
-        phaseColors: [0x00f3ff, 0xff007f, 0xffd700],
-        active: [false, false, false]
-      }));
+        return Object.freeze({
+          verifyHumanTiming() {
+            const now = performance.now();
+            if (now - _lastActionTime < 45) {
+              return false; // Blokuje automatizované bot skripty
+            }
+            _lastActionTime = now;
+            return true;
+          },
+          recordMove(nodeId, phase, totalMoves) {
+            _auditTrail.push(`${nodeId}:${phase}:${totalMoves}:${Math.floor(performance.now())}`);
+          },
+          getAuditLength() {
+            return _auditTrail.length;
+          },
+          async generateProofHash(player, moves, stateVector) {
+            const payload = `${_secretSalt}|${player}|${moves}|${stateVector}|${_auditTrail.length}`;
+            if (window.crypto && window.crypto.subtle) {
+              const data = new TextEncoder().encode(payload);
+              const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+              const hashArray = Array.from(new Uint8Array(hashBuffer));
+              return hashArray.map(b => b.toString(16).padStart(2, '0')).join('').substring(0, 24).toUpperCase();
+            }
+            return btoa(payload).substring(0, 24).toUpperCase();
+          }
+        });
+      })();
 
-      // Automatické prepojenie blízkych uzlov do sieťovej geometrie polyédra
-      const _connections = [];
-      for(let i = 0; i < _nodes.length; i++) {
-        for(let j = i + 1; j < _nodes.length; j++) {
-          const dist = Math.hypot(
-            _nodes[i].pos[0] - _nodes[j].pos[0],
-            _nodes[i].pos[1] - _nodes[j].pos[1],
-            _nodes[i].pos[2] - _nodes[j].pos[2]
-          );
-          if (dist < 3.2) {
-            _connections.push([i, j]);
+      const QuantumPolyhedronEngine = (function() {
+        let _player = "AGENT-3000";
+        let _timePhase = 0;
+        let _moves = 0;
+        let _isSolved = false;
+        let _toastTimer = null;
+
+        // 12 vrcholov ikosaédra
+        const phi = (1 + Math.sqrt(5)) / 2;
+        const scale = 1.8;
+        const rawPoints = Object.freeze([
+          [-1, phi, 0], [1, phi, 0], [-1, -phi, 0], [1, -phi, 0],
+          [0, -1, phi], [0, 1, phi], [0, -1, -phi], [0, 1, -phi],
+          [phi, 0, -1], [phi, 0, 1], [-phi, 0, -1], [-phi, 0, 1]
+        ]);
+
+        const _nodes = rawPoints.map((pt, idx) => ({
+          id: idx,
+          pos: Object.freeze([pt[0] * scale, pt[1] * scale, pt[2] * scale]),
+          phaseColors: Object.freeze([0x00f3ff, 0xff007f, 0xffd700]),
+          active: [false, false, false]
+        }));
+
+        const _connections = [];
+        for (let i = 0; i < _nodes.length; i++) {
+          for (let j = i + 1; j < _nodes.length; j++) {
+            const dist = Math.hypot(
+              _nodes[i].pos[0] - _nodes[j].pos[0],
+              _nodes[i].pos[1] - _nodes[j].pos[1],
+              _nodes[i].pos[2] - _nodes[j].pos[2]
+            );
+            if (dist < 3.2) {
+              _connections.push(Object.freeze([i, j]));
+            }
           }
         }
-      }
+        Object.freeze(_connections);
 
-      function showToast(msg, duration = 3800) {
-        const el = document.getElementById('toast');
-        el.innerText = msg;
-        el.style.display = 'block';
-        if (_toastTimer) clearTimeout(_toastTimer);
-        _toastTimer = setTimeout(() => { el.style.display = 'none'; }, duration);
-      }
-
-      const AudioEngine = {
-        ctx: null,
-        init() {
-          if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-        },
-        playTone(freq, type = 'sine', duration = 0.15, gainVal = 0.1) {
-          if (!this.ctx) return;
-          try {
-            const osc = this.ctx.createOscillator();
-            const gain = this.ctx.createGain();
-            osc.type = type;
-            osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
-            gain.gain.setValueAtTime(gainVal, this.ctx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + duration);
-            osc.connect(gain);
-            gain.connect(this.ctx.destination);
-            osc.start();
-            osc.stop(this.ctx.currentTime + duration);
-          } catch(e){}
-        },
-        playLaser() {
-          if (!this.ctx) return;
-          try {
-            const osc = this.ctx.createOscillator();
-            const gain = this.ctx.createGain();
-            osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(1000, this.ctx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(100, this.ctx.currentTime + 0.25);
-            gain.gain.setValueAtTime(0.12, this.ctx.currentTime);
-            gain.gain.linearRampToValueAtTime(0.01, this.ctx.currentTime + 0.25);
-            osc.connect(gain);
-            gain.connect(this.ctx.destination);
-            osc.start();
-            osc.stop(this.ctx.currentTime + 0.25);
-          } catch(e){}
-        },
-        playFanfare() {
-          if (!this.ctx) return;
-          const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51, 1567.98];
-          notes.forEach((n, i) => {
-            setTimeout(() => this.playTone(n, 'triangle', 0.45, 0.15), i * 110);
-          });
+        function showToast(msg, duration = 3800) {
+          const el = document.getElementById('toast');
+          el.textContent = msg;
+          el.style.display = 'block';
+          if (_toastTimer) clearTimeout(_toastTimer);
+          _toastTimer = setTimeout(() => { el.style.display = 'none'; }, duration);
         }
-      };
 
-      return {
-        init() {
-          this.setupThreeJS();
-          this.setupEvents();
-          this.updateHUD();
-          this.adjustCameraForScreen();
-        },
-
-        adjustCameraForScreen() {
-          const isMobile = window.innerWidth <= 768;
-          const dist = isMobile ? 11.8 : 9.5;
-          this.camera.position.set(dist * 0.65, dist * 0.58, dist);
-          this.camera.lookAt(0, 0, 0);
-        },
-
-        setupThreeJS() {
-          const container = document.getElementById('canvas-container');
-          this.scene = new THREE.Scene();
-          this.scene.fog = new THREE.FogExp2(0x010206, 0.012);
-
-          this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-          
-          this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
-          this.renderer.setSize(window.innerWidth, window.innerHeight);
-          this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-          container.appendChild(this.renderer.domElement);
-
-          // Žiarivé farebné osvetlenie scény (aura efekt)
-          this.scene.add(new THREE.AmbientLight(0xffffff, 0.5));
-          const pointLight = new THREE.PointLight(0x00f3ff, 3.5, 90);
-          pointLight.position.set(15, 15, 15);
-          this.scene.add(pointLight);
-
-          const pointLight2 = new THREE.PointLight(0xff007f, 3.5, 90);
-          pointLight2.position.set(-15, -15, -15);
-          this.scene.add(pointLight2);
-
-          const pointLight3 = new THREE.PointLight(0x9d4edd, 2.5, 90);
-          pointLight3.position.set(0, 15, -15);
-          this.scene.add(pointLight3);
-
-          // Vesmírna aura a farebná hmlovina v pozadí
-          this.createSpaceAuraAndNebula();
-
-          this.polyGroup = new THREE.Group();
-          this.scene.add(this.polyGroup);
-
-          // Vnútorné pulzujúce kvantové jadro
-          const coreGeo = new THREE.IcosahedronGeometry(0.65, 1);
-          const coreMat = new THREE.MeshPhongMaterial({ color: 0xff007f, emissive: 0xff007f, emissiveIntensity: 1.0, wireframe: true });
-          this.coreMesh = new THREE.Mesh(coreGeo, coreMat);
-          this.polyGroup.add(this.coreMesh);
-
-          // Uzly Polyédra
-          this.nodeMeshes = [];
-          const sphereGeo = new THREE.SphereGeometry(0.38, 32, 32);
-
-          _nodes.forEach(node => {
-            const mat = new THREE.MeshPhongMaterial({
-              color: node.phaseColors[1],
-              emissive: node.phaseColors[1],
-              emissiveIntensity: 0.4,
-              shininess: 140,
-              wireframe: true
+        const AudioEngine = {
+          ctx: null,
+          init() {
+            if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+          },
+          playTone(freq, type = 'sine', duration = 0.15, gainVal = 0.1) {
+            if (!this.ctx) return;
+            try {
+              const osc = this.ctx.createOscillator();
+              const gain = this.ctx.createGain();
+              osc.type = type;
+              osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+              gain.gain.setValueAtTime(gainVal, this.ctx.currentTime);
+              gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + duration);
+              osc.connect(gain);
+              gain.connect(this.ctx.destination);
+              osc.start();
+              osc.stop(this.ctx.currentTime + duration);
+            } catch (e) {}
+          },
+          playLaser() {
+            if (!this.ctx) return;
+            try {
+              const osc = this.ctx.createOscillator();
+              const gain = this.ctx.createGain();
+              osc.type = 'sawtooth';
+              osc.frequency.setValueAtTime(1000, this.ctx.currentTime);
+              osc.frequency.exponentialRampToValueAtTime(100, this.ctx.currentTime + 0.25);
+              gain.gain.setValueAtTime(0.12, this.ctx.currentTime);
+              gain.gain.linearRampToValueAtTime(0.01, this.ctx.currentTime + 0.25);
+              osc.connect(gain);
+              gain.connect(this.ctx.destination);
+              osc.start();
+              osc.stop(this.ctx.currentTime + 0.25);
+            } catch (e) {}
+          },
+          playFanfare() {
+            if (!this.ctx) return;
+            const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51, 1567.98];
+            notes.forEach((n, i) => {
+              setTimeout(() => this.playTone(n, 'triangle', 0.45, 0.15), i * 110);
             });
-            const mesh = new THREE.Mesh(sphereGeo, mat);
-            mesh.position.set(...node.pos);
-            mesh.userData = { id: node.id };
-            this.polyGroup.add(mesh);
-            this.nodeMeshes.push(mesh);
-          });
+          }
+        };
 
-          // Laserové hrany polyédra
-          this.laserLines = [];
-          _connections.forEach(conn => {
-            const posA = new THREE.Vector3(..._nodes[conn[0]].pos);
-            const posB = new THREE.Vector3(..._nodes[conn[1]].pos);
-            const geo = new THREE.BufferGeometry().setFromPoints([posA, posB]);
-            const mat = new THREE.LineBasicMaterial({ color: 0x1a2638, transparent: true, opacity: 0.4, linewidth: 2 });
-            const line = new THREE.Line(geo, mat);
-            this.polyGroup.add(line);
-            this.laserLines.push({ line, nodes: conn });
-          });
+        return {
+          init() {
+            this.setupThreeJS();
+            this.setupEvents();
+            this.updateHUD();
+            this.adjustCameraForScreen();
+          },
 
-          this.raycaster = new THREE.Raycaster();
-          this.mouse = new THREE.Vector2();
+          adjustCameraForScreen() {
+            const isMobile = window.innerWidth <= 768;
+            const dist = isMobile ? 11.8 : 9.5;
+            this.camera.position.set(dist * 0.65, dist * 0.58, dist);
+            this.camera.lookAt(0, 0, 0);
+          },
 
-          const animate = () => {
-            requestAnimationFrame(animate);
-            if (this.coreMesh) {
-              this.coreMesh.rotation.x += 0.015;
-              this.coreMesh.rotation.y += 0.02;
-              const s = 1 + Math.sin(Date.now() * 0.004) * 0.22;
-              this.coreMesh.scale.set(s, s, s);
+          setupThreeJS() {
+            const container = document.getElementById('canvas-container');
+            this.scene = new THREE.Scene();
+
+            this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+            
+            this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
+            this.renderer.setSize(window.innerWidth, window.innerHeight);
+            this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            container.appendChild(this.renderer.domElement);
+
+            // Žiarivé osvetlenie scény pre 3D Polyéder
+            this.scene.add(new THREE.AmbientLight(0xffffff, 0.55));
+            const pointLight = new THREE.PointLight(0x00f3ff, 3.5, 90);
+            pointLight.position.set(15, 15, 15);
+            this.scene.add(pointLight);
+
+            const pointLight2 = new THREE.PointLight(0xff007f, 3.5, 90);
+            pointLight2.position.set(-15, -15, -15);
+            this.scene.add(pointLight2);
+
+            const pointLight3 = new THREE.PointLight(0xffd700, 2.5, 90);
+            pointLight3.position.set(0, 15, -15);
+            this.scene.add(pointLight3);
+
+            // 3D Špirálová galaxia Andromeda (M31) a hlboké hviezdne pole (bez rozmazanej hmloviny)
+            this.createAndromeda3DGalaxy();
+
+            this.polyGroup = new THREE.Group();
+            this.scene.add(this.polyGroup);
+
+            // Vnútorné pulzujúce kvantové jadro
+            const coreGeo = new THREE.IcosahedronGeometry(0.65, 1);
+            const coreMat = new THREE.MeshPhongMaterial({ color: 0xff007f, emissive: 0xff007f, emissiveIntensity: 1.0, wireframe: true });
+            this.coreMesh = new THREE.Mesh(coreGeo, coreMat);
+            this.polyGroup.add(this.coreMesh);
+
+            // Uzly Polyédra
+            this.nodeMeshes = [];
+            const sphereGeo = new THREE.SphereGeometry(0.38, 32, 32);
+
+            _nodes.forEach(node => {
+              const mat = new THREE.MeshPhongMaterial({
+                color: node.phaseColors[1],
+                emissive: node.phaseColors[1],
+                emissiveIntensity: 0.4,
+                shininess: 140,
+                wireframe: true
+              });
+              const mesh = new THREE.Mesh(sphereGeo, mat);
+              mesh.position.set(...node.pos);
+              mesh.userData = { id: node.id };
+              this.polyGroup.add(mesh);
+              this.nodeMeshes.push(mesh);
+            });
+
+            // Laserové hrany polyédra
+            this.laserLines = [];
+            _connections.forEach(conn => {
+              const posA = new THREE.Vector3(..._nodes[conn[0]].pos);
+              const posB = new THREE.Vector3(..._nodes[conn[1]].pos);
+              const geo = new THREE.BufferGeometry().setFromPoints([posA, posB]);
+              const mat = new THREE.LineBasicMaterial({ color: 0x1a2638, transparent: true, opacity: 0.45, linewidth: 2 });
+              const line = new THREE.Line(geo, mat);
+              this.polyGroup.add(line);
+              this.laserLines.push({ line, nodes: conn });
+            });
+
+            this.raycaster = new THREE.Raycaster();
+            this.mouse = new THREE.Vector2();
+
+            const animate = () => {
+              requestAnimationFrame(animate);
+              if (this.coreMesh) {
+                this.coreMesh.rotation.x += 0.015;
+                this.coreMesh.rotation.y += 0.02;
+                const s = 1 + Math.sin(Date.now() * 0.004) * 0.22;
+                this.coreMesh.scale.set(s, s, s);
+              }
+              if (this.andromedaGroup) {
+                this.andromedaGroup.rotation.y += 0.0007;
+              }
+              if (this.deepStars) {
+                this.deepStars.rotation.y -= 0.00015;
+              }
+              this.renderer.render(this.scene, this.camera);
+            };
+            animate();
+          },
+
+          createAndromeda3DGalaxy() {
+            // Okrúhla textúra pre ostré 4K hviezdy bez štvorcových okrajov
+            const starCanvas = document.createElement('canvas');
+            starCanvas.width = 64;
+            starCanvas.height = 64;
+            const sCtx = starCanvas.getContext('2d');
+            const sGrad = sCtx.createRadialGradient(32, 32, 0, 32, 32, 32);
+            sGrad.addColorStop(0, 'rgba(255, 255, 255, 1)');
+            sGrad.addColorStop(0.25, 'rgba(255, 255, 255, 0.85)');
+            sGrad.addColorStop(0.6, 'rgba(180, 220, 255, 0.2)');
+            sGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+            sCtx.fillStyle = sGrad;
+            sCtx.fillRect(0, 0, 64, 64);
+            const starTexture = new THREE.CanvasTexture(starCanvas);
+
+            // 1. 3D Špirálová galaxia Andromeda (M31) v pozadí
+            this.andromedaGroup = new THREE.Group();
+            const galaxyStars = 4800;
+            const gGeo = new THREE.BufferGeometry();
+            const gPos = new Float32Array(galaxyStars * 3);
+            const gColors = new Float32Array(galaxyStars * 3);
+
+            const coreColor = new THREE.Color(0xffe6a3); // Teplé zlaté jadro galaxie
+            const armColorOuter = new THREE.Color(0x00d4ff); // Jasnomodré mladé hviezdy v ramenách
+            const armColorAccent = new THREE.Color(0xb565ff); // Jemný fialový akcent v ramenách
+            const branches = 4;
+            const radius = 26;
+
+            for (let i = 0; i < galaxyStars; i++) {
+              const i3 = i * 3;
+              const r = Math.pow(Math.random(), 1.6) * radius;
+              const spinAngle = r * 0.28;
+              const branchAngle = ((i % branches) / branches) * Math.PI * 2;
+
+              const spread = Math.pow(Math.random(), 2.4) * (r * 0.28 + 0.35);
+              const randX = (Math.random() - 0.5) * spread;
+              const randY = (Math.random() - 0.5) * (spread * 0.28); // Plochý galaktický disk
+              const randZ = (Math.random() - 0.5) * spread;
+
+              gPos[i3] = Math.cos(branchAngle + spinAngle) * r + randX;
+              gPos[i3 + 1] = randY;
+              gPos[i3 + 2] = Math.sin(branchAngle + spinAngle) * r + randZ;
+
+              const targetArmColor = (i % 5 === 0) ? armColorAccent : armColorOuter;
+              const mixedColor = coreColor.clone().lerp(targetArmColor, Math.min(1, r / (radius * 0.72)));
+
+              gColors[i3] = mixedColor.r;
+              gColors[i3 + 1] = mixedColor.g;
+              gColors[i3 + 2] = mixedColor.b;
             }
-            if (this.auraGroup) {
-              this.auraGroup.rotation.y += 0.0004;
-              this.auraGroup.rotation.z += 0.0002;
-            }
-            this.renderer.render(this.scene, this.camera);
-          };
-          animate();
-        },
 
-        createSpaceAuraAndNebula() {
-          this.auraGroup = new THREE.Group();
+            gGeo.setAttribute('position', new THREE.BufferAttribute(gPos, 3));
+            gGeo.setAttribute('color', new THREE.BufferAttribute(gColors, 3));
 
-          // Farebné mraky vesmírnej hmloviny s vysokou žiarou
-          const colors = [0x00f3ff, 0xff007f, 0x9d4edd, 0xffd700];
-          colors.forEach((col, idx) => {
-            const count = 350;
-            const geo = new THREE.BufferGeometry();
-            const pos = new Float32Array(count * 3);
-            for(let i = 0; i < count * 3; i += 3) {
-              pos[i] = (Math.random() - 0.5) * 65;
-              pos[i+1] = (Math.random() - 0.5) * 65;
-              pos[i+2] = (Math.random() - 0.5) * 65;
-            }
-            geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-            const mat = new THREE.PointsMaterial({
-              size: 1.2 + idx * 0.4,
-              color: col,
+            const gMat = new THREE.PointsMaterial({
+              size: 0.32,
+              map: starTexture,
+              vertexColors: true,
               transparent: true,
-              opacity: 0.22,
+              opacity: 0.95,
+              depthWrite: false,
               blending: THREE.AdditiveBlending
             });
-            this.auraGroup.add(new THREE.Points(geo, mat));
-          });
 
-          // Žiarivá centrálna aura v pozadí
-          const glowGeo = new THREE.PlaneGeometry(32, 32);
-          const glowCanvas = document.createElement('canvas');
-          glowCanvas.width = 512; glowCanvas.height = 512;
-          const gCtx = glowCanvas.getContext('2d');
-          const grad = gCtx.createRadialGradient(256, 256, 10, 256, 256, 250);
-          grad.addColorStop(0, 'rgba(0, 243, 255, 0.18)');
-          grad.addColorStop(0.4, 'rgba(255, 0, 127, 0.08)');
-          grad.addColorStop(0.8, 'rgba(157, 78, 221, 0.03)');
-          grad.addColorStop(1, 'rgba(1, 2, 6, 0)');
-          gCtx.fillStyle = grad;
-          gCtx.fillRect(0, 0, 512, 512);
+            const galaxyPoints = new THREE.Points(gGeo, gMat);
+            this.andromedaGroup.add(galaxyPoints);
 
-          const glowTex = new THREE.CanvasTexture(glowCanvas);
-          const glowMat = new THREE.MeshBasicMaterial({ map: glowTex, transparent: true, depthWrite: false });
-          const glowMesh = new THREE.Mesh(glowGeo, glowMat);
-          glowMesh.position.z = -14;
-          this.scene.add(glowMesh);
+            // Naklonenie Andromedy ako na skutočných astronomických snímkach
+            this.andromedaGroup.position.set(0, 1.5, -24);
+            this.andromedaGroup.rotation.x = Math.PI * 0.34;
+            this.andromedaGroup.rotation.z = -Math.PI * 0.18;
+            this.scene.add(this.andromedaGroup);
 
-          this.scene.add(this.auraGroup);
-        },
-
-        setupEvents() {
-          window.addEventListener('resize', () => {
-            this.camera.aspect = window.innerWidth / window.innerHeight;
-            this.camera.updateProjectionMatrix();
-            this.renderer.setSize(window.innerWidth, window.innerHeight);
-            this.adjustCameraForScreen();
-          });
-
-          const nameInput = document.getElementById('player-name-input');
-          if (nameInput) {
-            nameInput.addEventListener('input', (e) => {
-              const clean = e.target.value.replace(/[^a-zA-Z0-9\-_ ]/g, '').trim();
-              _player = clean || "AGENT-3000";
+            // 2. Krištáľovo čisté hviezdne pozadie v 3D priestore
+            const bgCount = 1200;
+            const bgGeo = new THREE.BufferGeometry();
+            const bgPos = new Float32Array(bgCount * 3);
+            for (let i = 0; i < bgCount * 3; i += 3) {
+              bgPos[i] = (Math.random() - 0.5) * 120;
+              bgPos[i + 1] = (Math.random() - 0.5) * 120;
+              bgPos[i + 2] = (Math.random() - 0.5) * 120;
+            }
+            bgGeo.setAttribute('position', new THREE.BufferAttribute(bgPos, 3));
+            const bgMat = new THREE.PointsMaterial({
+              size: 0.22,
+              map: starTexture,
+              color: 0xffffff,
+              transparent: true,
+              opacity: 0.75,
+              depthWrite: false
             });
-          }
+            this.deepStars = new THREE.Points(bgGeo, bgMat);
+            this.scene.add(this.deepStars);
+          },
 
-          const handleTimeChange = (val) => {
-            _timePhase = parseInt(val);
-            document.getElementById('time-slider').value = _timePhase;
-            AudioEngine.init();
-            AudioEngine.playLaser();
-            this.updateTimePhaseVisuals();
-            this.updateHUD();
-          };
+          setupEvents() {
+            window.addEventListener('resize', () => {
+              this.camera.aspect = window.innerWidth / window.innerHeight;
+              this.camera.updateProjectionMatrix();
+              this.renderer.setSize(window.innerWidth, window.innerHeight);
+              this.adjustCameraForScreen();
+            });
 
-          document.getElementById('time-slider').addEventListener('input', (e) => handleTimeChange(e.target.value));
-
-          document.getElementById('reset-cam-btn').addEventListener('click', (e) => {
-            if (!e.isTrusted) return;
-            AudioEngine.init();
-            AudioEngine.playTone(600, 'sine', 0.1);
-            this.adjustCameraForScreen();
-            this.polyGroup.rotation.set(0, 0, 0);
-          });
-
-          document.getElementById('oracle-btn').addEventListener('click', (e) => {
-            if (!e.isTrusted) return;
-            AudioEngine.init();
-            AudioEngine.playTone(900, 'square', 0.2);
-            showToast("AI ORÁKULUM: Prepojenia v minulosti (t₋₁) vyvolávajú rezonanciu v prítomnosti (t₀). Hľadaj symetriu.");
-          });
-
-          document.getElementById('challenge-btn').addEventListener('click', (e) => {
-            if (!e.isTrusted) return;
-            AudioEngine.init();
-            AudioEngine.playTone(750, 'sine', 0.15);
-            const totalStab = this.getTotalStabilization();
-            const shareText = `✨ Riešim 3D sci-fi kvantový polyéder CHRONO-POLYHEDRON 3000!\n⚡ Stabilizácia: ${totalStab}% | Ťahy: ${_moves}\nTrúfneš si prekonať túto vesmírnu výzvu? 👉 ${window.location.href}`;
-            if (navigator.clipboard) {
-              navigator.clipboard.writeText(shareText);
+            const nameInput = document.getElementById('player-name-input');
+            if (nameInput) {
+              nameInput.addEventListener('input', (e) => {
+                const clean = e.target.value.replace(/[^a-zA-Z0-9\-_ ]/g, '').trim();
+                _player = clean || "AGENT-3000";
+              });
             }
-            showToast("Virálna výzva bola skopírovaná do schránky! Zdieľaj ju na sociálnych sieťach.");
-          });
 
-          document.getElementById('rage-btn').addEventListener('click', (e) => {
-            if (!e.isTrusted) return;
-            AudioEngine.init();
-            AudioEngine.playTone(150, 'sawtooth', 0.3);
-            showToast(`RAGE QUIT: ${_player} opustil vesmírnu os pri ${_moves} ťahoch.`);
-          });
+            const handleTimeChange = (val) => {
+              const parsed = parseInt(val, 10);
+              if (![-1, 0, 1].includes(parsed)) return;
+              _timePhase = parsed;
+              document.getElementById('time-slider').value = _timePhase;
+              AudioEngine.init();
+              AudioEngine.playLaser();
+              this.updateTimePhaseVisuals();
+              this.updateHUD();
+            };
 
-          document.getElementById('close-cert-btn').addEventListener('click', () => {
-            document.getElementById('cert-modal').style.display = 'none';
-          });
+            document.getElementById('time-slider').addEventListener('input', (e) => handleTimeChange(e.target.value));
 
-          document.getElementById('download-cert-btn').addEventListener('click', () => {
-            this.downloadCertificate();
-          });
+            document.getElementById('reset-cam-btn').addEventListener('click', (e) => {
+              if (!e.isTrusted) return;
+              AudioEngine.init();
+              AudioEngine.playTone(600, 'sine', 0.1);
+              this.adjustCameraForScreen();
+              this.polyGroup.rotation.set(0, 0, 0);
+            });
 
-          const dom = this.renderer.domElement;
-          let isInteracting = false;
-          let prevX = 0, prevY = 0;
-          let startX = 0, startY = 0;
+            document.getElementById('oracle-btn').addEventListener('click', (e) => {
+              if (!e.isTrusted) return;
+              AudioEngine.init();
+              AudioEngine.playTone(900, 'square', 0.2);
+              showToast("AI ORÁKULUM: Prepojenia v minulosti (t₋₁) vyvolávajú rezonanciu v prítomnosti (t₀). Hľadaj symetriu.");
+            });
 
-          const handleStart = (x, y) => {
-            AudioEngine.init();
-            isInteracting = true;
-            prevX = x; prevY = y;
-            startX = x; startY = y;
-          };
-
-          const handleMove = (x, y) => {
-            if (!isInteracting) return;
-            const deltaX = x - prevX;
-            const deltaY = y - prevY;
-
-            this.polyGroup.rotation.y += deltaX * 0.0085;
-            this.polyGroup.rotation.x += deltaY * 0.0085;
-
-            prevX = x; prevY = y;
-          };
-
-          const handleEnd = (x, y) => {
-            if (!isInteracting) return;
-            isInteracting = false;
-
-            const dist = Math.hypot(x - startX, y - startY);
-            if (dist < 10) {
-              this.mouse.x = (startX / window.innerWidth) * 2 - 1;
-              this.mouse.y = -(startY / window.innerHeight) * 2 + 1;
-
-              this.raycaster.setFromCamera(this.mouse, this.camera);
-              const intersects = this.raycaster.intersectObjects(this.nodeMeshes);
-
-              if (intersects.length > 0) {
-                this.handleNodeClick(intersects[0].object.userData.id);
+            document.getElementById('challenge-btn').addEventListener('click', (e) => {
+              if (!e.isTrusted) return;
+              AudioEngine.init();
+              AudioEngine.playTone(750, 'sine', 0.15);
+              const totalStab = this.getTotalStabilization();
+              const shareText = `🌌 Riešim 3D kvantový polyéder CHRONO-POLYHEDRON 3000 v galaxii Andromeda!\n⚡ Stabilizácia: ${totalStab}% | Ťahy: ${_moves}\nTrúfneš si prekonať túto vesmírnu výzvu? 👉 ${window.location.href}`;
+              if (navigator.clipboard) {
+                navigator.clipboard.writeText(shareText);
               }
+              showToast("Virálna výzva bola skopírovaná do schránky! Zdieľaj ju na sociálnych sieťach.");
+            });
+
+            document.getElementById('rage-btn').addEventListener('click', (e) => {
+              if (!e.isTrusted) return;
+              AudioEngine.init();
+              AudioEngine.playTone(150, 'sawtooth', 0.3);
+              showToast(`RAGE QUIT: ${_player} opustil galaktickú os pri ${_moves} ťahoch.`);
+            });
+
+            document.getElementById('close-cert-btn').addEventListener('click', () => {
+              document.getElementById('cert-modal').style.display = 'none';
+            });
+
+            document.getElementById('download-cert-btn').addEventListener('click', () => {
+              this.downloadCertificate();
+            });
+
+            const dom = this.renderer.domElement;
+            let isInteracting = false;
+            let prevX = 0, prevY = 0;
+            let startX = 0, startY = 0;
+
+            const handleStart = (x, y) => {
+              AudioEngine.init();
+              isInteracting = true;
+              prevX = x; prevY = y;
+              startX = x; startY = y;
+            };
+
+            const handleMove = (x, y) => {
+              if (!isInteracting) return;
+              const deltaX = x - prevX;
+              const deltaY = y - prevY;
+
+              this.polyGroup.rotation.y += deltaX * 0.0085;
+              this.polyGroup.rotation.x += deltaY * 0.0085;
+
+              prevX = x; prevY = y;
+            };
+
+            const handleEnd = (x, y) => {
+              if (!isInteracting) return;
+              isInteracting = false;
+
+              const dist = Math.hypot(x - startX, y - startY);
+              if (dist < 10) {
+                this.mouse.x = (startX / window.innerWidth) * 2 - 1;
+                this.mouse.y = -(startY / window.innerHeight) * 2 + 1;
+
+                this.raycaster.setFromCamera(this.mouse, this.camera);
+                const intersects = this.raycaster.intersectObjects(this.nodeMeshes);
+
+                if (intersects.length > 0) {
+                  this.handleNodeClick(intersects[0].object.userData.id);
+                }
+              }
+            };
+
+            dom.addEventListener('mousedown', (e) => { if (e.isTrusted) handleStart(e.clientX, e.clientY); });
+            window.addEventListener('mousemove', (e) => handleMove(e.clientX, e.clientY));
+            window.addEventListener('mouseup', (e) => handleEnd(e.clientX, e.clientY));
+
+            dom.addEventListener('touchstart', (e) => {
+              if (e.isTrusted && e.touches.length === 1) handleStart(e.touches[0].clientX, e.touches[0].clientY);
+            }, { passive: true });
+
+            window.addEventListener('touchmove', (e) => {
+              if (e.touches.length === 1) handleMove(e.touches[0].clientX, e.touches[0].clientY);
+            }, { passive: true });
+
+            window.addEventListener('touchend', (e) => {
+              if (e.changedTouches.length === 1) handleEnd(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
+            });
+          },
+
+          handleNodeClick(id) {
+            if (_isSolved) return;
+            if (!SecurityCore.verifyHumanTiming()) return; // Ochrana proti automatizovaným kliker-botom
+            if (typeof id !== 'number' || id < 0 || id >= _nodes.length) return;
+
+            const pIdx = _timePhase + 1;
+            const node = _nodes[id];
+            node.active[pIdx] = !node.active[pIdx];
+            _moves++;
+
+            SecurityCore.recordMove(id, _timePhase, _moves);
+            AudioEngine.playTone(360 + id * 55, 'sine', 0.14, 0.18);
+
+            if (pIdx === 0 && node.active[0]) {
+              node.active[1] = !node.active[1];
             }
-          };
 
-          dom.addEventListener('mousedown', (e) => { if (e.isTrusted) handleStart(e.clientX, e.clientY); });
-          window.addEventListener('mousemove', (e) => handleMove(e.clientX, e.clientY));
-          window.addEventListener('mouseup', (e) => handleEnd(e.clientX, e.clientY));
+            this.updateTimePhaseVisuals();
+            this.checkWinCondition();
+            this.updateHUD();
+          },
 
-          dom.addEventListener('touchstart', (e) => {
-            if (e.isTrusted && e.touches.length === 1) handleStart(e.touches[0].clientX, e.touches[0].clientY);
-          }, { passive: true });
+          updateTimePhaseVisuals() {
+            const pIdx = _timePhase + 1;
 
-          window.addEventListener('touchmove', (e) => {
-            if (e.touches.length === 1) handleMove(e.touches[0].clientX, e.touches[0].clientY);
-          }, { passive: true });
+            this.nodeMeshes.forEach((mesh, idx) => {
+              const isActive = _nodes[idx].active[pIdx];
+              const activeColor = _nodes[idx].phaseColors[pIdx];
 
-          window.addEventListener('touchend', (e) => {
-            if (e.changedTouches.length === 1) handleEnd(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
-          });
-        },
+              mesh.material.color.setHex(isActive ? activeColor : 0x223344);
+              mesh.material.emissive.setHex(isActive ? activeColor : 0x000000);
+              mesh.material.emissiveIntensity = isActive ? 0.85 : 0;
+              mesh.material.wireframe = !isActive;
+            });
 
-        handleNodeClick(id) {
-          if (_isSolved) return;
+            this.laserLines.forEach(item => {
+              const [a, b] = item.nodes;
+              const activeA = _nodes[a].active[pIdx];
+              const activeB = _nodes[b].active[pIdx];
 
-          const pIdx = _timePhase + 1;
-          const node = _nodes[id];
-          node.active[pIdx] = !node.active[pIdx];
-          _moves++;
+              if (activeA && activeB) {
+                item.line.material.color.setHex(_nodes[a].phaseColors[pIdx]);
+                item.line.material.opacity = 0.95;
+              } else {
+                item.line.material.color.setHex(0x1a2638);
+                item.line.material.opacity = 0.3;
+              }
+            });
+          },
 
-          AudioEngine.playTone(360 + id * 55, 'sine', 0.14, 0.18);
+          getTotalStabilization() {
+            let totalActive = 0;
+            _nodes.forEach(n => {
+              if (n.active[0]) totalActive++;
+              if (n.active[1]) totalActive++;
+              if (n.active[2]) totalActive++;
+            });
+            return Math.round((totalActive / (_nodes.length * 3)) * 100);
+          },
 
-          if (pIdx === 0 && node.active[0]) {
-            node.active[1] = !node.active[1];
+          async checkWinCondition() {
+            // Integritná kontrola: overí, či boli reálne vykonané ťahy v auditnom zázname
+            if (this.getTotalStabilization() === 100 && !_isSolved) {
+              if (_moves < 18 || SecurityCore.getAuditLength() !== _moves) {
+                showToast("SECURITY ALERT: Detegovaná nekonzistentná manipulácia so stavom!");
+                return;
+              }
+              _isSolved = true;
+              AudioEngine.playFanfare();
+              const stateVector = _nodes.map(n => n.active.map(b => b ? 1 : 0).join('')).join('');
+              const proofHash = await SecurityCore.generateProofHash(_player, _moves, stateVector);
+              setTimeout(() => this.triggerVictory(proofHash), 350);
+            }
+          },
+
+          updateHUD() {
+            const phases = ["PAST (t₋₁)", "PRESENT (t₀)", "FUTURE (t₊₁)"];
+            const currentPhaseText = phases[_timePhase + 1];
+
+            document.getElementById('phase-val').innerText = currentPhaseText;
+            document.getElementById('phase-val-top').innerText = currentPhaseText;
+
+            const totalPercent = this.getTotalStabilization();
+            
+            document.getElementById('stab-val').innerText = `${totalPercent}%`;
+            document.getElementById('stab-val-top').innerText = `${totalPercent}%`;
+
+            document.getElementById('moves-val').innerText = _moves;
+            document.getElementById('moves-val-top').innerText = _moves;
+
+            const strain = Math.min(100, Math.max(15, _moves * 3));
+            document.getElementById('strain-fill').style.width = `${strain}%`;
+            document.getElementById('strain-val').innerText = `IQ ${180 - Math.floor(strain / 4)}`;
+          },
+
+          triggerVictory(proofHash) {
+            document.getElementById('cert-modal').style.display = 'flex';
+            this.build3DCertificate(proofHash);
+          },
+
+          build3DCertificate(proofHash) {
+            const container = document.getElementById('cert-canvas-container');
+            container.innerHTML = '';
+
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 100);
+            camera.position.set(0, 0, 5);
+
+            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            container.appendChild(renderer.domElement);
+
+            const plaqueGeo = new THREE.BoxGeometry(3.6, 2.2, 0.1);
+            
+            const canvas = document.createElement('canvas');
+            canvas.width = 1024;
+            canvas.height = 640;
+            const ctx = canvas.getContext('2d');
+
+            ctx.fillStyle = '#050812';
+            ctx.fillRect(0, 0, 1024, 640);
+
+            ctx.strokeStyle = '#ffd700';
+            ctx.lineWidth = 12;
+            ctx.strokeRect(20, 20, 984, 600);
+
+            ctx.fillStyle = '#ffd700';
+            ctx.font = 'bold 36px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('ANDROMEDA POLYHEDRON MASTER', 512, 100);
+
+            ctx.fillStyle = '#00f3ff';
+            ctx.font = '26px sans-serif';
+            ctx.fillText('KRYPTOGRAFICKÝ CERTIFIKÁT ÚSPECHU', 512, 160);
+
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 46px sans-serif';
+            ctx.fillText(_player, 512, 280);
+
+            ctx.fillStyle = '#a0aec0';
+            ctx.font = '22px sans-serif';
+            ctx.fillText('Úspešne prepojil všetkých 36 kvantových uzlov', 512, 360);
+            ctx.fillText(`Počet ťahov: ${_moves} • Časová rezonancia: 100%`, 512, 410);
+
+            ctx.fillStyle = '#00ff88';
+            ctx.font = '18px monospace';
+            ctx.fillText(`SHA256-PROOF: ${proofHash}`, 512, 530);
+
+            const texture = new THREE.CanvasTexture(canvas);
+            const mat = new THREE.MeshPhongMaterial({ map: texture, shininess: 95 });
+            const plaque = new THREE.Mesh(plaqueGeo, mat);
+            scene.add(plaque);
+
+            const light1 = new THREE.PointLight(0xffd700, 2.5, 20);
+            light1.position.set(3, 3, 4);
+            scene.add(light1);
+
+            scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+
+            this.certRenderer = renderer;
+
+            const certAnimate = () => {
+              if (document.getElementById('cert-modal').style.display === 'flex') {
+                requestAnimationFrame(certAnimate);
+                plaque.rotation.y = Math.sin(Date.now() * 0.0015) * 0.22;
+                plaque.rotation.x = Math.cos(Date.now() * 0.0012) * 0.1;
+                renderer.render(scene, camera);
+              }
+            };
+            certAnimate();
+          },
+
+          downloadCertificate() {
+            if (!this.certRenderer) return;
+            const dataURL = this.certRenderer.domElement.toDataURL('image/png');
+            const link = document.createElement('a');
+            link.download = `ChronoPolyhedron_Andromeda_${_player}.png`;
+            link.href = dataURL;
+            link.click();
           }
+        };
+      })();
 
-          this.updateTimePhaseVisuals();
-          this.checkWinCondition();
-          this.updateHUD();
-        },
-
-        updateTimePhaseVisuals() {
-          const pIdx = _timePhase + 1;
-
-          this.nodeMeshes.forEach((mesh, idx) => {
-            const isActive = _nodes[idx].active[pIdx];
-            const activeColor = _nodes[idx].phaseColors[pIdx];
-
-            mesh.material.color.setHex(isActive ? activeColor : 0x223344);
-            mesh.material.emissive.setHex(isActive ? activeColor : 0x000000);
-            mesh.material.emissiveIntensity = isActive ? 0.85 : 0;
-            mesh.material.wireframe = !isActive;
-          });
-
-          this.laserLines.forEach(item => {
-            const [a, b] = item.nodes;
-            const activeA = _nodes[a].active[pIdx];
-            const activeB = _nodes[b].active[pIdx];
-
-            if (activeA && activeB) {
-              item.line.material.color.setHex(_nodes[a].phaseColors[pIdx]);
-              item.line.material.opacity = 0.95;
-            } else {
-              item.line.material.color.setHex(0x1a2638);
-              item.line.material.opacity = 0.3;
-            }
-          });
-        },
-
-        getTotalStabilization() {
-          let totalActive = 0;
-          _nodes.forEach(n => {
-            if (n.active[0]) totalActive++;
-            if (n.active[1]) totalActive++;
-            if (n.active[2]) totalActive++;
-          });
-          return Math.round((totalActive / (_nodes.length * 3)) * 100);
-        },
-
-        checkWinCondition() {
-          if (this.getTotalStabilization() === 100 && !_isSolved) {
-            _isSolved = true;
-            AudioEngine.playFanfare();
-            setTimeout(() => this.triggerVictory(), 350);
-          }
-        },
-
-        updateHUD() {
-          const phases = ["PAST (t₋₁)", "PRESENT (t₀)", "FUTURE (t₊₁)"];
-          const currentPhaseText = phases[_timePhase + 1];
-
-          document.getElementById('phase-val').innerText = currentPhaseText;
-          document.getElementById('phase-val-top').innerText = currentPhaseText;
-
-          const totalPercent = this.getTotalStabilization();
-          
-          document.getElementById('stab-val').innerText = `${totalPercent}%`;
-          document.getElementById('stab-val-top').innerText = `${totalPercent}%`;
-
-          document.getElementById('moves-val').innerText = _moves;
-          document.getElementById('moves-val-top').innerText = _moves;
-
-          const strain = Math.min(100, Math.max(15, _moves * 3));
-          document.getElementById('strain-fill').style.width = `${strain}%`;
-          document.getElementById('strain-val').innerText = `IQ ${180 - Math.floor(strain / 4)}`;
-        },
-
-        triggerVictory() {
-          document.getElementById('cert-modal').style.display = 'flex';
-          this.build3DCertificate();
-        },
-
-        build3DCertificate() {
-          const container = document.getElementById('cert-canvas-container');
-          container.innerHTML = '';
-
-          const scene = new THREE.Scene();
-          const camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 100);
-          camera.position.set(0, 0, 5);
-
-          const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
-          renderer.setSize(container.clientWidth, container.clientHeight);
-          renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-          container.appendChild(renderer.domElement);
-
-          const plaqueGeo = new THREE.BoxGeometry(3.6, 2.2, 0.1);
-          
-          const canvas = document.createElement('canvas');
-          canvas.width = 1024;
-          canvas.height = 640;
-          const ctx = canvas.getContext('2d');
-
-          ctx.fillStyle = '#060a14';
-          ctx.fillRect(0, 0, 1024, 640);
-
-          ctx.strokeStyle = '#ffd700';
-          ctx.lineWidth = 12;
-          ctx.strokeRect(20, 20, 984, 600);
-
-          ctx.fillStyle = '#ffd700';
-          ctx.font = 'bold 36px sans-serif';
-          ctx.textAlign = 'center';
-          ctx.fillText('QUANTUM POLYHEDRON MASTER', 512, 100);
-
-          ctx.fillStyle = '#00f3ff';
-          ctx.font = '26px sans-serif';
-          ctx.fillText('CERTIFIKÁT O STABILIZÁCII VESMÍRU', 512, 160);
-
-          ctx.fillStyle = '#ffffff';
-          ctx.font = 'bold 46px sans-serif';
-          ctx.fillText(_player, 512, 280);
-
-          ctx.fillStyle = '#a0aec0';
-          ctx.font = '22px sans-serif';
-          ctx.fillText('Úspešne prepojil všetkých 36 kvantových uzlov', 512, 360);
-          ctx.fillText(`Počet ťahov: ${_moves} • Časová rezonancia: 100%`, 512, 410);
-
-          const certHash = "SHA256-VERIFIED:" + btoa(`${_player}_${_moves}_${_sessionSig}`).substr(0, 22);
-          ctx.fillStyle = '#ff007f';
-          ctx.font = '16px monospace';
-          ctx.fillText(certHash, 512, 530);
-
-          const texture = new THREE.CanvasTexture(canvas);
-          const mat = new THREE.MeshPhongMaterial({ map: texture, shininess: 95 });
-          const plaque = new THREE.Mesh(plaqueGeo, mat);
-          scene.add(plaque);
-
-          const light1 = new THREE.PointLight(0xffd700, 2.5, 20);
-          light1.position.set(3, 3, 4);
-          scene.add(light1);
-
-          scene.add(new THREE.AmbientLight(0xffffff, 0.6));
-
-          this.certRenderer = renderer;
-
-          const certAnimate = () => {
-            if (document.getElementById('cert-modal').style.display === 'flex') {
-              requestAnimationFrame(certAnimate);
-              plaque.rotation.y = Math.sin(Date.now() * 0.0015) * 0.22;
-              plaque.rotation.x = Math.cos(Date.now() * 0.0012) * 0.1;
-              renderer.render(scene, camera);
-            }
-          };
-          certAnimate();
-        },
-
-        downloadCertificate() {
-          if (!this.certRenderer) return;
-          const dataURL = this.certRenderer.domElement.toDataURL('image/png');
-          const link = document.createElement('a');
-          link.download = `ChronoPolyhedron_3000_Certificate_${_player}.png`;
-          link.href = dataURL;
-          link.click();
-        }
-      };
+      window.addEventListener('DOMContentLoaded', () => {
+        QuantumPolyhedronEngine.init();
+      });
     })();
-
-    window.addEventListener('DOMContentLoaded', () => {
-      QuantumPolyhedronEngine.init();
-    });
   </script>
 </body>
 </html>
