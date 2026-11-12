@@ -3,13 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>CHRONO-CUBE 3000: Radiant 4K Constellation Edition</title>
+  <title>CHRONO-HEXAHEDRON 3000: 4D Quantum Tesseract</title>
   <style>
     :root {
       --bg: #010206;
       --primary: #00f3ff;
       --secondary: #ff007f;
       --gold: #ffd700;
+      --purple: #9d4edd;
       --panel: rgba(6, 10, 20, 0.88);
       --font: 'Segoe UI', Roboto, sans-serif;
     }
@@ -31,16 +32,16 @@
       padding: 6px 12px;
       border-radius: 10px;
       backdrop-filter: blur(12px);
-      box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
+      box-shadow: 0 0 18px rgba(0, 243, 255, 0.25);
     }
 
-    h1 { font-size: 0.95rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--primary); text-shadow: 0 0 10px var(--primary); }
+    h1 { font-size: 0.92rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--primary); text-shadow: 0 0 10px var(--primary); }
     .sub { font-size: 0.55rem; color: #8a99ad; margin-top: 1px; }
 
-    /* Kompaktné štatistiky UPRATANÉ VŠETKY HORE pre mobil aj PC */
+    /* Kompaktné štatistiky HORE */
     .top-stats-compact {
       background: var(--panel);
-      border: 1px solid rgba(255, 215, 0, 0.4);
+      border: 1px solid rgba(255, 215, 0, 0.45);
       padding: 6px 10px;
       border-radius: 10px;
       backdrop-filter: blur(12px);
@@ -50,11 +51,11 @@
       box-shadow: 0 0 15px rgba(255, 215, 0, 0.15);
     }
     .stat-item { font-size: 0.65rem; display: flex; flex-direction: column; align-items: flex-end; }
-    .stat-item span { color: #8a99ad; font-size: 0.55rem; text-transform: uppercase; }
-    .stat-item strong { color: #fff; font-size: 0.75rem; }
+    .stat-item span { color: #8a99ad; font-size: 0.52rem; text-transform: uppercase; }
+    .stat-item strong { color: #fff; font-size: 0.72rem; }
 
     /* Desktopové štatistiky vpravo */
-    .side-panel { position: absolute; right: 12px; top: 75px; display: flex; flex-direction: column; gap: 8px; width: 210px; z-index: 10; }
+    .side-panel { position: absolute; right: 12px; top: 75px; display: flex; flex-direction: column; gap: 8px; width: 220px; z-index: 10; }
     .stat-card {
       background: var(--panel);
       border: 1px solid rgba(255, 255, 255, 0.15);
@@ -63,11 +64,24 @@
       border-radius: 10px;
       backdrop-filter: blur(15px);
     }
-    .stat-label { font-size: 0.65rem; color: #8a99ad; text-transform: uppercase; letter-spacing: 1px; }
-    .stat-value { font-size: 1.1rem; font-weight: bold; color: #fff; margin-top: 3px; text-shadow: 0 0 8px rgba(255,255,255,0.4); }
+    .stat-label { font-size: 0.62rem; color: #8a99ad; text-transform: uppercase; letter-spacing: 1px; }
+    .stat-value { font-size: 1.05rem; font-weight: bold; color: #fff; margin-top: 3px; text-shadow: 0 0 8px rgba(255,255,255,0.4); }
 
     .strain-bar-bg { width: 100%; height: 5px; background: rgba(255, 255, 255, 0.1); border-radius: 3px; margin-top: 6px; overflow: hidden; }
-    .strain-bar-fill { height: 100%; width: 10%; background: linear-gradient(90deg, #00f3ff, #ff007f); }
+    .strain-bar-fill { height: 100%; width: 15%; background: linear-gradient(90deg, #00f3ff, #ff007f, #ffd700); transition: width 0.3s; }
+
+    .player-input-box { display: flex; gap: 6px; margin-top: 4px; }
+    .player-input {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid rgba(0, 243, 255, 0.4);
+      color: var(--gold);
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: bold;
+      outline: none;
+    }
 
     /* Spodný ovládací panel */
     footer { display: flex; flex-direction: column; gap: 6px; align-items: center; width: 100%; margin-bottom: 4px; }
@@ -76,79 +90,98 @@
       background: var(--panel);
       padding: 8px 16px;
       border-radius: 20px;
-      border: 1px solid rgba(0, 243, 255, 0.4);
+      border: 1px solid rgba(0, 243, 255, 0.45);
       backdrop-filter: blur(12px);
       display: flex;
       align-items: center;
       gap: 10px;
       width: 100%;
-      max-width: 380px;
+      max-width: 400px;
       justify-content: center;
-      box-shadow: 0 0 15px rgba(0,243,255,0.15);
+      box-shadow: 0 0 18px rgba(0,243,255,0.2);
     }
     .time-slider { flex: 1; accent-color: var(--primary); cursor: pointer; height: 20px; }
 
-    .btn-group { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; width: 100%; max-width: 600px; }
+    .btn-group { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; width: 100%; max-width: 640px; }
     
     .btn {
       background: rgba(0, 243, 255, 0.12);
       border: 1px solid var(--primary);
       color: var(--primary);
-      padding: 9px 12px;
+      padding: 9px 10px;
       border-radius: 8px;
       cursor: pointer;
       font-family: inherit;
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       font-weight: bold;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 0.8px;
       transition: all 0.2s;
       backdrop-filter: blur(10px);
       text-align: center;
       box-shadow: 0 4px 12px rgba(0,0,0,0.4);
       flex: 1;
-      min-width: 110px;
+      min-width: 115px;
     }
-    .btn:hover { background: var(--primary); color: #010206; box-shadow: 0 0 15px var(--primary); }
+    .btn:hover, .btn:active { background: var(--primary); color: #010206; box-shadow: 0 0 15px var(--primary); transform: translateY(-1px); }
     .btn-secondary { border-color: var(--secondary); color: var(--secondary); background: rgba(255, 0, 127, 0.12); }
-    .btn-secondary:hover { background: var(--secondary); color: #fff; box-shadow: 0 0 15px var(--secondary); }
+    .btn-secondary:hover, .btn-secondary:active { background: var(--secondary); color: #fff; box-shadow: 0 0 15px var(--secondary); }
     .btn-gold { border-color: var(--gold); color: var(--gold); background: rgba(255, 215, 0, 0.12); }
-    .btn-gold:hover { background: var(--gold); color: #010206; box-shadow: 0 0 20px var(--gold); }
+    .btn-gold:hover, .btn-gold:active { background: var(--gold); color: #010206; box-shadow: 0 0 20px var(--gold); }
 
-    /* Media query pre mobil */
     @media (max-width: 768px) {
       .side-panel { display: none; }
-      .btn { padding: 9px 4px; font-size: 0.65rem; min-width: 47%; }
-      .top-stats-compact { padding: 4px 8px; }
+      .btn { padding: 9px 4px; font-size: 0.63rem; min-width: 47%; }
+      .top-stats-compact { padding: 4px 8px; gap: 7px; }
+      h1 { font-size: 0.82rem; }
+    }
+
+    /* Toast notifikácia namiesto rušivých alertov */
+    #toast {
+      position: fixed;
+      top: 68px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(6, 10, 22, 0.95);
+      border: 1px solid var(--primary);
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-size: 0.75rem;
+      z-index: 90;
+      max-width: 90vw;
+      text-align: center;
+      box-shadow: 0 0 25px rgba(0, 243, 255, 0.35);
+      display: none;
     }
 
     /* Modal */
     .modal { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(1, 2, 6, 0.92); backdrop-filter: blur(20px); z-index: 100; display: none; justify-content: center; align-items: center; padding: 15px; }
-    .modal-content { background: #060a14; border: 1px solid var(--gold); border-radius: 16px; padding: 20px; max-width: 450px; width: 100%; text-align: center; box-shadow: 0 0 40px rgba(255, 215, 0, 0.3); }
-    .modal-title { color: var(--gold); font-size: 1.3rem; letter-spacing: 1.5px; margin-bottom: 10px; text-transform: uppercase; text-shadow: 0 0 10px var(--gold); }
-    #cert-canvas-container { width: 100%; height: 200px; margin: 10px 0; border-radius: 10px; border: 1px solid rgba(255, 215, 0, 0.3); background: #010206; }
+    .modal-content { background: #060a14; border: 1px solid var(--gold); border-radius: 16px; padding: 20px; max-width: 460px; width: 100%; text-align: center; box-shadow: 0 0 40px rgba(255, 215, 0, 0.35); }
+    .modal-title { color: var(--gold); font-size: 1.25rem; letter-spacing: 1.5px; margin-bottom: 8px; text-transform: uppercase; text-shadow: 0 0 10px var(--gold); }
+    #cert-canvas-container { width: 100%; height: 210px; margin: 10px 0; border-radius: 10px; border: 1px solid rgba(255, 215, 0, 0.35); background: #010206; }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
 
   <div id="canvas-container"></div>
+  <div id="toast"></div>
 
   <div class="hud">
     <header>
       <div class="title-box">
-        <h1>Chrono-Cube 3000</h1>
-        <div class="sub">4K Constellation Edition</div>
+        <h1>Chrono-Hexahedron</h1>
+        <div class="sub">4D Tesseract • Impossible Edition</div>
       </div>
 
-      <!-- Všetky podstatné informácie vytiahnuté presne do HORNÉHO pravého rohu -->
       <div class="top-stats-compact">
         <div class="stat-item">
-          <span>Stav</span>
+          <span>Dimenzia</span>
           <strong id="phase-val-top" style="color:var(--primary);">PRESENT (t₀)</strong>
         </div>
         <div class="stat-item">
-          <span>Sieť</span>
+          <span>Hexaéder</span>
           <strong id="stab-val-top" style="color:var(--gold);">0%</strong>
         </div>
         <div class="stat-item">
@@ -158,19 +191,25 @@
       </div>
     </header>
 
-    <!-- Desktopové podrobné štatistiky vpravo hore -->
+    <!-- Desktopové štatistiky vpravo hore -->
     <div class="side-panel">
       <div class="stat-card">
-        <div class="stat-label">Časový stav</div>
+        <div class="stat-label">Volací znak riešiteľa</div>
+        <div class="player-input-box">
+          <input type="text" id="player-name-input" class="player-input" value="AGENT-3000" maxlength="18">
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Časová dimenzia</div>
         <div class="stat-value" id="phase-val" style="color: var(--primary);">PRESENT (t₀)</div>
       </div>
       <div class="stat-card">
-        <div class="stat-label">Stabilizácia siete</div>
+        <div class="stat-label">Stabilizácia Hexaédra (48 uzlov)</div>
         <div class="stat-value" id="stab-val">0%</div>
       </div>
       <div class="stat-card">
         <div class="stat-label">Brain Strain (IQ)</div>
-        <div class="stat-value" id="strain-val">IQ 145</div>
+        <div class="stat-value" id="strain-val">IQ 168</div>
         <div class="strain-bar-bg"><div class="strain-bar-fill" id="strain-fill"></div></div>
       </div>
       <div class="stat-card">
@@ -179,7 +218,7 @@
       </div>
     </div>
 
-    <!-- Spodný panel: Časový posuvník + Tlačidlá dole -->
+    <!-- Spodný panel -->
     <footer>
       <div class="time-control">
         <span style="font-size: 0.7rem; color: #8a99ad; font-weight: bold;">t₋₁</span>
@@ -190,7 +229,7 @@
       <div class="btn-group">
         <button class="btn" id="reset-cam-btn">Reset Pohľadu</button>
         <button class="btn btn-secondary" id="oracle-btn">AI Orákulum</button>
-        <button class="btn btn-secondary" id="challenge-btn">Generovať Výzvu</button>
+        <button class="btn btn-secondary" id="challenge-btn">Virálna Výzva</button>
         <button class="btn btn-gold" id="rage-btn">Rage Quit</button>
       </div>
     </footer>
@@ -199,8 +238,8 @@
   <!-- Certificate Modal -->
   <div class="modal" id="cert-modal">
     <div class="modal-content">
-      <div class="modal-title">✨ Kvantový Certifikát ✨</div>
-      <p style="font-size: 0.8rem; color: #a0aec0;">Stabilizácia mriežky dokončená na 100%.</p>
+      <div class="modal-title">🏆 Hexahedron Master 🏆</div>
+      <p style="font-size: 0.8rem; color: #a0aec0;">Stabilizovali ste všetkých 48 uzlov 4D Hexaédra!</p>
       
       <div id="cert-canvas-container"></div>
 
@@ -212,29 +251,62 @@
   </div>
 
   <script>
-    const QuantumGameEngine = (function() {
-      let _sessionSig = Math.random().toString(36).substring(2) + Date.now().toString(36);
+    const QuantumHexahedronEngine = (function() {
+      const _sessionSig = Math.random().toString(36).substring(2) + Date.now().toString(36);
       let _player = "AGENT-3000";
       let _timePhase = 0;
       let _moves = 0;
       let _isSolved = false;
+      let _toastTimer = null;
+
+      // 16 vrcholov 4D Hexaédra (8 vonkajší plášť + 8 vnútorné kvantové jadro)
+      const OUTER = 2.3;
+      const INNER = 1.05;
 
       const _nodes = [
-        { id: 0, pos: [-2, 2, 2], phaseColors: [0x00f3ff, 0xff007f, 0xffd700], active: [false, false, false] },
-        { id: 1, pos: [2, 2, 2], phaseColors: [0xff007f, 0x00f3ff, 0xffd700], active: [false, false, false] },
-        { id: 2, pos: [2, -2, 2], phaseColors: [0xffd700, 0xff007f, 0x00f3ff], active: [false, false, false] },
-        { id: 3, pos: [-2, -2, 2], phaseColors: [0x00f3ff, 0xffd700, 0xff007f], active: [false, false, false] },
-        { id: 4, pos: [-2, 2, -2], phaseColors: [0xff007f, 0xffd700, 0x00f3ff], active: [false, false, false] },
-        { id: 5, pos: [2, 2, -2], phaseColors: [0x00f3ff, 0xff007f, 0xffd700], active: [false, false, false] },
-        { id: 6, pos: [2, -2, -2], phaseColors: [0xffd700, 0x00f3ff, 0xff007f], active: [false, false, false] },
-        { id: 7, pos: [-2, -2, -2], phaseColors: [0xff007f, 0x00f3ff, 0xffd700], active: [false, false, false] }
+        // Vonkajší Hexaéder (0 - 7)
+        { id: 0, layer: 'outer', pos: [-OUTER,  OUTER,  OUTER], phaseColors: [0x00f3ff, 0xff007f, 0xffd700], active: [false, false, false] },
+        { id: 1, layer: 'outer', pos: [ OUTER,  OUTER,  OUTER], phaseColors: [0xff007f, 0x00f3ff, 0xffd700], active: [false, false, false] },
+        { id: 2, layer: 'outer', pos: [ OUTER, -OUTER,  OUTER], phaseColors: [0xffd700, 0xff007f, 0x00f3ff], active: [false, false, false] },
+        { id: 3, layer: 'outer', pos: [-OUTER, -OUTER,  OUTER], phaseColors: [0x00f3ff, 0xffd700, 0xff007f], active: [false, false, false] },
+        { id: 4, layer: 'outer', pos: [-OUTER,  OUTER, -OUTER], phaseColors: [0xff007f, 0xffd700, 0x00f3ff], active: [false, false, false] },
+        { id: 5, layer: 'outer', pos: [ OUTER,  OUTER, -OUTER], phaseColors: [0x00f3ff, 0xff007f, 0xffd700], active: [false, false, false] },
+        { id: 6, layer: 'outer', pos: [ OUTER, -OUTER, -OUTER], phaseColors: [0xffd700, 0x00f3ff, 0xff007f], active: [false, false, false] },
+        { id: 7, layer: 'outer', pos: [-OUTER, -OUTER, -OUTER], phaseColors: [0xff007f, 0x00f3ff, 0xffd700], active: [false, false, false] },
+
+        // Vnútorný Hexaéder (8 - 15)
+        { id: 8,  layer: 'inner', pos: [-INNER,  INNER,  INNER], phaseColors: [0x9d4edd, 0x00f3ff, 0xffd700], active: [false, false, false] },
+        { id: 9,  layer: 'inner', pos: [ INNER,  INNER,  INNER], phaseColors: [0x00f3ff, 0x9d4edd, 0xffd700], active: [false, false, false] },
+        { id: 10, layer: 'inner', pos: [ INNER, -INNER,  INNER], phaseColors: [0xffd700, 0x9d4edd, 0x00f3ff], active: [false, false, false] },
+        { id: 11, layer: 'inner', pos: [-INNER, -INNER,  INNER], phaseColors: [0x9d4edd, 0xffd700, 0x00f3ff], active: [false, false, false] },
+        { id: 12, layer: 'inner', pos: [-INNER,  INNER, -INNER], phaseColors: [0x00f3ff, 0xffd700, 0x9d4edd], active: [false, false, false] },
+        { id: 13, layer: 'inner', pos: [ INNER,  INNER, -INNER], phaseColors: [0x9d4edd, 0x00f3ff, 0xffd700], active: [false, false, false] },
+        { id: 14, layer: 'inner', pos: [ INNER, -INNER, -INNER], phaseColors: [0xffd700, 0x00f3ff, 0x9d4edd], active: [false, false, false] },
+        { id: 15, layer: 'inner', pos: [-INNER, -INNER, -INNER], phaseColors: [0x00f3ff, 0x9d4edd, 0xffd700], active: [false, false, false] }
       ];
 
+      // 32 fotonických laserových hrán (12 vonkajších + 12 vnútorných + 8 hyper-priestorových mostov)
       const _connections = [
+        // Vonkajší hexaéder
         [0,1], [1,2], [2,3], [3,0],
         [4,5], [5,6], [6,7], [7,4],
-        [0,4], [1,5], [2,6], [3,7]
+        [0,4], [1,5], [2,6], [3,7],
+        // Vnútorný hexaéder
+        [8,9], [9,10], [10,11], [11,8],
+        [12,13], [13,14], [14,15], [15,12],
+        [8,12], [9,13], [10,14], [11,15],
+        // 4D prepojenia medzi vonkajším a vnútorným hexaédrom
+        [0,8], [1,9], [2,10], [3,11],
+        [4,12], [5,13], [6,14], [7,15]
       ];
+
+      function showToast(msg, duration = 3800) {
+        const el = document.getElementById('toast');
+        el.innerText = msg;
+        el.style.display = 'block';
+        if (_toastTimer) clearTimeout(_toastTimer);
+        _toastTimer = setTimeout(() => { el.style.display = 'none'; }, duration);
+      }
 
       const AudioEngine = {
         ctx: null,
@@ -262,21 +334,21 @@
             const osc = this.ctx.createOscillator();
             const gain = this.ctx.createGain();
             osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(950, this.ctx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(120, this.ctx.currentTime + 0.22);
+            osc.frequency.setValueAtTime(980, this.ctx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(110, this.ctx.currentTime + 0.24);
             gain.gain.setValueAtTime(0.12, this.ctx.currentTime);
-            gain.gain.linearRampToValueAtTime(0.01, this.ctx.currentTime + 0.22);
+            gain.gain.linearRampToValueAtTime(0.01, this.ctx.currentTime + 0.24);
             osc.connect(gain);
             gain.connect(this.ctx.destination);
             osc.start();
-            osc.stop(this.ctx.currentTime + 0.22);
+            osc.stop(this.ctx.currentTime + 0.24);
           } catch(e){}
         },
         playFanfare() {
           if (!this.ctx) return;
-          const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51];
+          const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51, 1567.98];
           notes.forEach((n, i) => {
-            setTimeout(() => this.playTone(n, 'triangle', 0.4, 0.15), i * 120);
+            setTimeout(() => this.playTone(n, 'triangle', 0.45, 0.15), i * 110);
           });
         }
       };
@@ -291,15 +363,15 @@
 
         adjustCameraForScreen() {
           const isMobile = window.innerWidth <= 768;
-          const dist = isMobile ? 11.5 : 9.5;
-          this.camera.position.set(dist * 0.65, dist * 0.65, dist);
+          const dist = isMobile ? 12.2 : 9.8;
+          this.camera.position.set(dist * 0.65, dist * 0.58, dist);
           this.camera.lookAt(0, 0, 0);
         },
 
         setupThreeJS() {
           const container = document.getElementById('canvas-container');
           this.scene = new THREE.Scene();
-          this.scene.fog = new THREE.FogExp2(0x010206, 0.015);
+          this.scene.fog = new THREE.FogExp2(0x010206, 0.014);
 
           this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
           
@@ -310,55 +382,81 @@
 
           // Osvetlenie
           this.scene.add(new THREE.AmbientLight(0xffffff, 0.45));
-          const pointLight = new THREE.PointLight(0x00f3ff, 3, 80);
+          const pointLight = new THREE.PointLight(0x00f3ff, 3.2, 85);
           pointLight.position.set(12, 12, 12);
           this.scene.add(pointLight);
 
-          const pointLight2 = new THREE.PointLight(0xff007f, 3, 80);
+          const pointLight2 = new THREE.PointLight(0xff007f, 3.2, 85);
           pointLight2.position.set(-12, -12, -12);
           this.scene.add(pointLight2);
 
-          // 4K Zlaté Súhvezdie & Žiara Pozadia
           this.createRadiant4KConstellations();
 
-          this.cubeGroup = new THREE.Group();
-          this.scene.add(this.cubeGroup);
+          this.hexaGroup = new THREE.Group();
+          this.scene.add(this.hexaGroup);
 
-          // Centrálne kvantové jadro
-          const coreGeo = new THREE.IcosahedronGeometry(0.75, 2);
-          const coreMat = new THREE.MeshPhongMaterial({ color: 0xff007f, emissive: 0xff007f, emissiveIntensity: 0.9, wireframe: true });
+          // Kryštalický priesvitný plášť hexaédra (futuristický 3D efekt stien)
+          const outerShellGeo = new THREE.BoxGeometry(OUTER * 2, OUTER * 2, OUTER * 2);
+          const outerShellMat = new THREE.MeshPhongMaterial({
+            color: 0x00f3ff,
+            transparent: true,
+            opacity: 0.04,
+            shininess: 100,
+            side: THREE.DoubleSide,
+            depthWrite: false
+          });
+          this.outerShell = new THREE.Mesh(outerShellGeo, outerShellMat);
+          this.hexaGroup.add(this.outerShell);
+
+          // Orbitálny gyro-prstenec okolo hexaédra
+          const ringGeo = new THREE.TorusGeometry(4.1, 0.025, 16, 100);
+          const ringMat = new THREE.MeshBasicMaterial({ color: 0xffd700, transparent: true, opacity: 0.35 });
+          this.orbitalRing = new THREE.Mesh(ringGeo, ringMat);
+          this.orbitalRing.rotation.x = Math.PI / 3;
+          this.hexaGroup.add(this.orbitalRing);
+
+          // Centrálne kvantové jadro (Oktaéder v strede)
+          const coreGeo = new THREE.OctahedronGeometry(0.55, 1);
+          const coreMat = new THREE.MeshPhongMaterial({ color: 0xff007f, emissive: 0xff007f, emissiveIntensity: 0.95, wireframe: true });
           this.coreMesh = new THREE.Mesh(coreGeo, coreMat);
-          this.cubeGroup.add(this.coreMesh);
+          this.hexaGroup.add(this.coreMesh);
 
-          // Uzly hyperkocky
+          // 16 Uzlov Hexaédra (vonkajšie gule + vnútorné kryštály)
           this.nodeMeshes = [];
-          const sphereGeo = new THREE.SphereGeometry(0.42, 32, 32);
+          const outerGeo = new THREE.SphereGeometry(0.36, 28, 28);
+          const innerGeo = new THREE.OctahedronGeometry(0.32, 0);
 
           _nodes.forEach(node => {
+            const geo = node.layer === 'outer' ? outerGeo : innerGeo;
             const mat = new THREE.MeshPhongMaterial({
               color: node.phaseColors[1],
               emissive: node.phaseColors[1],
               emissiveIntensity: 0.35,
-              shininess: 120,
+              shininess: 130,
               wireframe: true
             });
-            const mesh = new THREE.Mesh(sphereGeo, mat);
+            const mesh = new THREE.Mesh(geo, mat);
             mesh.position.set(...node.pos);
             mesh.userData = { id: node.id };
-            this.cubeGroup.add(mesh);
+            this.hexaGroup.add(mesh);
             this.nodeMeshes.push(mesh);
           });
 
-          // Laserové prepojenia
+          // 32 Laserových prepojení
           this.laserLines = [];
           _connections.forEach(conn => {
             const posA = new THREE.Vector3(..._nodes[conn[0]].pos);
             const posB = new THREE.Vector3(..._nodes[conn[1]].pos);
             const geo = new THREE.BufferGeometry().setFromPoints([posA, posB]);
-            const mat = new THREE.LineBasicMaterial({ color: 0x1a2638, transparent: true, opacity: 0.35, linewidth: 2 });
+            const isBridge = _nodes[conn[0]].layer !== _nodes[conn[1]].layer;
+            const mat = new THREE.LineBasicMaterial({
+              color: isBridge ? 0x2b193d : 0x1a2638,
+              transparent: true,
+              opacity: isBridge ? 0.22 : 0.38
+            });
             const line = new THREE.Line(geo, mat);
-            this.cubeGroup.add(line);
-            this.laserLines.push({ line, nodes: conn });
+            this.hexaGroup.add(line);
+            this.laserLines.push({ line, nodes: conn, isBridge });
           });
 
           this.raycaster = new THREE.Raycaster();
@@ -367,10 +465,14 @@
           const animate = () => {
             requestAnimationFrame(animate);
             if (this.coreMesh) {
-              this.coreMesh.rotation.x += 0.012;
-              this.coreMesh.rotation.y += 0.018;
-              let s = 1 + Math.sin(Date.now() * 0.0035) * 0.18;
+              this.coreMesh.rotation.x += 0.015;
+              this.coreMesh.rotation.y += 0.022;
+              const s = 1 + Math.sin(Date.now() * 0.004) * 0.2;
               this.coreMesh.scale.set(s, s, s);
+            }
+            if (this.orbitalRing) {
+              this.orbitalRing.rotation.z += 0.006;
+              this.orbitalRing.rotation.y += 0.004;
             }
             if (this.constellationGroup) {
               this.constellationGroup.rotation.y += 0.0003;
@@ -384,22 +486,21 @@
         createRadiant4KConstellations() {
           this.constellationGroup = new THREE.Group();
 
-          // 1. Zlaté a neónové Hviezdy súhvezdia (4K efekt)
-          const starCount = 450;
+          const starCount = 480;
           const starGeo = new THREE.BufferGeometry();
           const starPos = new Float32Array(starCount * 3);
           const starColors = new Float32Array(starCount * 3);
 
           const c1 = new THREE.Color(0x00f3ff);
           const c2 = new THREE.Color(0xffd700);
-          const c3 = new THREE.Color(0xff007f);
+          const c3 = new THREE.Color(0x9d4edd);
 
-          for(let i=0; i<starCount*3; i+=3) {
-            starPos[i] = (Math.random() - 0.5) * 55;
-            starPos[i+1] = (Math.random() - 0.5) * 55;
-            starPos[i+2] = (Math.random() - 0.5) * 55;
+          for(let i = 0; i < starCount * 3; i += 3) {
+            starPos[i] = (Math.random() - 0.5) * 60;
+            starPos[i+1] = (Math.random() - 0.5) * 60;
+            starPos[i+2] = (Math.random() - 0.5) * 60;
 
-            let randCol = Math.random() > 0.6 ? c2 : (Math.random() > 0.3 ? c1 : c3);
+            const randCol = Math.random() > 0.6 ? c2 : (Math.random() > 0.3 ? c1 : c3);
             starColors[i] = randCol.r;
             starColors[i+1] = randCol.g;
             starColors[i+2] = randCol.b;
@@ -409,18 +510,16 @@
           starGeo.setAttribute('color', new THREE.BufferAttribute(starColors, 3));
 
           const starMat = new THREE.PointsMaterial({
-            size: 0.12,
+            size: 0.13,
             vertexColors: true,
             transparent: true,
             opacity: 0.85
           });
 
-          const starField = new THREE.Points(starGeo, starMat);
-          this.constellationGroup.add(starField);
+          this.constellationGroup.add(new THREE.Points(starGeo, starMat));
 
-          // 2. Prepojenia laserových línií medzi hlavnými hviezdami súhvezdia
           const linePoints = [];
-          for(let i=0; i<30; i++) {
+          for(let i = 0; i < 36; i++) {
             const idxA = Math.floor(Math.random() * starCount) * 3;
             const idxB = Math.floor(Math.random() * starCount) * 3;
             linePoints.push(new THREE.Vector3(starPos[idxA], starPos[idxA+1], starPos[idxA+2]));
@@ -431,19 +530,17 @@
           const constLinesMat = new THREE.LineBasicMaterial({
             color: 0xffd700,
             transparent: true,
-            opacity: 0.15
+            opacity: 0.16
           });
-          const constLines = new THREE.LineSegments(constLinesGeo, constLinesMat);
-          this.constellationGroup.add(constLines);
+          this.constellationGroup.add(new THREE.LineSegments(constLinesGeo, constLinesMat));
 
-          // 3. Jemná radiálna 4K Žiara v pozadí za hyperkockou
-          const glowGeo = new THREE.PlaneGeometry(25, 25);
+          const glowGeo = new THREE.PlaneGeometry(28, 28);
           const glowCanvas = document.createElement('canvas');
           glowCanvas.width = 512; glowCanvas.height = 512;
           const gCtx = glowCanvas.getContext('2d');
           const grad = gCtx.createRadialGradient(256, 256, 10, 256, 256, 250);
-          grad.addColorStop(0, 'rgba(0, 243, 255, 0.12)');
-          grad.addColorStop(0.5, 'rgba(255, 0, 127, 0.05)');
+          grad.addColorStop(0, 'rgba(0, 243, 255, 0.14)');
+          grad.addColorStop(0.5, 'rgba(157, 78, 221, 0.06)');
           grad.addColorStop(1, 'rgba(1, 2, 6, 0)');
           gCtx.fillStyle = grad;
           gCtx.fillRect(0, 0, 512, 512);
@@ -451,7 +548,7 @@
           const glowTex = new THREE.CanvasTexture(glowCanvas);
           const glowMat = new THREE.MeshBasicMaterial({ map: glowTex, transparent: true, depthWrite: false });
           const glowMesh = new THREE.Mesh(glowGeo, glowMat);
-          glowMesh.position.z = -10;
+          glowMesh.position.z = -12;
           this.scene.add(glowMesh);
 
           this.scene.add(this.constellationGroup);
@@ -465,6 +562,14 @@
             this.adjustCameraForScreen();
           });
 
+          const nameInput = document.getElementById('player-name-input');
+          if (nameInput) {
+            nameInput.addEventListener('input', (e) => {
+              const clean = e.target.value.replace(/[^a-zA-Z0-9\-_ ]/g, '').trim();
+              _player = clean || "AGENT-3000";
+            });
+          }
+
           const handleTimeChange = (val) => {
             _timePhase = parseInt(val);
             document.getElementById('time-slider').value = _timePhase;
@@ -476,31 +581,38 @@
 
           document.getElementById('time-slider').addEventListener('input', (e) => handleTimeChange(e.target.value));
 
-          document.getElementById('reset-cam-btn').addEventListener('click', () => {
+          document.getElementById('reset-cam-btn').addEventListener('click', (e) => {
+            if (!e.isTrusted) return;
             AudioEngine.init();
             AudioEngine.playTone(600, 'sine', 0.1);
             this.adjustCameraForScreen();
-            this.cubeGroup.rotation.set(0, 0, 0);
+            this.hexaGroup.rotation.set(0, 0, 0);
           });
 
-          document.getElementById('oracle-btn').addEventListener('click', () => {
+          document.getElementById('oracle-btn').addEventListener('click', (e) => {
+            if (!e.isTrusted) return;
             AudioEngine.init();
             AudioEngine.playTone(900, 'square', 0.2);
-            alert(`[AI ORÁKULUM]: Pre stabilizáciu mriežky prepínaj časový posuvník a aktivuj uzly v minula (t₋₁) aj prítomnosti (t₀)!`);
+            showToast("AI ORÁKULUM: Vnútorný kryštál mení budúcnosť (t₊₁), vonkajší uzol v minulosti (t₋₁) mení prítomnosť (t₀)!");
           });
 
-          document.getElementById('challenge-btn').addEventListener('click', () => {
+          document.getElementById('challenge-btn').addEventListener('click', (e) => {
+            if (!e.isTrusted) return;
             AudioEngine.init();
             AudioEngine.playTone(750, 'sine', 0.15);
-            const seed = btoa(`${_player}_${Date.now()}_${_sessionSig.substr(0,5)}`);
-            navigator.clipboard.writeText(window.location.href + `#challenge=${seed}`);
-            alert(`Výzva bola skopírovaná do schránky!`);
+            const totalStab = this.getTotalStabilization();
+            const shareText = `🧩 Práve riešim 4D kvantový hlavolam CHRONO-HEXAHEDRON 3000!\n⚡ Stabilizácia: ${totalStab}% | Ťahy: ${_moves}\nTrúfneš si prekonať tento 4D tesseract? 👉 ${window.location.href}`;
+            if (navigator.clipboard) {
+              navigator.clipboard.writeText(shareText);
+            }
+            showToast("Virálna výzva so štatistikami bola skopírovaná do schránky! Zdieľaj ju na LinkedIn/FB.");
           });
 
-          document.getElementById('rage-btn').addEventListener('click', () => {
+          document.getElementById('rage-btn').addEventListener('click', (e) => {
+            if (!e.isTrusted) return;
             AudioEngine.init();
             AudioEngine.playTone(150, 'sawtooth', 0.3);
-            alert(`[RAGE QUIT]: Hráč ${_player} predčasne opustil os.`);
+            showToast(`RAGE QUIT: ${_player} opustil 4D Hexaéder pri ${_moves} ťahoch.`);
           });
 
           document.getElementById('close-cert-btn').addEventListener('click', () => {
@@ -528,8 +640,8 @@
             const deltaX = x - prevX;
             const deltaY = y - prevY;
 
-            this.cubeGroup.rotation.y += deltaX * 0.008;
-            this.cubeGroup.rotation.x += deltaY * 0.008;
+            this.hexaGroup.rotation.y += deltaX * 0.0085;
+            this.hexaGroup.rotation.x += deltaY * 0.0085;
 
             prevX = x; prevY = y;
           };
@@ -539,7 +651,7 @@
             isInteracting = false;
 
             const dist = Math.hypot(x - startX, y - startY);
-            if (dist < 8) {
+            if (dist < 10) {
               this.mouse.x = (startX / window.innerWidth) * 2 - 1;
               this.mouse.y = -(startY / window.innerHeight) * 2 + 1;
 
@@ -552,12 +664,12 @@
             }
           };
 
-          dom.addEventListener('mousedown', (e) => handleStart(e.clientX, e.clientY));
+          dom.addEventListener('mousedown', (e) => { if (e.isTrusted) handleStart(e.clientX, e.clientY); });
           window.addEventListener('mousemove', (e) => handleMove(e.clientX, e.clientY));
           window.addEventListener('mouseup', (e) => handleEnd(e.clientX, e.clientY));
 
           dom.addEventListener('touchstart', (e) => {
-            if (e.touches.length === 1) handleStart(e.touches[0].clientX, e.touches[0].clientY);
+            if (e.isTrusted && e.touches.length === 1) handleStart(e.touches[0].clientX, e.touches[0].clientY);
           }, { passive: true });
 
           window.addEventListener('touchmove', (e) => {
@@ -573,13 +685,19 @@
           if (_isSolved) return;
 
           const pIdx = _timePhase + 1;
-          _nodes[id].active[pIdx] = !_nodes[id].active[pIdx];
+          const node = _nodes[id];
+          node.active[pIdx] = !node.active[pIdx];
           _moves++;
 
-          AudioEngine.playTone(380 + id * 65, 'sine', 0.12, 0.18);
+          AudioEngine.playTone(340 + id * 45, node.layer === 'inner' ? 'triangle' : 'sine', 0.14, 0.18);
 
-          if (pIdx === 0 && _nodes[id].active[0]) {
-            _nodes[id].active[1] = !_nodes[id].active[1];
+          // Kvantové previazanie medzi dimenziami a vrstvami hexaédra
+          if (pIdx === 0 && node.active[0]) {
+            node.active[1] = !node.active[1];
+          }
+          if (node.layer === 'inner' && node.active[pIdx]) {
+            const partnerId = id - 8;
+            _nodes[partnerId].active[2] = !_nodes[partnerId].active[2];
           }
 
           this.updateTimePhaseVisuals();
@@ -596,7 +714,7 @@
 
             mesh.material.color.setHex(isActive ? activeColor : 0x223344);
             mesh.material.emissive.setHex(isActive ? activeColor : 0x000000);
-            mesh.material.emissiveIntensity = isActive ? 0.7 : 0;
+            mesh.material.emissiveIntensity = isActive ? 0.85 : 0;
             mesh.material.wireframe = !isActive;
           });
 
@@ -609,27 +727,27 @@
               item.line.material.color.setHex(_nodes[a].phaseColors[pIdx]);
               item.line.material.opacity = 0.95;
             } else {
-              item.line.material.color.setHex(0x1a2638);
-              item.line.material.opacity = 0.25;
+              item.line.material.color.setHex(item.isBridge ? 0x2b193d : 0x1a2638);
+              item.line.material.opacity = item.isBridge ? 0.2 : 0.32;
             }
           });
         },
 
-        checkWinCondition() {
+        getTotalStabilization() {
           let totalActive = 0;
           _nodes.forEach(n => {
             if (n.active[0]) totalActive++;
             if (n.active[1]) totalActive++;
             if (n.active[2]) totalActive++;
           });
+          return Math.round((totalActive / (_nodes.length * 3)) * 100);
+        },
 
-          const totalNodes = _nodes.length * 3;
-          const stabRatio = Math.round((totalActive / totalNodes) * 100);
-
-          if (stabRatio === 100 && !_isSolved) {
+        checkWinCondition() {
+          if (this.getTotalStabilization() === 100 && !_isSolved) {
             _isSolved = true;
             AudioEngine.playFanfare();
-            setTimeout(() => this.triggerVictory(), 300);
+            setTimeout(() => this.triggerVictory(), 350);
           }
         },
 
@@ -640,18 +758,17 @@
           document.getElementById('phase-val').innerText = currentPhaseText;
           document.getElementById('phase-val-top').innerText = currentPhaseText;
 
-          let activeInPhase = _nodes.filter(n => n.active[_timePhase + 1]).length;
-          let percent = Math.round((activeInPhase / _nodes.length) * 100);
+          const totalPercent = this.getTotalStabilization();
           
-          document.getElementById('stab-val').innerText = `${percent}%`;
-          document.getElementById('stab-val-top').innerText = `${percent}%`;
+          document.getElementById('stab-val').innerText = `${totalPercent}%`;
+          document.getElementById('stab-val-top').innerText = `${totalPercent}%`;
 
           document.getElementById('moves-val').innerText = _moves;
           document.getElementById('moves-val-top').innerText = _moves;
 
-          let strain = Math.min(100, Math.max(10, _moves * 4));
+          const strain = Math.min(100, Math.max(15, _moves * 3));
           document.getElementById('strain-fill').style.width = `${strain}%`;
-          document.getElementById('strain-val').innerText = `IQ ${160 - Math.floor(strain / 3)}`;
+          document.getElementById('strain-val').innerText = `IQ ${172 - Math.floor(strain / 4)}`;
         },
 
         triggerVictory() {
@@ -687,13 +804,13 @@
           ctx.strokeRect(20, 20, 984, 600);
 
           ctx.fillStyle = '#ffd700';
-          ctx.font = 'bold 38px sans-serif';
+          ctx.font = 'bold 36px sans-serif';
           ctx.textAlign = 'center';
-          ctx.fillText('QUANTUM HYPERCUBE MASTER', 512, 100);
+          ctx.fillText('4D QUANTUM HEXAHEDRON MASTER', 512, 100);
 
           ctx.fillStyle = '#00f3ff';
-          ctx.font = '28px sans-serif';
-          ctx.fillText('CERTIFIKÁT O VYRIEŠENÍ HLAVOLAMU', 512, 160);
+          ctx.font = '26px sans-serif';
+          ctx.fillText('CERTIFIKÁT O STABILIZÁCII TESSERACTU', 512, 160);
 
           ctx.fillStyle = '#ffffff';
           ctx.font = 'bold 46px sans-serif';
@@ -701,20 +818,20 @@
 
           ctx.fillStyle = '#a0aec0';
           ctx.font = '22px sans-serif';
-          ctx.fillText(`Úspešne stabilizoval všetkých 24 kvantových uzlov`, 512, 360);
+          ctx.fillText('Úspešne prepojil všetkých 48 kvantových uzlov', 512, 360);
           ctx.fillText(`Počet ťahov: ${_moves} • Časová rezonancia: 100%`, 512, 410);
 
-          const certHash = "SHA256-VERIFIED:" + btoa(`${_player}_${_moves}_${_sessionSig}`).substr(0, 20);
+          const certHash = "SHA256-VERIFIED:" + btoa(`${_player}_${_moves}_${_sessionSig}`).substr(0, 22);
           ctx.fillStyle = '#ff007f';
           ctx.font = '16px monospace';
           ctx.fillText(certHash, 512, 530);
 
           const texture = new THREE.CanvasTexture(canvas);
-          const mat = new THREE.MeshPhongMaterial({ map: texture, shininess: 90 });
+          const mat = new THREE.MeshPhongMaterial({ map: texture, shininess: 95 });
           const plaque = new THREE.Mesh(plaqueGeo, mat);
           scene.add(plaque);
 
-          const light1 = new THREE.PointLight(0xffd700, 2, 20);
+          const light1 = new THREE.PointLight(0xffd700, 2.2, 20);
           light1.position.set(3, 3, 4);
           scene.add(light1);
 
@@ -725,7 +842,7 @@
           const certAnimate = () => {
             if (document.getElementById('cert-modal').style.display === 'flex') {
               requestAnimationFrame(certAnimate);
-              plaque.rotation.y = Math.sin(Date.now() * 0.0015) * 0.2;
+              plaque.rotation.y = Math.sin(Date.now() * 0.0015) * 0.22;
               plaque.rotation.x = Math.cos(Date.now() * 0.0012) * 0.1;
               renderer.render(scene, camera);
             }
@@ -737,7 +854,7 @@
           if (!this.certRenderer) return;
           const dataURL = this.certRenderer.domElement.toDataURL('image/png');
           const link = document.createElement('a');
-          link.download = `ChronoCube_3000_Certificate_${_player}.png`;
+          link.download = `ChronoHexahedron_3000_Certificate_${_player}.png`;
           link.href = dataURL;
           link.click();
         }
@@ -745,7 +862,7 @@
     })();
 
     window.addEventListener('DOMContentLoaded', () => {
-      QuantumGameEngine.init();
+      QuantumHexahedronEngine.init();
     });
   </script>
 </body>
