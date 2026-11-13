@@ -25,6 +25,7 @@
     .hud { position: absolute; z-index: 10; pointer-events: none; display: flex; flex-direction: column; justify-content: space-between; padding: 10px; width: 100%; height: 100%; }
     .hud * { pointer-events: auto; }
 
+    .top-wrapper { display: flex; flex-direction: column; gap: 6px; width: 100%; }
     header { display: flex; justify-content: space-between; align-items: center; gap: 6px; width: 100%; }
     
     .title-box {
@@ -56,6 +57,49 @@
     .stat-item span { color: #8a99ad; font-size: 0.52rem; text-transform: uppercase; }
     .stat-item strong { color: #fff; font-size: 0.72rem; }
 
+    /* Mobilná lišta pre meno lúštiteľa HORE (stred displeja zostáva 100% voľný) */
+    .mobile-player-bar {
+      display: none;
+      background: var(--panel);
+      border: 1px solid rgba(255, 0, 127, 0.5);
+      border-left: 3px solid var(--secondary);
+      padding: 5px 10px;
+      border-radius: 10px;
+      backdrop-filter: blur(12px);
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      box-shadow: 0 0 15px rgba(255, 0, 127, 0.2);
+    }
+    .mobile-player-bar label {
+      font-size: 0.62rem;
+      color: var(--secondary);
+      text-transform: uppercase;
+      font-weight: bold;
+      letter-spacing: 0.8px;
+      white-space: nowrap;
+      text-shadow: 0 0 6px rgba(255, 0, 127, 0.5);
+    }
+    .mobile-player-bar input {
+      flex: 1;
+      background: rgba(0, 0, 0, 0.65);
+      border: 1px solid rgba(0, 243, 255, 0.45);
+      color: var(--gold);
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 0.75rem;
+      font-weight: bold;
+      outline: none;
+      user-select: text;
+      -webkit-user-select: text;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .mobile-player-bar input:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.35);
+    }
+
     /* Desktopové štatistiky vpravo */
     .side-panel { position: absolute; right: 12px; top: 75px; display: flex; flex-direction: column; gap: 8px; width: 225px; z-index: 10; }
     .stat-card {
@@ -83,6 +127,8 @@
       font-size: 0.75rem;
       font-weight: bold;
       outline: none;
+      user-select: text;
+      -webkit-user-select: text;
     }
 
     /* Spodný ovládací panel */
@@ -133,6 +179,7 @@
 
     @media (max-width: 768px) {
       .side-panel { display: none; }
+      .mobile-player-bar { display: flex; }
       .btn { padding: 9px 4px; font-size: 0.63rem; min-width: 47%; }
       .top-stats-compact { padding: 4px 8px; gap: 7px; }
       h1 { font-size: 0.82rem; }
@@ -140,7 +187,7 @@
 
     #toast {
       position: fixed;
-      top: 68px;
+      top: 105px;
       left: 50%;
       transform: translateX(-50%);
       background: rgba(5, 8, 18, 0.96);
@@ -170,32 +217,40 @@
   <div id="toast"></div>
 
   <div class="hud">
-    <header>
-      <div class="title-box">
-        <h1>Chrono-Polyhedron</h1>
-        <div class="sub">Andromeda M31 3D • <span class="sec-badge">SHA-256 SHIELD</span></div>
-      </div>
+    <div class="top-wrapper">
+      <header>
+        <div class="title-box">
+          <h1>Chrono-Polyhedron</h1>
+          <div class="sub">Andromeda M31 3D • <span class="sec-badge">SHA-256 SHIELD</span></div>
+        </div>
 
-      <div class="top-stats-compact">
-        <div class="stat-item">
-          <span>Dimenzia</span>
-          <strong id="phase-val-top" style="color:var(--primary);">PRESENT (t₀)</strong>
+        <div class="top-stats-compact">
+          <div class="stat-item">
+            <span>Dimenzia</span>
+            <strong id="phase-val-top" style="color:var(--primary);">PRESENT (t₀)</strong>
+          </div>
+          <div class="stat-item">
+            <span>Polyéder</span>
+            <strong id="stab-val-top" style="color:var(--gold);">0%</strong>
+          </div>
+          <div class="stat-item">
+            <span>Ťahy</span>
+            <strong id="moves-val-top">0</strong>
+          </div>
         </div>
-        <div class="stat-item">
-          <span>Polyéder</span>
-          <strong id="stab-val-top" style="color:var(--gold);">0%</strong>
-        </div>
-        <div class="stat-item">
-          <span>Ťahy</span>
-          <strong id="moves-val-top">0</strong>
-        </div>
+      </header>
+
+      <!-- Mobilná kolónka pre meno lúštiteľa -->
+      <div class="mobile-player-bar">
+        <label for="player-name-mobile">Meno lúštiteľa:</label>
+        <input type="text" id="player-name-mobile" value="AGENT-3000" maxlength="18" autocomplete="off" placeholder="Zadaj svoje meno...">
       </div>
-    </header>
+    </div>
 
     <!-- Desktopové štatistiky vpravo hore -->
     <div class="side-panel">
       <div class="stat-card">
-        <div class="stat-label">Volací znak riešiteľa</div>
+        <div class="stat-label">Meno lúštiteľa</div>
         <div class="player-input-box">
           <input type="text" id="player-name-input" class="player-input" value="AGENT-3000" maxlength="18" autocomplete="off">
         </div>
@@ -265,7 +320,7 @@
           verifyHumanTiming() {
             const now = performance.now();
             if (now - _lastActionTime < 45) {
-              return false; // Blokuje automatizované bot skripty
+              return false;
             }
             _lastActionTime = now;
             return true;
@@ -420,7 +475,7 @@
             pointLight3.position.set(0, 15, -15);
             this.scene.add(pointLight3);
 
-            // 3D Špirálová galaxia Andromeda (M31) a hlboké hviezdne pole (bez rozmazanej hmloviny)
+            // 3D Špirálová galaxia Andromeda (M31) a hlboké hviezdne pole
             this.createAndromeda3DGalaxy();
 
             this.polyGroup = new THREE.Group();
@@ -486,7 +541,6 @@
           },
 
           createAndromeda3DGalaxy() {
-            // Okrúhla textúra pre ostré 4K hviezdy bez štvorcových okrajov
             const starCanvas = document.createElement('canvas');
             starCanvas.width = 64;
             starCanvas.height = 64;
@@ -500,16 +554,15 @@
             sCtx.fillRect(0, 0, 64, 64);
             const starTexture = new THREE.CanvasTexture(starCanvas);
 
-            // 1. 3D Špirálová galaxia Andromeda (M31) v pozadí
             this.andromedaGroup = new THREE.Group();
             const galaxyStars = 4800;
             const gGeo = new THREE.BufferGeometry();
             const gPos = new Float32Array(galaxyStars * 3);
             const gColors = new Float32Array(galaxyStars * 3);
 
-            const coreColor = new THREE.Color(0xffe6a3); // Teplé zlaté jadro galaxie
-            const armColorOuter = new THREE.Color(0x00d4ff); // Jasnomodré mladé hviezdy v ramenách
-            const armColorAccent = new THREE.Color(0xb565ff); // Jemný fialový akcent v ramenách
+            const coreColor = new THREE.Color(0xffe6a3);
+            const armColorOuter = new THREE.Color(0x00d4ff);
+            const armColorAccent = new THREE.Color(0xb565ff);
             const branches = 4;
             const radius = 26;
 
@@ -521,7 +574,7 @@
 
               const spread = Math.pow(Math.random(), 2.4) * (r * 0.28 + 0.35);
               const randX = (Math.random() - 0.5) * spread;
-              const randY = (Math.random() - 0.5) * (spread * 0.28); // Plochý galaktický disk
+              const randY = (Math.random() - 0.5) * (spread * 0.28);
               const randZ = (Math.random() - 0.5) * spread;
 
               gPos[i3] = Math.cos(branchAngle + spinAngle) * r + randX;
@@ -552,13 +605,11 @@
             const galaxyPoints = new THREE.Points(gGeo, gMat);
             this.andromedaGroup.add(galaxyPoints);
 
-            // Naklonenie Andromedy ako na skutočných astronomických snímkach
             this.andromedaGroup.position.set(0, 1.5, -24);
             this.andromedaGroup.rotation.x = Math.PI * 0.34;
             this.andromedaGroup.rotation.z = -Math.PI * 0.18;
             this.scene.add(this.andromedaGroup);
 
-            // 2. Krištáľovo čisté hviezdne pozadie v 3D priestore
             const bgCount = 1200;
             const bgGeo = new THREE.BufferGeometry();
             const bgPos = new Float32Array(bgCount * 3);
@@ -588,12 +639,21 @@
               this.adjustCameraForScreen();
             });
 
-            const nameInput = document.getElementById('player-name-input');
-            if (nameInput) {
-              nameInput.addEventListener('input', (e) => {
-                const clean = e.target.value.replace(/[^a-zA-Z0-9\-_ ]/g, '').trim();
-                _player = clean || "AGENT-3000";
-              });
+            const desktopNameInput = document.getElementById('player-name-input');
+            const mobileNameInput = document.getElementById('player-name-mobile');
+
+            const syncPlayerName = (rawValue, sourceEl) => {
+              const clean = rawValue.replace(/[^a-zA-Z0-9\-_ áäčďéíĺľňóôŕšťúýžÁÄČĎÉÍĹĽŇÓÔŔŠŤÚÝŽ]/g, '').trim();
+              _player = clean || "AGENT-3000";
+              if (sourceEl !== desktopNameInput && desktopNameInput) desktopNameInput.value = rawValue;
+              if (sourceEl !== mobileNameInput && mobileNameInput) mobileNameInput.value = rawValue;
+            };
+
+            if (desktopNameInput) {
+              desktopNameInput.addEventListener('input', (e) => syncPlayerName(e.target.value, desktopNameInput));
+            }
+            if (mobileNameInput) {
+              mobileNameInput.addEventListener('input', (e) => syncPlayerName(e.target.value, mobileNameInput));
             }
 
             const handleTimeChange = (val) => {
@@ -629,7 +689,7 @@
               AudioEngine.init();
               AudioEngine.playTone(750, 'sine', 0.15);
               const totalStab = this.getTotalStabilization();
-              const shareText = `🌌 Riešim 3D kvantový polyéder CHRONO-POLYHEDRON 3000 v galaxii Andromeda!\n⚡ Stabilizácia: ${totalStab}% | Ťahy: ${_moves}\nTrúfneš si prekonať túto vesmírnu výzvu? 👉 ${window.location.href}`;
+              const shareText = `🌌 Riešim 3D kvantový polyéder CHRONO-POLYHEDRON 3000 v galaxii Andromeda!\n👤 Hráč: ${_player} | Stabilizácia: ${totalStab}% | Ťahy: ${_moves}\nTrúfneš si prekonať túto vesmírnu výzvu? 👉 ${window.location.href}`;
               if (navigator.clipboard) {
                 navigator.clipboard.writeText(shareText);
               }
@@ -711,7 +771,7 @@
 
           handleNodeClick(id) {
             if (_isSolved) return;
-            if (!SecurityCore.verifyHumanTiming()) return; // Ochrana proti automatizovaným kliker-botom
+            if (!SecurityCore.verifyHumanTiming()) return;
             if (typeof id !== 'number' || id < 0 || id >= _nodes.length) return;
 
             const pIdx = _timePhase + 1;
@@ -770,7 +830,6 @@
           },
 
           async checkWinCondition() {
-            // Integritná kontrola: overí, či boli reálne vykonané ťahy v auditnom zázname
             if (this.getTotalStabilization() === 100 && !_isSolved) {
               if (_moves < 18 || SecurityCore.getAuditLength() !== _moves) {
                 showToast("SECURITY ALERT: Detegovaná nekonzistentná manipulácia so stavom!");
