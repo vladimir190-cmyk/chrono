@@ -1,0 +1,13 @@
+JSON
+{
+  "name": "CHRONO-POLYHEDRON 3000: Omega Edition",
+  "short_name": "Chrono3000",
+  "description": "Futuristický 4D kvantový sci-fi hlavolam zasadený do galaxie Andromeda (M31) s SHA-256 verifikáciou.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#000103",
+  "theme_color": "#00f3ff",
+  "categories": ["games", "puzzle", "education"]
+}
