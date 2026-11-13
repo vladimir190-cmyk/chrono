@@ -2,7 +2,7 @@
 <html lang="sk">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://cdnjs.cloudflare.com https://*.firebaseio.com https://*.supabase.co; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' https://*.firebaseio.com https://*.supabase.co; worker-src 'self' blob:;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://cdnjs.cloudflare.com https://api.jsonbin.io; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' https://api.jsonbin.io; worker-src 'self' blob:;">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="theme-color" content="#000103">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -46,7 +46,7 @@
     .sub { font-size: 0.55rem; color: #8a99ad; margin-top: 1px; display: flex; align-items: center; gap: 5px; }
     .sec-badge { color: var(--green); font-weight: bold; }
 
-    /* Kompaktné štatistiky HORE (vrátane Speedrun Timeru) */
+    /* Kompaktné štatistiky HORE */
     .top-stats-compact {
       background: var(--panel);
       border: 1px solid rgba(255, 215, 0, 0.45);
@@ -62,7 +62,7 @@
     .stat-item span { color: #8a99ad; font-size: 0.5rem; text-transform: uppercase; }
     .stat-item strong { color: #fff; font-size: 0.72rem; font-variant-numeric: tabular-nums; }
 
-    /* Mobilná lišta pre meno lúštiteľa + rýchle ikony */
+    /* Mobilná lišta pre meno lúštiteľa */
     .mobile-player-bar {
       display: none;
       background: var(--panel);
@@ -205,20 +205,18 @@
       display: none;
     }
 
-    /* Modály (Certifikát, Rebríček, Tutoriál) */
+    /* Modály */
     .modal { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 1, 3, 0.92); backdrop-filter: blur(20px); z-index: 100; display: none; justify-content: center; align-items: center; padding: 15px; }
     .modal-content { background: #050812; border: 1px solid var(--gold); border-radius: 16px; padding: 20px; max-width: 480px; width: 100%; text-align: center; box-shadow: 0 0 45px rgba(255, 215, 0, 0.35); max-height: 90vh; overflow-y: auto; }
     .modal-title { color: var(--gold); font-size: 1.2rem; letter-spacing: 1.5px; margin-bottom: 8px; text-transform: uppercase; text-shadow: 0 0 12px var(--gold); }
     #cert-canvas-container { width: 100%; height: 210px; margin: 10px 0; border-radius: 10px; border: 1px solid rgba(255, 215, 0, 0.35); background: #000103; }
 
-    /* Tabuľka rebríčka */
     .lb-table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.75rem; text-align: left; }
     .lb-table th { color: var(--primary); border-bottom: 1px solid rgba(0, 243, 255, 0.3); padding: 6px; text-transform: uppercase; font-size: 0.65rem; }
     .lb-table td { padding: 7px 6px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
     .lb-rank-1 { color: var(--gold); font-weight: bold; }
     .lb-hash { font-family: monospace; color: var(--green); font-size: 0.65rem; }
 
-    /* Tutoriál boxy */
     .tut-step { background: rgba(0, 243, 255, 0.06); border: 1px solid rgba(0, 243, 255, 0.25); border-radius: 10px; padding: 10px; margin: 8px 0; text-align: left; font-size: 0.78rem; line-height: 1.4; }
     .tut-step strong { color: var(--primary); }
   </style>
@@ -257,7 +255,6 @@
         </div>
       </header>
 
-      <!-- Mobilná lišta pre meno lúštiteľa -->
       <div class="mobile-player-bar">
         <label for="player-name-mobile">Lúštiteľ:</label>
         <input type="text" id="player-name-mobile" value="AGENT-3000" maxlength="18" autocomplete="off" placeholder="Tvoje meno...">
@@ -265,7 +262,6 @@
       </div>
     </div>
 
-    <!-- Desktopové štatistiky vpravo hore -->
     <div class="side-panel">
       <div class="stat-card">
         <div class="stat-label">Meno lúštiteľa</div>
@@ -290,7 +286,6 @@
       </div>
     </div>
 
-    <!-- Spodný panel -->
     <footer>
       <div class="time-control">
         <span style="font-size: 0.7rem; color: #8a99ad; font-weight: bold;">t₋₁</span>
@@ -302,27 +297,27 @@
         <button class="btn" id="reset-cam-btn">Reset Pohľadu</button>
         <button class="btn btn-green" id="audio-toggle-btn">Zvuk: ON</button>
         <button class="btn btn-secondary" id="tutorial-btn">Level 1 Tutoriál</button>
-        <button class="btn btn-gold" id="leaderboard-btn">🏆 Rebríček</button>
+        <button class="btn btn-gold" id="leaderboard-btn">🏆 Globálny Rebríček</button>
         <button class="btn btn-secondary" id="challenge-btn">Virálna Výzva</button>
         <button class="btn btn-gold" id="rage-btn">Reset Hry</button>
       </div>
     </footer>
   </div>
 
-  <!-- 1. Modal: Interaktívny Tutoriál (Onboarding) -->
+  <!-- Modal: Tutoriál -->
   <div class="modal" id="tutorial-modal">
     <div class="modal-content" style="border-color: var(--primary);">
       <div class="modal-title" style="color: var(--primary);">🎮 Kvantový Tréning (Onboarding)</div>
       <p style="font-size: 0.8rem; color: #a0aec0;">Vitajte v CHRONO-POLYHEDRON 3000. Pochopte fyziku 4D priestoru za 10 sekúnd:</p>
       
       <div class="tut-step">
-        <strong>1. Rotácia & Výber:</strong> Ťahaním prsta alebo myši otáčate 3D polyédrom v galaxii Andromeda. Kliknutím na uzol ho aktivujete.
+        <strong>1. Rotácia & Výber:</strong> Ťahaním prsta alebo myši otáčate 3D polyédrom. Kliknutím na uzol ho aktivujete.
       </div>
       <div class="tut-step">
-        <strong>2. Kauzalita Času ($t_{-1} \rightarrow t_0 \rightarrow t_{+1}$):</strong> Posuvníkom dole meníte časovú dimenziu. Aktivácia uzla v <em>Minulosti ($t_{-1}$)</em> automaticky prepne ten istý uzol v <em>Prítomnosti ($t_0$)</em>!
+        <strong>2. Kauzalita Času ($t_{-1} \rightarrow t_0 \rightarrow t_{+1}$):</strong> Posuvníkom dole meníte časovú dimenziu. Aktivácia uzla v <em>Minulosti ($t_{-1}$)</em> prepne ten istý uzol v <em>Prítomnosti ($t_0$)</em>!
       </div>
       <div class="tut-step">
-        <strong>3. Cesta k víťazstvu:</strong> Vyberte si režim. <strong>Level 1 (Tréning)</strong> má len 9 uzlov (3×3) na rýchle pochopenie. <strong>Omega (36 uzlov)</strong> odomyká zápis do globálneho rebríčka a SHA-256 certifikát!
+        <strong>3. Cesta k víťazstvu:</strong> <strong>Level 1</strong> má len 9 uzlov na tréning. Režim <strong>Omega</strong> odomyká zápis do <em>globálneho cloudového rebríčka</em> a SHA-256 certifikát!
       </div>
 
       <div style="display: flex; gap: 8px; justify-content: center; margin-top: 14px; flex-wrap: wrap;">
@@ -332,11 +327,11 @@
     </div>
   </div>
 
-  <!-- 2. Modal: Globálny Rebríček (Leaderboard) -->
+  <!-- Modal: Globálny Rebríček -->
   <div class="modal" id="leaderboard-modal">
     <div class="modal-content">
       <div class="modal-title">🏆 Globálny Rebríček Agentov</div>
-      <p style="font-size: 0.75rem; color: #a0aec0;">Najrýchlejší riešitelia 36-uzlového Omega Polyédra (SHA-256 Verified)</p>
+      <p style="font-size: 0.75rem; color: #a0aec0;">Svetoví riešitelia 36-uzlového Omega Polyédra (Cloud Sync)</p>
       
       <table class="lb-table">
         <thead>
@@ -348,7 +343,9 @@
             <th>Proof</th>
           </tr>
         </thead>
-        <tbody id="leaderboard-body"></tbody>
+        <tbody id="leaderboard-body">
+          <tr><td colspan="5" style="text-align:center; color:#8a99ad;">Načítavam globálnu sieť...</td></tr>
+        </tbody>
       </table>
 
       <div style="display: flex; gap: 8px; justify-content: center; margin-top: 12px;">
@@ -357,11 +354,11 @@
     </div>
   </div>
 
-  <!-- 3. Modal: Kryptografický 3D Certifikát -->
+  <!-- Modal: Kryptografický 3D Certifikát -->
   <div class="modal" id="cert-modal">
     <div class="modal-content">
       <div class="modal-title">🏆 Polyhedron Master 🏆</div>
-      <p style="font-size: 0.8rem; color: #a0aec0;">Galaktická mriežka stabilizovaná na 100%! Výsledok zapísaný do rebríčka.</p>
+      <p style="font-size: 0.8rem; color: #a0aec0;">Mriežka stabilizovaná! Skóre bolo úspešne odoslané do globálneho cloudu.</p>
       
       <div id="cert-canvas-container"></div>
 
@@ -377,85 +374,17 @@
       'use strict';
 
       // ==========================================
-      // 1. PWA MANIFEST & SERVICE WORKER ENGINE
+      // CLOUD REBRÍČEK ENGINE (JSONBin.io API)
       // ==========================================
-      (function initPWA() {
-        const svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="100" fill="#050812"/><polygon points="256,60 440,170 440,342 256,452 72,342 72,170" fill="none" stroke="#00f3ff" stroke-width="18"/><polygon points="256,60 440,342 72,342" fill="none" stroke="#ff007f" stroke-width="10"/><circle cx="256" cy="256" r="45" fill="#ffd700"/></svg>`;
-        const iconUrl = 'data:image/svg+xml;base64,' + btoa(svgIcon);
-
-        const manifestObj = {
-          name: "CHRONO-POLYHEDRON 3000: Omega Edition",
-          short_name: "Chrono3000",
-          start_url: ".",
-          display: "standalone",
-          background_color: "#000103",
-          theme_color: "#00f3ff",
-          description: "4D Kvantový sci-fi hlavolam v galaxii Andromeda s SHA-256 verifikáciou.",
-          icons: [{ src: iconUrl, sizes: "512x512", type: "image/svg+xml" }]
+      const CloudLeaderboard = (function() {
+        // Sem môžeš vložiť svoje reálne ID z jsonbin.io, ak ho vytvoríš.
+        // Ak sú políčka prázdne, hra funguje v lokálnom režime s fallback vzorovými dátami.
+        const CONFIG = {
+          BIN_ID: "", 
+          API_KEY: "" 
         };
 
-        const manifestBlob = new Blob([JSON.stringify(manifestObj)], { type: 'application/json' });
-        const manifestLink = document.getElementById('pwa-manifest');
-        if (manifestLink) manifestLink.href = URL.createObjectURL(manifestBlob);
-
-        if ('serviceWorker' in navigator) {
-          const swCode = `
-            self.addEventListener('install', e => self.skipWaiting());
-            self.addEventListener('activate', e => self.clients.claim());
-            self.addEventListener('fetch', e => {
-              e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
-            });
-          `;
-          const swBlob = new Blob([swCode], { type: 'application/javascript' });
-          navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(() => {});
-        }
-      })();
-
-      // ==========================================
-      // 2. SECURITY CORE (SHA-256 & ANTI-CHEAT)
-      // ==========================================
-      const SecurityCore = (function() {
-        const _secretSalt = crypto.getRandomValues(new Uint32Array(4)).join('-');
-        let _lastActionTime = 0;
-        const _auditTrail = [];
-
-        return Object.freeze({
-          resetAudit() {
-            _auditTrail.length = 0;
-          },
-          verifyHumanTiming() {
-            const now = performance.now();
-            if (now - _lastActionTime < 40) return false;
-            _lastActionTime = now;
-            return true;
-          },
-          recordMove(nodeId, phase, totalMoves) {
-            _auditTrail.push(`${nodeId}:${phase}:${totalMoves}:${Math.floor(performance.now())}`);
-          },
-          getAuditLength() {
-            return _auditTrail.length;
-          },
-          async generateProofHash(player, moves, timeMs, stateVector) {
-            const payload = `${_secretSalt}|${player}|${moves}|${timeMs}|${stateVector}|${_auditTrail.length}`;
-            if (window.crypto && window.crypto.subtle) {
-              const data = new TextEncoder().encode(payload);
-              const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-              const hashArray = Array.from(new Uint8Array(hashBuffer));
-              return hashArray.map(b => b.toString(16).padStart(2, '0')).join('').substring(0, 24).toUpperCase();
-            }
-            return btoa(payload).substring(0, 24).toUpperCase();
-          }
-        });
-      })();
-
-      // ==========================================
-      // 3. GLOBAL LEADERBOARD ENGINE (FIREBASE/SUPABASE READY)
-      // ==========================================
-      const LeaderboardManager = (function() {
-        // Sem môžete vložiť vlastný Firebase Realtime DB endpoint (napr. "https://vas-projekt.firebaseio.com/scores.json")
-        const LEADERBOARD_API_URL = ""; 
-        const STORAGE_KEY = "chrono_polyhedron_omega_lb_v1";
-
+        const STORAGE_KEY = "chrono_cloud_fallback_v2";
         const defaultAgents = [
           { name: "NEXUS-PRIME", timeMs: 38420, moves: 24, hash: "8F9A2C1E04B7" },
           { name: "ANDROMEDA-X", timeMs: 49150, moves: 27, hash: "3D71E90A5C2B" },
@@ -463,7 +392,7 @@
           { name: "CYBER-NOVA", timeMs: 78340, moves: 35, hash: "5A0E7D3B9F44" }
         ];
 
-        function getLocalScores() {
+        function getLocalFallback() {
           try {
             const raw = localStorage.getItem(STORAGE_KEY);
             if (!raw) {
@@ -484,39 +413,60 @@
             const tenths = Math.floor((ms % 1000) / 100);
             return `${mins}:${secs}.${tenths}`;
           },
+
+          async fetchScores() {
+            if (CONFIG.BIN_ID) {
+              try {
+                const res = await fetch(`https://api.jsonbin.io/v3/b/${CONFIG.BIN_ID}/latest`, {
+                  headers: { 'X-Master-Key': CONFIG.API_KEY }
+                });
+                const json = await res.json();
+                if (json && json.record && Array.isArray(json.record.scores)) {
+                  return json.record.scores;
+                }
+              } catch (e) {}
+            }
+            return getLocalFallback();
+          },
+
           async submitScore(entry) {
-            const scores = getLocalScores();
+            let scores = await this.fetchScores();
             scores.push(entry);
             scores.sort((a, b) => a.timeMs - b.timeMs || a.moves - b.moves);
-            const top10 = scores.slice(0, 10);
+            scores = scores.slice(0, 15); // Top 15 na svete
+
+            // Uložiť lokálne ako zálohu
             try {
-              localStorage.setItem(STORAGE_KEY, JSON.stringify(top10));
+              localStorage.setItem(STORAGE_KEY, JSON.stringify(scores));
             } catch (e) {}
 
-            if (LEADERBOARD_API_URL) {
+            // Synchronizovať do globálneho cloudu
+            if (CONFIG.BIN_ID && CONFIG.API_KEY) {
               try {
-                await fetch(LEADERBOARD_API_URL, {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify(entry)
+                await fetch(`https://api.jsonbin.io/v3/b/${CONFIG.BIN_ID}`, {
+                  method: 'PUT',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'X-Master-Key': CONFIG.API_KEY
+                  },
+                  body: JSON.stringify({ scores: scores })
                 });
               } catch (e) {}
             }
           },
-          async render() {
-            let scores = getLocalScores();
-            if (LEADERBOARD_API_URL) {
-              try {
-                const res = await fetch(LEADERBOARD_API_URL);
-                const data = await res.json();
-                if (data) {
-                  scores = Object.values(data).sort((a, b) => a.timeMs - b.timeMs).slice(0, 10);
-                }
-              } catch (e) {}
+
+          async renderTable() {
+            const tbody = document.getElementById('leaderboard-body');
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#8a99ad;">Načítavam globálnu sieť...</td></tr>`;
+            
+            const scores = await this.fetchScores();
+            tbody.innerHTML = '';
+            
+            if (scores.length === 0) {
+              tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#8a99ad;">Zatiaľ žiadni agenti. Buď prvý!</td></tr>`;
+              return;
             }
 
-            const tbody = document.getElementById('leaderboard-body');
-            tbody.innerHTML = '';
             scores.forEach((row, index) => {
               const tr = document.createElement('tr');
               if (index === 0) tr.className = 'lb-rank-1';
@@ -525,7 +475,7 @@
                 <td>${row.name}</td>
                 <td>${this.formatTime(row.timeMs)}</td>
                 <td>${row.moves}</td>
-                <td class="lb-hash">${row.hash.substring(0, 8)}…</td>
+                <td class="lb-hash">${row.hash ? row.hash.substring(0, 8) : 'N/A'}…</td>
               `;
               tbody.appendChild(tr);
             });
@@ -534,16 +484,72 @@
       })();
 
       // ==========================================
-      // 4. WEB AUDIO API SOUNDSCAPES SYNTHESIZER
+      // PWA MANIFEST & SERVICE WORKER
+      // ==========================================
+      (function initPWA() {
+        const svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="100" fill="#050812"/><polygon points="256,60 440,170 440,342 256,452 72,342 72,170" fill="none" stroke="#00f3ff" stroke-width="18"/><polygon points="256,60 440,342 72,342" fill="none" stroke="#ff007f" stroke-width="10"/><circle cx="256" cy="256" r="45" fill="#ffd700"/></svg>`;
+        const iconUrl = 'data:image/svg+xml;base64,' + btoa(svgIcon);
+        const manifestObj = {
+          name: "CHRONO-POLYHEDRON 3000: Omega Edition",
+          short_name: "Chrono3000",
+          start_url: ".",
+          display: "standalone",
+          background_color: "#000103",
+          theme_color: "#00f3ff",
+          icons: [{ src: iconUrl, sizes: "512x512", type: "image/svg+xml" }]
+        };
+        const manifestBlob = new Blob([JSON.stringify(manifestObj)], { type: 'application/json' });
+        const manifestLink = document.getElementById('pwa-manifest');
+        if (manifestLink) manifestLink.href = URL.createObjectURL(manifestBlob);
+
+        if ('serviceWorker' in navigator) {
+          const swCode = `self.addEventListener('install', e => self.skipWaiting()); self.addEventListener('activate', e => self.clients.claim());`;
+          const swBlob = new Blob([swCode], { type: 'application/javascript' });
+          navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(() => {});
+        }
+      })();
+
+      // ==========================================
+      // SECURITY CORE (SHA-256)
+      // ==========================================
+      const SecurityCore = (function() {
+        const _secretSalt = crypto.getRandomValues(new Uint32Array(4)).join('-');
+        let _lastActionTime = 0;
+        const _auditTrail = [];
+
+        return Object.freeze({
+          resetAudit() { _auditTrail.length = 0; },
+          verifyHumanTiming() {
+            const now = performance.now();
+            if (now - _lastActionTime < 40) return false;
+            _lastActionTime = now;
+            return true;
+          },
+          recordMove(nodeId, phase, totalMoves) {
+            _auditTrail.push(`${nodeId}:${phase}:${totalMoves}:${Math.floor(performance.now())}`);
+          },
+          getAuditLength() { return _auditTrail.length; },
+          async generateProofHash(player, moves, timeMs, stateVector) {
+            const payload = `${_secretSalt}|${player}|${moves}|${timeMs}|${stateVector}|${_auditTrail.length}`;
+            if (window.crypto && window.crypto.subtle) {
+              const data = new TextEncoder().encode(payload);
+              const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+              const hashArray = Array.from(new Uint8Array(hashBuffer));
+              return hashArray.map(b => b.toString(16).padStart(2, '0')).join('').substring(0, 24).toUpperCase();
+            }
+            return btoa(payload).substring(0, 24).toUpperCase();
+          }
+        });
+      })();
+
+      // ==========================================
+      // SOUNDSCAPE SYNTHESIZER
       // ==========================================
       const SoundscapeEngine = (function() {
         let ctx = null;
         let isMuted = false;
         let isAmbientRunning = false;
-        let droneOsc1 = null;
-        let droneOsc2 = null;
-        let filterNode = null;
-        let masterGain = null;
+        let droneOsc1 = null, droneOsc2 = null, filterNode = null, masterGain = null;
 
         return {
           init() {
@@ -565,16 +571,10 @@
               filterNode = ctx.createBiquadFilter();
               const droneGain = ctx.createGain();
 
-              droneOsc1.type = 'sine';
-              droneOsc1.frequency.setValueAtTime(55, ctx.currentTime); // Hlboké A1
+              droneOsc1.type = 'sine'; droneOsc1.frequency.setValueAtTime(55, ctx.currentTime);
+              droneOsc2.type = 'triangle'; droneOsc2.frequency.setValueAtTime(82.41, ctx.currentTime);
+              filterNode.type = 'lowpass'; filterNode.frequency.setValueAtTime(180, ctx.currentTime);
 
-              droneOsc2.type = 'triangle';
-              droneOsc2.frequency.setValueAtTime(82.41, ctx.currentTime); // Kvinta E2
-
-              filterNode.type = 'lowpass';
-              filterNode.frequency.setValueAtTime(180, ctx.currentTime);
-
-              // LFO modulácia pre pulzujúci vesmírny efekt
               const lfo = ctx.createOscillator();
               const lfoGain = ctx.createGain();
               lfo.frequency.setValueAtTime(0.18, ctx.currentTime);
@@ -583,30 +583,24 @@
               lfoGain.connect(filterNode.frequency);
 
               droneGain.gain.setValueAtTime(0.14, ctx.currentTime);
-
               droneOsc1.connect(filterNode);
               droneOsc2.connect(filterNode);
               filterNode.connect(droneGain);
               droneGain.connect(masterGain);
 
-              droneOsc1.start();
-              droneOsc2.start();
-              lfo.start();
+              droneOsc1.start(); droneOsc2.start(); lfo.start();
             } catch (e) {}
           },
           shiftDimensionHarmonics(phase) {
             if (!ctx || !droneOsc1 || !droneOsc2) return;
             const now = ctx.currentTime;
-            // Mení tóninu vesmírneho dronu podľa dimenzie (-1 minulosť, 0 prítomnosť, 1 budúcnosť)
             const baseFreq = phase === -1 ? 49.0 : (phase === 0 ? 55.0 : 65.41);
             droneOsc1.frequency.exponentialRampToValueAtTime(baseFreq, now + 0.4);
             droneOsc2.frequency.exponentialRampToValueAtTime(baseFreq * 1.5, now + 0.4);
           },
           toggleMute() {
             isMuted = !isMuted;
-            if (masterGain && ctx) {
-              masterGain.gain.setTargetAtTime(isMuted ? 0 : 0.25, ctx.currentTime, 0.05);
-            }
+            if (masterGain && ctx) masterGain.gain.setTargetAtTime(isMuted ? 0 : 0.25, ctx.currentTime, 0.05);
             return !isMuted;
           },
           playNodePulse(nodeId, phase) {
@@ -619,14 +613,10 @@
               const freq = 320 + nodeId * 42 + (phase + 1) * 90;
               osc.frequency.setValueAtTime(freq, now);
               osc.frequency.exponentialRampToValueAtTime(freq * 1.25, now + 0.14);
-
               gain.gain.setValueAtTime(0.16, now);
               gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.16);
-
-              osc.connect(gain);
-              gain.connect(masterGain);
-              osc.start(now);
-              osc.stop(now + 0.16);
+              osc.connect(gain); gain.connect(masterGain);
+              osc.start(now); osc.stop(now + 0.16);
             } catch (e) {}
           },
           playLaserShift() {
@@ -640,10 +630,8 @@
               osc.frequency.exponentialRampToValueAtTime(110, now + 0.22);
               gain.gain.setValueAtTime(0.1, now);
               gain.gain.linearRampToValueAtTime(0.001, now + 0.22);
-              osc.connect(gain);
-              gain.connect(masterGain);
-              osc.start(now);
-              osc.stop(now + 0.22);
+              osc.connect(gain); gain.connect(masterGain);
+              osc.start(now); osc.stop(now + 0.22);
             } catch (e) {}
           },
           playFanfare() {
@@ -659,10 +647,8 @@
                 osc.frequency.setValueAtTime(freq, now);
                 gain.gain.setValueAtTime(0.18, now);
                 gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.5);
-                osc.connect(gain);
-                gain.connect(masterGain);
-                osc.start(now);
-                osc.stop(now + 0.5);
+                osc.connect(gain); gain.connect(masterGain);
+                osc.start(now); osc.stop(now + 0.5);
               }, idx * 100);
             });
           }
@@ -670,22 +656,17 @@
       })();
 
       // ==========================================
-      // 5. MAIN 3D QUANTUM POLYHEDRON ENGINE
+      // MAIN GAME ENGINE
       // ==========================================
       const QuantumPolyhedronEngine = (function() {
         let _player = "AGENT-3000";
         let _timePhase = 0;
         let _moves = 0;
         let _isSolved = false;
-        let _gameMode = 'omega'; // 'tutorial' (3 uzly = 9 stavov) alebo 'omega' (12 uzlov = 36 stavov)
+        let _gameMode = 'omega';
         let _toastTimer = null;
+        let _timerStart = null, _elapsedMs = 0, _timerInterval = null;
 
-        // Speedrun Timer premenné
-        let _timerStart = null;
-        let _elapsedMs = 0;
-        let _timerInterval = null;
-
-        // Geometria: 12 vrcholov ikosaédra pre Omega, 3 vrcholy pre Level 1 Tutoriál
         const phi = (1 + Math.sqrt(5)) / 2;
         const scale = 1.8;
         const omegaPoints = [
@@ -693,12 +674,8 @@
           [0, -1, phi], [0, 1, phi], [0, -1, -phi], [0, 1, -phi],
           [phi, 0, -1], [phi, 0, 1], [-phi, 0, -1], [-phi, 0, 1]
         ];
-        const tutorialPoints = [
-          [0, 1.9, 0], [-1.7, -1.2, 0.8], [1.7, -1.2, -0.8]
-        ];
-
-        let _nodes = [];
-        let _connections = [];
+        const tutorialPoints = [[0, 1.9, 0], [-1.7, -1.2, 0.8], [1.7, -1.2, -0.8]];
+        let _nodes = [], _connections = [];
 
         function showToast(msg, duration = 3800) {
           const el = document.getElementById('toast');
@@ -714,7 +691,7 @@
             _timerInterval = setInterval(() => {
               if (_timerStart !== null && !_isSolved) {
                 _elapsedMs = performance.now() - _timerStart;
-                const formatted = LeaderboardManager.formatTime(_elapsedMs);
+                const formatted = CloudLeaderboard.formatTime(_elapsedMs);
                 document.getElementById('timer-val').innerText = formatted;
                 document.getElementById('timer-val-top').innerText = formatted;
               }
@@ -723,10 +700,7 @@
         }
 
         function stopTimer() {
-          if (_timerInterval) {
-            clearInterval(_timerInterval);
-            _timerInterval = null;
-          }
+          if (_timerInterval) { clearInterval(_timerInterval); _timerInterval = null; }
         }
 
         return {
@@ -736,7 +710,6 @@
             this.setupEvents();
             this.adjustCameraForScreen();
 
-            // Zobrazí interaktívny tutoriál pri prvej návšteve
             if (!localStorage.getItem('chrono_tutorial_seen')) {
               document.getElementById('tutorial-modal').style.display = 'flex';
               localStorage.setItem('chrono_tutorial_seen', '1');
@@ -769,14 +742,8 @@
             _connections = [];
             for (let i = 0; i < _nodes.length; i++) {
               for (let j = i + 1; j < _nodes.length; j++) {
-                const dist = Math.hypot(
-                  _nodes[i].pos[0] - _nodes[j].pos[0],
-                  _nodes[i].pos[1] - _nodes[j].pos[1],
-                  _nodes[i].pos[2] - _nodes[j].pos[2]
-                );
-                if (mode === 'tutorial' || dist < 3.2) {
-                  _connections.push([i, j]);
-                }
+                const dist = Math.hypot(_nodes[i].pos[0] - _nodes[j].pos[0], _nodes[i].pos[1] - _nodes[j].pos[1], _nodes[i].pos[2] - _nodes[j].pos[2]);
+                if (mode === 'tutorial' || dist < 3.2) _connections.push([i, j]);
               }
             }
 
@@ -803,20 +770,11 @@
             container.appendChild(this.renderer.domElement);
 
             this.scene.add(new THREE.AmbientLight(0xffffff, 0.55));
-            const pointLight = new THREE.PointLight(0x00f3ff, 3.5, 90);
-            pointLight.position.set(15, 15, 15);
-            this.scene.add(pointLight);
-
-            const pointLight2 = new THREE.PointLight(0xff007f, 3.5, 90);
-            pointLight2.position.set(-15, -15, -15);
-            this.scene.add(pointLight2);
-
-            const pointLight3 = new THREE.PointLight(0xffd700, 2.5, 90);
-            pointLight3.position.set(0, 15, -15);
-            this.scene.add(pointLight3);
+            const p1 = new THREE.PointLight(0x00f3ff, 3.5, 90); p1.position.set(15, 15, 15); this.scene.add(p1);
+            const p2 = new THREE.PointLight(0xff007f, 3.5, 90); p2.position.set(-15, -15, -15); this.scene.add(p2);
+            const p3 = new THREE.PointLight(0xffd700, 2.5, 90); p3.position.set(0, 15, -15); this.scene.add(p3);
 
             this.createAndromeda3DGalaxy();
-
             this.polyGroup = new THREE.Group();
             this.scene.add(this.polyGroup);
 
@@ -831,21 +789,15 @@
                 const s = 1 + Math.sin(Date.now() * 0.004) * 0.22;
                 this.coreMesh.scale.set(s, s, s);
               }
-              if (this.andromedaGroup) {
-                this.andromedaGroup.rotation.y += 0.0007;
-              }
-              if (this.deepStars) {
-                this.deepStars.rotation.y -= 0.00015;
-              }
+              if (this.andromedaGroup) this.andromedaGroup.rotation.y += 0.0007;
+              if (this.deepStars) this.deepStars.rotation.y -= 0.00015;
               this.renderer.render(this.scene, this.camera);
             };
             animate();
           },
 
           rebuildPolyhedronMeshes() {
-            while (this.polyGroup.children.length > 0) {
-              this.polyGroup.remove(this.polyGroup.children[0]);
-            }
+            while (this.polyGroup.children.length > 0) this.polyGroup.remove(this.polyGroup.children[0]);
 
             const coreGeo = new THREE.IcosahedronGeometry(0.65, 1);
             const coreMat = new THREE.MeshPhongMaterial({ color: 0xff007f, emissive: 0xff007f, emissiveIntensity: 1.0, wireframe: true });
@@ -857,11 +809,7 @@
 
             _nodes.forEach(node => {
               const mat = new THREE.MeshPhongMaterial({
-                color: node.phaseColors[1],
-                emissive: node.phaseColors[1],
-                emissiveIntensity: 0.4,
-                shininess: 140,
-                wireframe: true
+                color: node.phaseColors[1], emissive: node.phaseColors[1], emissiveIntensity: 0.4, shininess: 140, wireframe: true
               });
               const mesh = new THREE.Mesh(sphereGeo, mat);
               mesh.position.set(...node.pos);
@@ -884,16 +832,14 @@
 
           createAndromeda3DGalaxy() {
             const starCanvas = document.createElement('canvas');
-            starCanvas.width = 64;
-            starCanvas.height = 64;
+            starCanvas.width = 64; starCanvas.height = 64;
             const sCtx = starCanvas.getContext('2d');
             const sGrad = sCtx.createRadialGradient(32, 32, 0, 32, 32, 32);
             sGrad.addColorStop(0, 'rgba(255, 255, 255, 1)');
             sGrad.addColorStop(0.25, 'rgba(255, 255, 255, 0.85)');
             sGrad.addColorStop(0.6, 'rgba(180, 220, 255, 0.2)');
             sGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
-            sCtx.fillStyle = sGrad;
-            sCtx.fillRect(0, 0, 64, 64);
+            sCtx.fillStyle = sGrad; sCtx.fillRect(0, 0, 64, 64);
             const starTexture = new THREE.CanvasTexture(starCanvas);
 
             this.andromedaGroup = new THREE.Group();
@@ -905,69 +851,44 @@
             const coreColor = new THREE.Color(0xffe6a3);
             const armColorOuter = new THREE.Color(0x00d4ff);
             const armColorAccent = new THREE.Color(0xb565ff);
-            const branches = 4;
-            const radius = 26;
+            const branches = 4, radius = 26;
 
             for (let i = 0; i < galaxyStars; i++) {
               const i3 = i * 3;
               const r = Math.pow(Math.random(), 1.6) * radius;
               const spinAngle = r * 0.28;
               const branchAngle = ((i % branches) / branches) * Math.PI * 2;
-
               const spread = Math.pow(Math.random(), 2.4) * (r * 0.28 + 0.35);
-              const randX = (Math.random() - 0.5) * spread;
-              const randY = (Math.random() - 0.5) * (spread * 0.28);
-              const randZ = (Math.random() - 0.5) * spread;
 
-              gPos[i3] = Math.cos(branchAngle + spinAngle) * r + randX;
-              gPos[i3 + 1] = randY;
-              gPos[i3 + 2] = Math.sin(branchAngle + spinAngle) * r + randZ;
+              gPos[i3] = Math.cos(branchAngle + spinAngle) * r + (Math.random() - 0.5) * spread;
+              gPos[i3 + 1] = (Math.random() - 0.5) * (spread * 0.28);
+              gPos[i3 + 2] = Math.sin(branchAngle + spinAngle) * r + (Math.random() - 0.5) * spread;
 
-              const targetArmColor = (i % 5 === 0) ? armColorAccent : armColorOuter;
-              const mixedColor = coreColor.clone().lerp(targetArmColor, Math.min(1, r / (radius * 0.72)));
-
-              gColors[i3] = mixedColor.r;
-              gColors[i3 + 1] = mixedColor.g;
-              gColors[i3 + 2] = mixedColor.b;
+              const mixedColor = coreColor.clone().lerp((i % 5 === 0) ? armColorAccent : armColorOuter, Math.min(1, r / (radius * 0.72)));
+              gColors[i3] = mixedColor.r; gColors[i3 + 1] = mixedColor.g; gColors[i3 + 2] = mixedColor.b;
             }
 
             gGeo.setAttribute('position', new THREE.BufferAttribute(gPos, 3));
             gGeo.setAttribute('color', new THREE.BufferAttribute(gColors, 3));
 
             const gMat = new THREE.PointsMaterial({
-              size: 0.32,
-              map: starTexture,
-              vertexColors: true,
-              transparent: true,
-              opacity: 0.95,
-              depthWrite: false,
-              blending: THREE.AdditiveBlending
+              size: 0.32, map: starTexture, vertexColors: true, transparent: true, opacity: 0.95, depthWrite: false, blending: THREE.AdditiveBlending
             });
-
             this.andromedaGroup.add(new THREE.Points(gGeo, gMat));
             this.andromedaGroup.position.set(0, 1.5, -24);
             this.andromedaGroup.rotation.x = Math.PI * 0.34;
             this.andromedaGroup.rotation.z = -Math.PI * 0.18;
             this.scene.add(this.andromedaGroup);
 
-            const bgCount = 1200;
             const bgGeo = new THREE.BufferGeometry();
-            const bgPos = new Float32Array(bgCount * 3);
-            for (let i = 0; i < bgCount * 3; i += 3) {
+            const bgPos = new Float32Array(1200 * 3);
+            for (let i = 0; i < 3600; i += 3) {
               bgPos[i] = (Math.random() - 0.5) * 120;
               bgPos[i + 1] = (Math.random() - 0.5) * 120;
               bgPos[i + 2] = (Math.random() - 0.5) * 120;
             }
             bgGeo.setAttribute('position', new THREE.BufferAttribute(bgPos, 3));
-            const bgMat = new THREE.PointsMaterial({
-              size: 0.22,
-              map: starTexture,
-              color: 0xffffff,
-              transparent: true,
-              opacity: 0.75,
-              depthWrite: false
-            });
-            this.deepStars = new THREE.Points(bgGeo, bgMat);
+            this.deepStars = new THREE.Points(bgGeo, new THREE.PointsMaterial({ size: 0.22, map: starTexture, color: 0xffffff, transparent: true, opacity: 0.75, depthWrite: false }));
             this.scene.add(this.deepStars);
           },
 
@@ -1006,7 +927,6 @@
 
             document.getElementById('time-slider').addEventListener('input', (e) => handleTimeChange(e.target.value));
 
-            // Prepínanie zvuku (Web Audio Soundscapes)
             const toggleSound = () => {
               SoundscapeEngine.init();
               const isOn = SoundscapeEngine.toggleMute();
@@ -1024,7 +944,6 @@
               this.polyGroup.rotation.set(0, 0, 0);
             });
 
-            // Tutoriál & prepínanie režimov
             document.getElementById('tutorial-btn').addEventListener('click', () => {
               document.getElementById('tutorial-modal').style.display = 'flex';
             });
@@ -1032,7 +951,7 @@
               SoundscapeEngine.init();
               document.getElementById('tutorial-modal').style.display = 'none';
               this.loadGameMode('tutorial');
-              showToast("Level 1 (Tréningový režim): Stabilizuj 9 uzlov!");
+              showToast("Level 1 (Tréning): Stabilizuj 9 uzlov!");
             });
             document.getElementById('start-omega-btn').addEventListener('click', () => {
               SoundscapeEngine.init();
@@ -1041,27 +960,24 @@
               showToast("Režim OMEGA (36 uzlov): Čas sa spustí prvým kliknutím!");
             });
 
-            // Rebríček
             document.getElementById('leaderboard-btn').addEventListener('click', async () => {
-              await LeaderboardManager.render();
               document.getElementById('leaderboard-modal').style.display = 'flex';
+              await CloudLeaderboard.renderTable();
             });
             document.getElementById('close-lb-btn').addEventListener('click', () => {
               document.getElementById('leaderboard-modal').style.display = 'none';
             });
 
-            // Virálna výzva
             document.getElementById('challenge-btn').addEventListener('click', (e) => {
               if (!e.isTrusted) return;
               SoundscapeEngine.init();
               const totalStab = this.getTotalStabilization();
-              const timeFormatted = LeaderboardManager.formatTime(_elapsedMs);
+              const timeFormatted = CloudLeaderboard.formatTime(_elapsedMs);
               const shareText = `🌌 Riešim 3D kvantový polyéder CHRONO-POLYHEDRON 3000 v galaxii Andromeda!\n👤 Agent: ${_player} | Čas: ${timeFormatted} | Stabilizácia: ${totalStab}% | Ťahy: ${_moves}\nTrúfneš si prekonať túto vesmírnu výzvu? 👉 ${window.location.href}`;
               if (navigator.clipboard) navigator.clipboard.writeText(shareText);
-              showToast("Virálna výzva bola skopírovaná do schránky! Zdieľaj ju na LinkedIn/FB.");
+              showToast("Virálna výzva skopírovaná do schránky!");
             });
 
-            // Reset hry
             document.getElementById('rage-btn').addEventListener('click', (e) => {
               if (!e.isTrusted) return;
               this.loadGameMode(_gameMode);
@@ -1077,56 +993,36 @@
             });
 
             const dom = this.renderer.domElement;
-            let isInteracting = false;
-            let prevX = 0, prevY = 0;
-            let startX = 0, startY = 0;
+            let isInteracting = false, prevX = 0, prevY = 0, startX = 0, startY = 0;
 
             const handleStart = (x, y) => {
               SoundscapeEngine.init();
-              isInteracting = true;
-              prevX = x; prevY = y;
-              startX = x; startY = y;
+              isInteracting = true; prevX = x; prevY = y; startX = x; startY = y;
             };
-
             const handleMove = (x, y) => {
               if (!isInteracting) return;
-              const deltaX = x - prevX;
-              const deltaY = y - prevY;
-              this.polyGroup.rotation.y += deltaX * 0.0085;
-              this.polyGroup.rotation.x += deltaY * 0.0085;
+              this.polyGroup.rotation.y += (x - prevX) * 0.0085;
+              this.polyGroup.rotation.x += (y - prevY) * 0.0085;
               prevX = x; prevY = y;
             };
-
             const handleEnd = (x, y) => {
               if (!isInteracting) return;
               isInteracting = false;
-              const dist = Math.hypot(x - startX, y - startY);
-              if (dist < 10) {
+              if (Math.hypot(x - startX, y - startY) < 10) {
                 this.mouse.x = (startX / window.innerWidth) * 2 - 1;
                 this.mouse.y = -(startY / window.innerHeight) * 2 + 1;
                 this.raycaster.setFromCamera(this.mouse, this.camera);
                 const intersects = this.raycaster.intersectObjects(this.nodeMeshes);
-                if (intersects.length > 0) {
-                  this.handleNodeClick(intersects[0].object.userData.id);
-                }
+                if (intersects.length > 0) this.handleNodeClick(intersects[0].object.userData.id);
               }
             };
 
             dom.addEventListener('mousedown', (e) => { if (e.isTrusted) handleStart(e.clientX, e.clientY); });
             window.addEventListener('mousemove', (e) => handleMove(e.clientX, e.clientY));
             window.addEventListener('mouseup', (e) => handleEnd(e.clientX, e.clientY));
-
-            dom.addEventListener('touchstart', (e) => {
-              if (e.isTrusted && e.touches.length === 1) handleStart(e.touches[0].clientX, e.touches[0].clientY);
-            }, { passive: true });
-
-            window.addEventListener('touchmove', (e) => {
-              if (e.touches.length === 1) handleMove(e.touches[0].clientX, e.touches[0].clientY);
-            }, { passive: true });
-
-            window.addEventListener('touchend', (e) => {
-              if (e.changedTouches.length === 1) handleEnd(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
-            });
+            dom.addEventListener('touchstart', (e) => { if (e.isTrusted && e.touches.length === 1) handleStart(e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
+            window.addEventListener('touchmove', (e) => { if (e.touches.length === 1) handleMove(e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
+            window.addEventListener('touchend', (e) => { if (e.changedTouches.length === 1) handleEnd(e.changedTouches[0].clientX, e.changedTouches[0].clientY); });
           },
 
           handleNodeClick(id) {
@@ -1135,7 +1031,6 @@
             if (typeof id !== 'number' || id < 0 || id >= _nodes.length) return;
 
             startTimerIfNeeded();
-
             const pIdx = _timePhase + 1;
             const node = _nodes[id];
             node.active[pIdx] = !node.active[pIdx];
@@ -1144,10 +1039,7 @@
             SecurityCore.recordMove(id, _timePhase, _moves);
             SoundscapeEngine.playNodePulse(id, _timePhase);
 
-            // Kvantová previazanosť medzi minulosťou (t-1) a prítomnosťou (t0)
-            if (pIdx === 0 && node.active[0]) {
-              node.active[1] = !node.active[1];
-            }
+            if (pIdx === 0 && node.active[0]) node.active[1] = !node.active[1];
 
             this.updateTimePhaseVisuals();
             this.checkWinCondition();
@@ -1156,11 +1048,9 @@
 
           updateTimePhaseVisuals() {
             const pIdx = _timePhase + 1;
-
             this.nodeMeshes.forEach((mesh, idx) => {
               const isActive = _nodes[idx].active[pIdx];
               const activeColor = _nodes[idx].phaseColors[pIdx];
-
               mesh.material.color.setHex(isActive ? activeColor : 0x223344);
               mesh.material.emissive.setHex(isActive ? activeColor : 0x000000);
               mesh.material.emissiveIntensity = isActive ? 0.85 : 0;
@@ -1169,10 +1059,7 @@
 
             this.laserLines.forEach(item => {
               const [a, b] = item.nodes;
-              const activeA = _nodes[a].active[pIdx];
-              const activeB = _nodes[b].active[pIdx];
-
-              if (activeA && activeB) {
+              if (_nodes[a].active[pIdx] && _nodes[b].active[pIdx]) {
                 item.line.material.color.setHex(_nodes[a].phaseColors[pIdx]);
                 item.line.material.opacity = 0.95;
               } else {
@@ -1184,11 +1071,7 @@
 
           getTotalStabilization() {
             let totalActive = 0;
-            _nodes.forEach(n => {
-              if (n.active[0]) totalActive++;
-              if (n.active[1]) totalActive++;
-              if (n.active[2]) totalActive++;
-            });
+            _nodes.forEach(n => { if (n.active[0]) totalActive++; if (n.active[1]) totalActive++; if (n.active[2]) totalActive++; });
             return Math.round((totalActive / (_nodes.length * 3)) * 100);
           },
 
@@ -1196,7 +1079,7 @@
             if (this.getTotalStabilization() === 100 && !_isSolved) {
               const minMoves = _gameMode === 'tutorial' ? 4 : 18;
               if (_moves < minMoves || SecurityCore.getAuditLength() !== _moves) {
-                showToast("SECURITY ALERT: Detegovaná nekonzistentná manipulácia so stavom!");
+                showToast("SECURITY ALERT: Detegovaná nekonzistentná manipulácia!");
                 return;
               }
 
@@ -1205,7 +1088,7 @@
               SoundscapeEngine.playFanfare();
 
               if (_gameMode === 'tutorial') {
-                showToast("Level 1 dokončený! Prepínam do hlavného režimu OMEGA (36 uzlov)...", 4000);
+                showToast("Level 1 dokončený! Prepínam do režimu OMEGA...", 4000);
                 setTimeout(() => this.loadGameMode('omega'), 2600);
                 return;
               }
@@ -1214,7 +1097,7 @@
               const stateVector = _nodes.map(n => n.active.map(b => b ? 1 : 0).join('')).join('');
               const proofHash = await SecurityCore.generateProofHash(_player, _moves, finalTime, stateVector);
 
-              await LeaderboardManager.submitScore({
+              await CloudLeaderboard.submitScore({
                 name: _player,
                 timeMs: finalTime,
                 moves: _moves,
@@ -1263,51 +1146,37 @@
 
             const plaqueGeo = new THREE.BoxGeometry(3.6, 2.2, 0.1);
             const canvas = document.createElement('canvas');
-            canvas.width = 1024;
-            canvas.height = 640;
+            canvas.width = 1024; canvas.height = 640;
             const ctx = canvas.getContext('2d');
 
-            ctx.fillStyle = '#050812';
-            ctx.fillRect(0, 0, 1024, 640);
+            ctx.fillStyle = '#050812'; ctx.fillRect(0, 0, 1024, 640);
+            ctx.strokeStyle = '#ffd700'; ctx.lineWidth = 12; ctx.strokeRect(20, 20, 984, 600);
 
-            ctx.strokeStyle = '#ffd700';
-            ctx.lineWidth = 12;
-            ctx.strokeRect(20, 20, 984, 600);
-
-            ctx.fillStyle = '#ffd700';
-            ctx.font = 'bold 36px sans-serif';
-            ctx.textAlign = 'center';
+            ctx.fillStyle = '#ffd700'; ctx.font = 'bold 36px sans-serif'; ctx.textAlign = 'center';
             ctx.fillText('ANDROMEDA POLYHEDRON MASTER', 512, 100);
 
-            ctx.fillStyle = '#00f3ff';
-            ctx.font = '26px sans-serif';
+            ctx.fillStyle = '#00f3ff'; ctx.font = '26px sans-serif';
             ctx.fillText('KRYPTOGRAFICKÝ CERTIFIKÁT ÚSPECHU', 512, 160);
 
-            ctx.fillStyle = '#ffffff';
-            ctx.font = 'bold 46px sans-serif';
+            ctx.fillStyle = '#ffffff'; ctx.font = 'bold 46px sans-serif';
             ctx.fillText(_player, 512, 275);
 
-            ctx.fillStyle = '#a0aec0';
-            ctx.font = '22px sans-serif';
+            ctx.fillStyle = '#a0aec0'; ctx.font = '22px sans-serif';
             ctx.fillText('Úspešne prepojil všetkých 36 kvantových uzlov', 512, 355);
-            ctx.fillText(`Speedrun čas: ${LeaderboardManager.formatTime(finalTime)} • Počet ťahov: ${_moves}`, 512, 405);
+            ctx.fillText(`Speedrun čas: ${CloudLeaderboard.formatTime(finalTime)} • Počet ťahov: ${_moves}`, 512, 405);
 
-            ctx.fillStyle = '#00ff88';
-            ctx.font = '18px monospace';
+            ctx.fillStyle = '#00ff88'; ctx.font = '18px monospace';
             ctx.fillText(`SHA256-PROOF: ${proofHash}`, 512, 525);
 
             const texture = new THREE.CanvasTexture(canvas);
-            const mat = new THREE.MeshPhongMaterial({ map: texture, shininess: 95 });
-            const plaque = new THREE.Mesh(plaqueGeo, mat);
+            const plaque = new THREE.Mesh(plaqueGeo, new THREE.MeshPhongMaterial({ map: texture, shininess: 95 }));
             scene.add(plaque);
 
             const light1 = new THREE.PointLight(0xffd700, 2.5, 20);
-            light1.position.set(3, 3, 4);
-            scene.add(light1);
+            light1.position.set(3, 3, 4); scene.add(light1);
             scene.add(new THREE.AmbientLight(0xffffff, 0.6));
 
             this.certRenderer = renderer;
-
             const certAnimate = () => {
               if (document.getElementById('cert-modal').style.display === 'flex') {
                 requestAnimationFrame(certAnimate);
@@ -1330,9 +1199,7 @@
         };
       })();
 
-      window.addEventListener('DOMContentLoaded', () => {
-        QuantumPolyhedronEngine.init();
-      });
+      window.addEventListener('DOMContentLoaded', () => { QuantumPolyhedronEngine.init(); });
     })();
   </script>
 </body>
