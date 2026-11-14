@@ -13,7 +13,7 @@
       --gold: #ffd700;
       --purple: #9d4edd;
       --green: #00ff88;
-      --panel: rgba(10, 15, 30, 0.88);
+      --panel: rgba(10, 15, 30, 0.9);
       --font: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     }
 
@@ -23,90 +23,90 @@
     #canvas-container { width: 100vw; height: 100vh; position: absolute; top: 0; left: 0; z-index: 1; }
 
     /* HUD Overlay */
-    .hud { position: absolute; z-index: 10; pointer-events: none; display: flex; flex-direction: column; justify-content: space-between; padding: 14px; width: 100%; height: 100%; }
+    .hud { position: absolute; z-index: 10; pointer-events: none; display: flex; flex-direction: column; justify-content: space-between; padding: 12px; width: 100%; height: 100%; }
     .hud * { pointer-events: auto; }
 
     header { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; flex-wrap: wrap; }
-    .title-box { background: var(--panel); border: 1px solid rgba(0, 243, 255, 0.35); padding: 9px 14px; border-radius: 10px; backdrop-filter: blur(10px); box-shadow: 0 0 20px rgba(0, 243, 255, 0.15); }
-    h1 { font-size: 1.05rem; letter-spacing: 1.8px; text-transform: uppercase; color: var(--primary); text-shadow: 0 0 8px var(--primary); }
-    .sub { font-size: 0.65rem; color: #8a99ad; margin-top: 2px; }
+    .title-box { background: var(--panel); border: 1px solid rgba(0, 243, 255, 0.35); padding: 8px 14px; border-radius: 10px; backdrop-filter: blur(10px); box-shadow: 0 0 20px rgba(0, 243, 255, 0.15); }
+    h1 { font-size: 1rem; letter-spacing: 1.8px; text-transform: uppercase; color: var(--primary); text-shadow: 0 0 8px var(--primary); }
+    .sub { font-size: 0.62rem; color: #8a99ad; margin-top: 2px; }
     .sec-badge { color: var(--gold); font-weight: bold; }
 
     .header-right { display: flex; gap: 8px; align-items: center; }
-    .user-profile { background: var(--panel); border: 1px solid rgba(255, 0, 127, 0.4); padding: 7px 12px; border-radius: 10px; backdrop-filter: blur(10px); display: flex; align-items: center; gap: 6px; }
-    .user-profile label { font-size: 0.66rem; color: var(--secondary); text-transform: uppercase; font-weight: bold; }
-    .user-profile input { background: rgba(0, 0, 0, 0.55); border: 1px solid var(--primary); color: var(--gold); padding: 4px 7px; border-radius: 5px; font-family: inherit; font-size: 0.76rem; font-weight: bold; outline: none; width: 115px; user-select: text; -webkit-user-select: text; }
+    .user-profile { background: var(--panel); border: 1px solid rgba(255, 0, 127, 0.4); padding: 6px 12px; border-radius: 10px; backdrop-filter: blur(10px); display: flex; align-items: center; gap: 6px; }
+    .user-profile label { font-size: 0.65rem; color: var(--secondary); text-transform: uppercase; font-weight: bold; }
+    .user-profile input { background: rgba(0, 0, 0, 0.55); border: 1px solid var(--primary); color: var(--gold); padding: 4px 7px; border-radius: 5px; font-family: inherit; font-size: 0.74rem; font-weight: bold; outline: none; width: 110px; user-select: text; -webkit-user-select: text; }
     .user-profile input:focus { border-color: var(--gold); box-shadow: 0 0 8px var(--gold); }
 
     /* Side Panel Stats (Desktop) */
-    .side-panel { position: absolute; right: 14px; top: 82px; display: flex; flex-direction: column; gap: 7px; width: 195px; }
-    .stat-card { background: var(--panel); border: 1px solid rgba(255, 255, 255, 0.1); border-left: 3px solid var(--primary); padding: 7px 11px; border-radius: 8px; backdrop-filter: blur(10px); }
-    .stat-label { font-size: 0.58rem; color: #8a99ad; text-transform: uppercase; letter-spacing: 0.4px; }
-    .stat-value { font-size: 0.92rem; font-weight: bold; color: #fff; margin-top: 1px; font-variant-numeric: tabular-nums; }
+    .side-panel { position: absolute; right: 12px; top: 78px; display: flex; flex-direction: column; gap: 6px; width: 185px; }
+    .stat-card { background: var(--panel); border: 1px solid rgba(255, 255, 255, 0.1); border-left: 3px solid var(--primary); padding: 6px 10px; border-radius: 8px; backdrop-filter: blur(10px); }
+    .stat-label { font-size: 0.56rem; color: #8a99ad; text-transform: uppercase; letter-spacing: 0.4px; }
+    .stat-value { font-size: 0.88rem; font-weight: bold; color: #fff; margin-top: 1px; font-variant-numeric: tabular-nums; }
 
-    .strain-bar-bg { width: 100%; height: 4px; background: rgba(255, 255, 255, 0.1); border-radius: 3px; margin-top: 4px; overflow: hidden; }
+    .strain-bar-bg { width: 100%; height: 4px; background: rgba(255, 255, 255, 0.1); border-radius: 3px; margin-top: 3px; overflow: hidden; }
     .strain-bar-fill { height: 100%; width: 10%; background: linear-gradient(90deg, #00f3ff, #ff007f); transition: width 0.3s; }
 
     /* Bottom Controls */
-    footer { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-bottom: 4px; width: 100%; }
-    .time-control { background: var(--panel); padding: 8px 16px; border-radius: 25px; border: 1px solid rgba(0, 243, 255, 0.45); backdrop-filter: blur(10px); display: flex; align-items: center; gap: 10px; width: 100%; max-width: 400px; justify-content: center; }
-    .time-slider { flex: 1; accent-color: var(--primary); cursor: pointer; }
+    footer { display: flex; flex-direction: column; align-items: center; gap: 6px; margin-bottom: 2px; width: 100%; }
+    .time-control { background: var(--panel); padding: 6px 14px; border-radius: 20px; border: 1px solid rgba(0, 243, 255, 0.45); backdrop-filter: blur(10px); display: flex; align-items: center; gap: 10px; width: 100%; max-width: 380px; justify-content: center; }
+    .time-slider { flex: 1; accent-color: var(--primary); cursor: pointer; height: 16px; }
 
-    .btn-row { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; max-width: 820px; width: 100%; }
-    .btn { background: rgba(0, 243, 255, 0.12); border: 1px solid var(--primary); color: var(--primary); padding: 7px 12px; border-radius: 8px; cursor: pointer; font-family: inherit; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; transition: all 0.2s; backdrop-filter: blur(5px); }
+    .btn-row { display: flex; gap: 5px; flex-wrap: wrap; justify-content: center; max-width: 800px; width: 100%; }
+    .btn { background: rgba(0, 243, 255, 0.12); border: 1px solid var(--primary); color: var(--primary); padding: 6px 10px; border-radius: 7px; cursor: pointer; font-family: inherit; font-size: 0.66rem; font-weight: bold; text-transform: uppercase; transition: all 0.2s; backdrop-filter: blur(5px); }
     .btn:hover, .btn:active { background: var(--primary); color: #000; box-shadow: 0 0 15px var(--primary); }
     .btn-secondary { border-color: var(--secondary); color: var(--secondary); background: rgba(255, 0, 127, 0.12); }
     .btn-secondary:hover, .btn-secondary:active { background: var(--secondary); color: #fff; box-shadow: 0 0 15px var(--secondary); }
     .btn-gold { border-color: var(--gold); color: var(--gold); background: rgba(255, 215, 0, 0.12); }
     .btn-gold:hover, .btn-gold:active { background: var(--gold); color: #000; box-shadow: 0 0 15px var(--gold); }
     .btn-purple { border-color: var(--purple); color: #d8a7ff; background: rgba(157, 78, 221, 0.18); }
-    .btn-purple:hover, .btn-purple:active { background: var(--purple); color: #fff; box-shadow: 0 0 15px var(--purple); }
+    .btn-purple:hover, .btn-purple:active { background: var(--purple); color: #fff; box-shadow: 0 0 22px var(--purple); }
     .btn-green { border-color: var(--green); color: var(--green); background: rgba(0, 255, 136, 0.12); }
     .btn-green:hover, .btn-green:active { background: var(--green); color: #000; box-shadow: 0 0 15px var(--green); }
 
     /* Toast Notification */
-    #toast { position: fixed; top: 88px; left: 50%; transform: translateX(-50%); background: rgba(10, 15, 30, 0.96); border: 1px solid var(--primary); color: #fff; padding: 8px 14px; border-radius: 8px; font-size: 0.72rem; z-index: 95; max-width: 90vw; text-align: center; box-shadow: 0 0 25px rgba(0, 243, 255, 0.35); display: none; }
+    #toast { position: fixed; top: 76px; left: 50%; transform: translateX(-50%); background: rgba(10, 15, 30, 0.96); border: 1px solid var(--primary); color: #fff; padding: 6px 12px; border-radius: 7px; font-size: 0.68rem; z-index: 95; max-width: 90vw; text-align: center; box-shadow: 0 0 25px rgba(0, 243, 255, 0.35); display: none; }
 
-    /* Ultra-Compact Mobile HUD (keeps center clear) */
+    /* Super-Compressed Mobile HUD (Center Completely Clear) */
     @media (max-width: 768px) {
-      .hud { padding: 8px; }
-      header { gap: 4px; align-items: center; }
-      .title-box { padding: 4px 8px; border-radius: 7px; }
-      h1 { font-size: 0.72rem; letter-spacing: 1px; }
-      .sub { font-size: 0.52rem; margin-top: 1px; }
-      .header-right { gap: 4px; }
-      .user-profile { padding: 3px 6px; border-radius: 7px; gap: 4px; }
+      .hud { padding: 6px; }
+      header { gap: 3px; align-items: center; }
+      .title-box { padding: 3px 6px; border-radius: 6px; }
+      h1 { font-size: 0.65rem; letter-spacing: 0.8px; }
+      .sub { font-size: 0.46rem; margin-top: 0; }
+      .header-right { gap: 3px; }
+      .user-profile { padding: 2px 5px; border-radius: 6px; gap: 3px; }
       .user-profile label { display: none; }
-      .user-profile input { width: 78px; font-size: 0.65rem; padding: 2px 5px; }
-      #audio-toggle-btn { padding: 4px 7px; font-size: 0.6rem; border-radius: 7px; }
+      .user-profile input { width: 68px; font-size: 0.58rem; padding: 2px 4px; }
+      #audio-toggle-btn { padding: 3px 6px; font-size: 0.54rem; border-radius: 6px; }
 
       .side-panel {
         position: static;
         flex-direction: row;
         flex-wrap: nowrap;
         width: 100%;
-        gap: 3px;
-        margin-top: 4px;
+        gap: 2px;
+        margin-top: 3px;
         justify-content: space-between;
       }
       .stat-card {
         flex: 1;
-        padding: 3px 4px;
+        padding: 2px 3px;
         border-left-width: 2px;
-        border-radius: 5px;
+        border-radius: 4px;
         min-width: 0;
         text-align: center;
       }
-      .stat-label { font-size: 0.44rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-      .stat-value { font-size: 0.64rem; margin-top: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .stat-label { font-size: 0.4rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .stat-value { font-size: 0.58rem; margin-top: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
       .strain-bar-bg { display: none; }
 
-      footer { gap: 5px; margin-bottom: 2px; }
-      .time-control { padding: 5px 12px; gap: 8px; max-width: 320px; }
-      .time-control span { font-size: 0.6rem !important; }
-      .time-slider { height: 14px; }
-      .btn-row { gap: 4px; }
-      .btn { padding: 5px 6px; font-size: 0.56rem; border-radius: 6px; flex: 1 1 30%; }
+      footer { gap: 4px; margin-bottom: 1px; }
+      .time-control { padding: 4px 10px; gap: 6px; max-width: 280px; }
+      .time-control span { font-size: 0.54rem !important; }
+      .time-slider { height: 12px; }
+      .btn-row { gap: 3px; }
+      .btn { padding: 4px 5px; font-size: 0.52rem; border-radius: 5px; flex: 1 1 30%; }
     }
 
     /* Modal Styling */
@@ -144,7 +144,7 @@
       <header>
         <div class="title-box">
           <h1>Chrono-Polyhedron 3000</h1>
-          <div class="sub">Súhvezdie Andromeda • <span class="sec-badge" id="mode-badge">LVL 3: OMEGA 36</span></div>
+          <div class="sub">Galaxia M31 Andromeda • <span class="sec-badge" id="mode-badge">LVL 3: OMEGA 36</span></div>
         </div>
 
         <div class="header-right">
@@ -183,9 +183,9 @@
 
     <footer>
       <div class="time-control">
-        <span style="font-size: 0.72rem; color: #8a99ad; font-weight: bold;">PAST (t₋₁)</span>
+        <span style="font-size: 0.68rem; color: #8a99ad; font-weight: bold;">PAST (t₋₁)</span>
         <input type="range" min="-1" max="1" value="0" step="1" class="time-slider" id="time-slider">
-        <span style="font-size: 0.72rem; color: #8a99ad; font-weight: bold;">FUTURE (t₊₁)</span>
+        <span style="font-size: 0.68rem; color: #8a99ad; font-weight: bold;">FUTURE (t₊₁)</span>
       </div>
 
       <div class="btn-row">
@@ -702,108 +702,58 @@
           _bursts.push({ points, velocities, life: 1.0 });
         },
 
-        buildAndromedaConstellation() {
-          this.andromedaGroup = new THREE.Group();
+        buildAndromedaGalaxy() {
+          this.galaxyGroup = new THREE.Group();
 
-          // Accurate astronomical layout of Andromeda Constellation stars
-          const andromedaStars = [
-            { name: "Alpheratz", pos: [-9.5, 4.2, -16], size: 0.95, color: 0xbbeeff },
-            { name: "Delta", pos: [-5.8, 2.8, -16], size: 0.72, color: 0xffd28a },
-            { name: "Mirach", pos: [-2.2, 1.5, -16], size: 0.92, color: 0xff9d5c },
-            { name: "Almach", pos: [3.2, 3.6, -16], size: 0.88, color: 0xffd700 },
-            { name: "Mu", pos: [-2.7, 4.1, -16], size: 0.62, color: 0xffffff },
-            { name: "Nu", pos: [-3.1, 6.3, -16], size: 0.58, color: 0xaaddff },
-            { name: "Pi", pos: [-6.6, 5.8, -16], size: 0.6, color: 0xaaddff },
-            { name: "Iota", pos: [-8.2, 8.8, -16], size: 0.62, color: 0x00f3ff },
-            { name: "Kappa", pos: [-9.5, 9.5, -16], size: 0.55, color: 0x00f3ff },
-            { name: "Omicron", pos: [-11.0, 8.2, -16], size: 0.58, color: 0x00f3ff },
-            { name: "Zeta", pos: [-1.4, -0.8, -16], size: 0.56, color: 0xffb380 },
-            { name: "Eta", pos: [-3.3, -2.1, -16], size: 0.54, color: 0xffb380 },
-            { name: "51 And", pos: [5.8, 5.2, -16], size: 0.62, color: 0xffd28a }
-          ];
+          // Veľká rotujúca galaxia Andromeda M31 v pozadí
+          const galaxyStars = 2200;
+          const gGeo = new THREE.BufferGeometry();
+          const gPos = new Float32Array(galaxyStars * 3);
+          const gColors = new Float32Array(galaxyStars * 3);
 
-          // Constellation connecting lines
-          const linePairs = [
-            [0, 1], [1, 2], [2, 3],
-            [2, 4], [4, 5],
-            [1, 6], [6, 7], [7, 8], [7, 9],
-            [2, 10], [10, 11], [3, 12]
-          ];
+          const coreColor = new THREE.Color(0xffe6a3);
+          const armColor = new THREE.Color(0x00f3ff);
+          const outerColor = new THREE.Color(0x9d4edd);
+          const radius = 32;
 
-          linePairs.forEach(([i, j]) => {
-            const pA = new THREE.Vector3(...andromedaStars[i].pos);
-            const pB = new THREE.Vector3(...andromedaStars[j].pos);
-            const geo = new THREE.BufferGeometry().setFromPoints([pA, pB]);
-            const mat = new THREE.LineBasicMaterial({ color: 0x00f3ff, transparent: true, opacity: 0.35 });
-            this.andromedaGroup.add(new THREE.Line(geo, mat));
-          });
-
-          // Glowing round star sprites for each constellation star
-          andromedaStars.forEach(s => {
-            const spriteMat = new THREE.SpriteMaterial({
-              map: this.starTexture,
-              color: s.color,
-              transparent: true,
-              opacity: 0.95,
-              blending: THREE.AdditiveBlending
-            });
-            const sprite = new THREE.Sprite(spriteMat);
-            sprite.position.set(...s.pos);
-            sprite.scale.set(s.size, s.size, 1);
-            this.andromedaGroup.add(sprite);
-          });
-
-          // M31 Andromeda Galaxy glow right above Nu Andromedae
-          const m31Mat = new THREE.SpriteMaterial({
-            map: this.starTexture,
-            color: 0xd8a7ff,
-            transparent: true,
-            opacity: 0.75,
-            blending: THREE.AdditiveBlending
-          });
-          const m31Sprite = new THREE.Sprite(m31Mat);
-          m31Sprite.position.set(-3.6, 7.2, -15.8);
-          m31Sprite.scale.set(2.8, 1.1, 1);
-          this.andromedaGroup.add(m31Sprite);
-
-          // Soft round background starfield (no squares!)
-          const bgCount = 650;
-          const bgGeo = new THREE.BufferGeometry();
-          const bgPos = new Float32Array(bgCount * 3);
-          const bgCol = new Float32Array(bgCount * 3);
-          const cBlue = new THREE.Color(0x88ddff);
-          const cGold = new THREE.Color(0xffe6a3);
-          const cPurple = new THREE.Color(0xd8a7ff);
-
-          for (let i = 0; i < bgCount; i++) {
+          for (let i = 0; i < galaxyStars; i++) {
             const i3 = i * 3;
-            bgPos[i3] = (Math.random() - 0.5) * 52;
-            bgPos[i3 + 1] = (Math.random() - 0.5) * 44;
-            bgPos[i3 + 2] = -10 - Math.random() * 25;
-            const c = i % 3 === 0 ? cBlue : (i % 3 === 1 ? cGold : cPurple);
-            bgCol[i3] = c.r; bgCol[i3 + 1] = c.g; bgCol[i3 + 2] = c.b;
+            const r = Math.pow(Math.random(), 1.5) * radius;
+            const arm = i % 2 === 0 ? 0 : Math.PI;
+            const angle = arm + r * 0.35 + (Math.random() - 0.5) * 0.4;
+
+            gPos[i3] = Math.cos(angle) * r;
+            gPos[i3 + 1] = (Math.random() - 0.5) * (3.5 * (1 - r / radius));
+            gPos[i3 + 2] = Math.sin(angle) * r * 0.45 - 22; // Hlboko v pozadí
+
+            const mixFactor = r / radius;
+            const c = r < 4 ? coreColor : (mixFactor < 0.6 ? armColor : outerColor);
+            gColors[i3] = c.r;
+            gColors[i3 + 1] = c.g;
+            gColors[i3 + 2] = c.b;
           }
 
-          bgGeo.setAttribute('position', new THREE.BufferAttribute(bgPos, 3));
-          bgGeo.setAttribute('color', new THREE.BufferAttribute(bgCol, 3));
-          const bgMat = new THREE.PointsMaterial({
-            size: 0.24,
+          gGeo.setAttribute('position', new THREE.BufferAttribute(gPos, 3));
+          gGeo.setAttribute('color', new THREE.BufferAttribute(gColors, 3));
+
+          const gMat = new THREE.PointsMaterial({
+            size: 0.32,
             map: this.starTexture,
             vertexColors: true,
             transparent: true,
-            opacity: 0.75,
-            depthWrite: false,
-            blending: THREE.AdditiveBlending
+            opacity: 0.85,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
           });
-          this.andromedaGroup.add(new THREE.Points(bgGeo, bgMat));
 
-          this.scene.add(this.andromedaGroup);
+          this.galaxyGroup.add(new THREE.Points(gGeo, gMat));
+          this.scene.add(this.galaxyGroup);
         },
 
         setupThreeJS() {
           const container = document.getElementById('canvas-container');
           this.scene = new THREE.Scene();
-          this.scene.fog = new THREE.FogExp2(0x030712, 0.018);
+          this.scene.fog = new THREE.FogExp2(0x030712, 0.016);
 
           this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
           this.camera.position.set(6, 6, 9);
@@ -826,8 +776,8 @@
           this.cubeGroup = new THREE.Group();
           this.scene.add(this.cubeGroup);
 
-          // Build Andromeda Constellation in background
-          this.buildAndromedaConstellation();
+          // Build large Andromeda Galaxy in background
+          this.buildAndromedaGalaxy();
 
           // Interaction Setup
           this.raycaster = new THREE.Raycaster();
@@ -855,8 +805,8 @@
               this.gyroRing2.rotation.y -= 0.02 * stabBoost;
               this.gyroRing2.rotation.z += 0.014 * stabBoost;
             }
-            if (this.andromedaGroup) {
-              this.andromedaGroup.rotation.z = Math.sin(Date.now() * 0.00025) * 0.04;
+            if (this.galaxyGroup) {
+              this.galaxyGroup.rotation.y += 0.0007; // Pomalá rotácia veľkej galaxie Andromeda
             }
 
             for (let i = _bursts.length - 1; i >= 0; i--) {
@@ -960,7 +910,7 @@
             const cfg = LEVELS_CONFIG[_currentLevelKey];
             const stab = this.getTotalStabilization();
             const timeStr = Leaderboard.formatTime(_elapsedMs);
-            const text = `🌌 Riešim 3D kvantový polyéder CHRONO-POLYHEDRON 3000 (${cfg.shortName}) v súhvezdí Andromeda!\n👤 Agent: ${_player} | Čas: ${timeStr} | Stabilizácia: ${stab}% | Ťahy: ${_moves}\nTrúfneš si prekonať túto výzvu? 👉 ${window.location.href}`;
+            const text = `🌌 Riešim 3D kvantový polyéder CHRONO-POLYHEDRON 3000 (${cfg.shortName}) v galaxii Andromeda!\n👤 Agent: ${_player} | Čas: ${timeStr} | Stabilizácia: ${stab}% | Ťahy: ${_moves}\nTrúfneš si prekonať túto výzvu? 👉 ${window.location.href}`;
             try { navigator.clipboard.writeText(text); } catch (e) {}
             showToast("Virálna výzva skopírovaná do schránky!");
           });
@@ -1103,7 +1053,7 @@
             _isSolved = true;
             stopTimer();
             AudioEngine.playFanfare();
-            this.spawnQuantumBurst([0, 0, 0], 0xffd700, 120, 0.13);
+            this.spawnQuantumBurst([0, 0, 0], 0ffd700, 120, 0.13);
             this.spawnQuantumBurst([0, 0, 0], 0x00f3ff, 90, 0.1);
 
             const finalTime = Math.floor(_elapsedMs);
