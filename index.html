@@ -17,7 +17,7 @@
       --gold: #ffd700;
       --purple: #9d4edd;
       --green: #00ff88;
-      --panel: rgba(5, 8, 18, 0.88);
+      --panel: rgba(5, 8, 18, 0.92);
       --font: 'Segoe UI', Roboto, sans-serif;
     }
 
@@ -27,136 +27,106 @@
     #canvas-container { width: 100vw; height: 100vh; position: absolute; top: 0; left: 0; z-index: 1; }
 
     /* HUD Overlay */
-    .hud { position: absolute; z-index: 10; pointer-events: none; display: flex; flex-direction: column; justify-content: space-between; padding: 10px; width: 100%; height: 100%; }
+    .hud { position: absolute; z-index: 10; pointer-events: none; display: flex; flex-direction: column; justify-content: space-between; padding: 12px; width: 100%; height: 100%; }
     .hud * { pointer-events: auto; }
 
-    .top-wrapper { display: flex; flex-direction: column; gap: 6px; width: 100%; }
-    header { display: flex; justify-content: space-between; align-items: center; gap: 6px; width: 100%; }
+    .top-wrapper { display: flex; flex-direction: column; gap: 8px; width: 100%; }
+    header { display: flex; justify-content: space-between; align-items: center; gap: 8px; width: 100%; flex-wrap: wrap; }
     
     .title-box {
       background: var(--panel);
       border: 1px solid rgba(0, 243, 255, 0.55);
-      padding: 6px 12px;
-      border-radius: 10px;
+      padding: 8px 14px;
+      border-radius: 12px;
       backdrop-filter: blur(12px);
-      box-shadow: 0 0 18px rgba(0, 243, 255, 0.25);
+      box-shadow: 0 0 20px rgba(0, 243, 255, 0.25);
     }
 
-    h1 { font-size: 0.9rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--primary); text-shadow: 0 0 12px var(--primary); }
-    .sub { font-size: 0.55rem; color: #8a99ad; margin-top: 1px; display: flex; align-items: center; gap: 5px; }
+    h1 { font-size: 0.95rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--primary); text-shadow: 0 0 12px var(--primary); }
+    .sub { font-size: 0.58rem; color: #8a99ad; margin-top: 2px; display: flex; align-items: center; gap: 6px; }
     .sec-badge { color: var(--gold); font-weight: bold; }
 
-    .top-stats-compact {
+    /* Moderný, jednotný horný panel štatistík (žiadne duplicity) */
+    .top-stats-bar {
       background: var(--panel);
       border: 1px solid rgba(255, 215, 0, 0.45);
-      padding: 6px 10px;
-      border-radius: 10px;
+      padding: 7px 14px;
+      border-radius: 12px;
       backdrop-filter: blur(12px);
       display: flex;
-      gap: 9px;
+      gap: 16px;
       align-items: center;
-      box-shadow: 0 0 16px rgba(255, 215, 0, 0.18);
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.18);
     }
     .stat-item { font-size: 0.65rem; display: flex; flex-direction: column; align-items: flex-end; }
-    .stat-item span { color: #8a99ad; font-size: 0.5rem; text-transform: uppercase; }
-    .stat-item strong { color: #fff; font-size: 0.72rem; font-variant-numeric: tabular-nums; }
+    .stat-item span { color: #8a99ad; font-size: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    .stat-item strong { color: #fff; font-size: 0.78rem; font-variant-numeric: tabular-nums; }
 
-    .mobile-player-bar {
-      display: none;
+    /* Panel pre meno lúštiteľa (univerzálny pre PC aj Mobil) */
+    .player-bar {
       background: var(--panel);
       border: 1px solid rgba(255, 0, 127, 0.5);
       border-left: 3px solid var(--secondary);
-      padding: 5px 10px;
+      padding: 6px 12px;
       border-radius: 10px;
       backdrop-filter: blur(12px);
+      display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 8px;
+      gap: 10px;
       box-shadow: 0 0 15px rgba(255, 0, 127, 0.2);
     }
-    .mobile-player-bar label {
-      font-size: 0.6rem;
+    .player-bar label {
+      font-size: 0.62rem;
       color: var(--secondary);
       text-transform: uppercase;
       font-weight: bold;
       letter-spacing: 0.6px;
       white-space: nowrap;
     }
-    .mobile-player-bar input {
-      flex: 1;
-      min-width: 80px;
+    .player-bar input {
       background: rgba(0, 0, 0, 0.65);
       border: 1px solid rgba(0, 243, 255, 0.45);
       color: var(--gold);
-      padding: 4px 8px;
+      padding: 4px 10px;
       border-radius: 6px;
       font-family: inherit;
-      font-size: 0.72rem;
-      font-weight: bold;
-      outline: none;
-      user-select: text;
-      -webkit-user-select: text;
-    }
-
-    .side-panel { position: absolute; right: 12px; top: 75px; display: flex; flex-direction: column; gap: 7px; width: 235px; z-index: 10; }
-    .stat-card {
-      background: var(--panel);
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      border-left: 3px solid var(--primary);
-      padding: 9px 13px;
-      border-radius: 10px;
-      backdrop-filter: blur(15px);
-    }
-    .stat-label { font-size: 0.6rem; color: #8a99ad; text-transform: uppercase; letter-spacing: 1px; }
-    .stat-value { font-size: 1rem; font-weight: bold; color: #fff; margin-top: 2px; text-shadow: 0 0 8px rgba(255,255,255,0.4); font-variant-numeric: tabular-nums; }
-
-    .strain-bar-bg { width: 100%; height: 5px; background: rgba(255, 255, 255, 0.1); border-radius: 3px; margin-top: 5px; overflow: hidden; }
-    .strain-bar-fill { height: 100%; width: 15%; background: linear-gradient(90deg, #00f3ff, #ff007f, #ffd700); transition: width 0.3s; }
-
-    .player-input {
-      width: 100%;
-      margin-top: 4px;
-      background: rgba(0, 0, 0, 0.65);
-      border: 1px solid rgba(0, 243, 255, 0.4);
-      color: var(--gold);
-      padding: 4px 8px;
-      border-radius: 6px;
       font-size: 0.75rem;
       font-weight: bold;
       outline: none;
+      width: 130px;
       user-select: text;
       -webkit-user-select: text;
     }
 
-    footer { display: flex; flex-direction: column; gap: 6px; align-items: center; width: 100%; margin-bottom: 4px; }
+    footer { display: flex; flex-direction: column; gap: 8px; align-items: center; width: 100%; margin-bottom: 6px; }
     
     .time-control {
       background: var(--panel);
-      padding: 7px 16px;
+      padding: 8px 18px;
       border-radius: 20px;
       border: 1px solid rgba(0, 243, 255, 0.5);
       backdrop-filter: blur(12px);
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       width: 100%;
-      max-width: 420px;
+      max-width: 440px;
       justify-content: center;
       box-shadow: 0 0 20px rgba(0,243,255,0.2);
     }
     .time-slider { flex: 1; accent-color: var(--primary); cursor: pointer; height: 20px; }
 
-    .btn-group { display: flex; gap: 5px; flex-wrap: wrap; justify-content: center; width: 100%; max-width: 820px; }
+    .btn-group { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; width: 100%; max-width: 860px; }
     
     .btn {
       background: rgba(0, 243, 255, 0.12);
       border: 1px solid var(--primary);
       color: var(--primary);
-      padding: 8px 9px;
+      padding: 9px 12px;
       border-radius: 8px;
       cursor: pointer;
       font-family: inherit;
-      font-size: 0.66rem;
+      font-size: 0.68rem;
       font-weight: bold;
       text-transform: uppercase;
       letter-spacing: 0.7px;
@@ -165,7 +135,7 @@
       text-align: center;
       box-shadow: 0 4px 15px rgba(0,0,0,0.4);
       flex: 1;
-      min-width: 105px;
+      min-width: 110px;
     }
     .btn:hover, .btn:active { background: var(--primary); color: #000103; box-shadow: 0 0 20px var(--primary); transform: translateY(-1px); }
     .btn-secondary { border-color: var(--secondary); color: var(--secondary); background: rgba(255, 0, 127, 0.12); }
@@ -178,24 +148,23 @@
     .btn-purple:hover, .btn-purple:active { background: var(--purple); color: #fff; box-shadow: 0 0 22px var(--purple); }
 
     @media (max-width: 768px) {
-      .side-panel { display: none; }
-      .mobile-player-bar { display: flex; }
-      .btn { padding: 8px 4px; font-size: 0.6rem; min-width: 31%; }
-      .top-stats-compact { padding: 4px 7px; gap: 6px; }
-      h1 { font-size: 0.78rem; }
+      .top-stats-bar { gap: 8px; padding: 6px 8px; }
+      .stat-item strong { font-size: 0.68rem; }
+      .btn { padding: 8px 4px; font-size: 0.58rem; min-width: 30%; }
+      .player-bar input { width: 90px; }
     }
 
     #toast {
       position: fixed;
-      top: 105px;
+      top: 115px;
       left: 50%;
       transform: translateX(-50%);
       background: rgba(5, 8, 18, 0.96);
       border: 1px solid var(--primary);
       color: #fff;
-      padding: 10px 16px;
+      padding: 10px 18px;
       border-radius: 10px;
-      font-size: 0.75rem;
+      font-size: 0.78rem;
       z-index: 95;
       max-width: 90vw;
       text-align: center;
@@ -204,9 +173,9 @@
     }
 
     .modal { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 1, 3, 0.92); backdrop-filter: blur(20px); z-index: 100; display: none; justify-content: center; align-items: center; padding: 15px; }
-    .modal-content { background: #050812; border: 1px solid var(--gold); border-radius: 16px; padding: 20px; max-width: 520px; width: 100%; text-align: center; box-shadow: 0 0 45px rgba(255, 215, 0, 0.35); max-height: 90vh; overflow-y: auto; }
-    .modal-title { color: var(--gold); font-size: 1.2rem; letter-spacing: 1.5px; margin-bottom: 8px; text-transform: uppercase; text-shadow: 0 0 12px var(--gold); }
-    #cert-canvas-container { width: 100%; height: 230px; margin: 10px 0; border-radius: 10px; border: 1px solid rgba(255, 215, 0, 0.35); background: #000103; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .modal-content { background: #050812; border: 1px solid var(--gold); border-radius: 16px; padding: 22px; max-width: 520px; width: 100%; text-align: center; box-shadow: 0 0 45px rgba(255, 215, 0, 0.35); max-height: 90vh; overflow-y: auto; }
+    .modal-title { color: var(--gold); font-size: 1.25rem; letter-spacing: 1.5px; margin-bottom: 8px; text-transform: uppercase; text-shadow: 0 0 12px var(--gold); }
+    #cert-canvas-container { width: 100%; height: 240px; margin: 12px 0; border-radius: 10px; border: 1px solid rgba(255, 215, 0, 0.35); background: #000103; display: flex; align-items: center; justify-content: center; overflow: hidden; }
 
     .level-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0; text-align: left; }
     .level-card { background: rgba(0, 243, 255, 0.05); border: 1px solid rgba(0, 243, 255, 0.25); border-radius: 10px; padding: 12px; cursor: pointer; transition: all 0.2s; }
@@ -215,7 +184,7 @@
     .level-card p { font-size: 0.7rem; color: #a0aec0; line-height: 1.35; }
     .level-tag { display: inline-block; font-size: 0.6rem; padding: 2px 6px; border-radius: 4px; font-weight: bold; margin-bottom: 5px; text-transform: uppercase; }
 
-    .lb-table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.72rem; text-align: left; }
+    .lb-table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.75rem; text-align: left; }
     .lb-table th { color: var(--primary); border-bottom: 1px solid rgba(0, 243, 255, 0.3); padding: 6px; text-transform: uppercase; font-size: 0.62rem; }
     .lb-table td { padding: 7px 6px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
     .lb-rank-1 { color: var(--gold); font-weight: bold; }
@@ -236,67 +205,47 @@
           <div class="sub">Andromeda M31 • <span class="sec-badge" id="mode-badge">LVL 3: OMEGA 36</span></div>
         </div>
 
-        <div class="top-stats-compact">
+        <!-- Jednotný horný panel štatistík bez duplicity + nový pútavý údaj -->
+        <div class="top-stats-bar">
+          <div class="player-bar">
+            <label for="player-name-input">Agent:</label>
+            <input type="text" id="player-name-input" value="AGENT-3000" maxlength="18" autocomplete="off">
+          </div>
           <div class="stat-item">
             <span>Čas</span>
-            <strong id="timer-val-top" style="color:var(--green);">00:00.0</strong>
+            <strong id="timer-val" style="color:var(--green);">00:00.0</strong>
           </div>
           <div class="stat-item">
             <span>Fáza</span>
-            <strong id="phase-val-top" style="color:var(--primary);">t₀</strong>
+            <strong id="phase-val" style="color:var(--primary);">t₀</strong>
           </div>
           <div class="stat-item">
-            <span>Sieť</span>
-            <strong id="stab-val-top" style="color:var(--gold);">0%</strong>
+            <span>Stabilizácia</span>
+            <strong id="stab-val" style="color:var(--gold);">0%</strong>
           </div>
           <div class="stat-item">
-            <span>Ťahy</span>
-            <strong id="moves-val-top">0</strong>
+            <span>Kvantová Rezonancia</span>
+            <strong id="resonance-val" style="color: #d8a7ff;">SYNAPSE 1.0x</strong>
+          </div>
+          <div class="stat-item">
+            <span>Ťahy / IQ</span>
+            <strong id="moves-val">0 <span style="color:#8a99ad;">(175)</span></strong>
           </div>
         </div>
+
+        <button class="btn btn-green" id="audio-toggle-btn" style="flex: 0; min-width: auto; padding: 8px 12px;">🔊 Zvuk</button>
       </header>
-
-      <div class="mobile-player-bar">
-        <label for="player-name-mobile">Lúštiteľ:</label>
-        <input type="text" id="player-name-mobile" value="AGENT-3000" maxlength="18" autocomplete="off" placeholder="Tvoje meno...">
-        <button class="btn btn-green" id="audio-toggle-m" style="min-width: auto; padding: 4px 8px; flex: 0;">🔊</button>
-      </div>
-    </div>
-
-    <div class="side-panel">
-      <div class="stat-card">
-        <div class="stat-label">Meno lúštiteľa</div>
-        <input type="text" id="player-name-input" class="player-input" value="AGENT-3000" maxlength="18" autocomplete="off">
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Speedrun Čas (Time Attack)</div>
-        <div class="stat-value" id="timer-val" style="color: var(--green);">00:00.0</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Časová dimenzia</div>
-        <div class="stat-value" id="phase-val" style="color: var(--primary);">PRESENT (t₀)</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Stabilizácia Polyédra</div>
-        <div class="stat-value" id="stab-val">0%</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Brain Strain (IQ) & Ťahy</div>
-        <div class="stat-value"><span id="strain-val">IQ 175</span> • <span id="moves-val">0</span> ťahov</div>
-        <div class="strain-bar-bg"><div class="strain-bar-fill" id="strain-fill"></div></div>
-      </div>
     </div>
 
     <footer>
       <div class="time-control">
-        <span style="font-size: 0.7rem; color: #8a99ad; font-weight: bold;">t₋₁</span>
+        <span style="font-size: 0.7rem; color: #8a99ad; font-weight: bold;">t₋₁ (Minulosť)</span>
         <input type="range" min="-1" max="1" value="0" step="1" class="time-slider" id="time-slider">
-        <span style="font-size: 0.7rem; color: #8a99ad; font-weight: bold;">t₊₁</span>
+        <span style="font-size: 0.7rem; color: #8a99ad; font-weight: bold;">t₊₁ (Budúcnosť)</span>
       </div>
 
       <div class="btn-group">
         <button class="btn" id="reset-cam-btn">Reset Pohľadu</button>
-        <button class="btn btn-green" id="audio-toggle-btn">Zvuk: ON</button>
         <button class="btn btn-purple" id="levels-btn">🌌 Výber Levelu (1-4)</button>
         <button class="btn btn-gold" id="leaderboard-btn">🏆 Globálny Rebríček</button>
         <button class="btn btn-secondary" id="challenge-btn">Virálna Výzva</button>
@@ -369,7 +318,7 @@
     </div>
   </div>
 
-  <!-- Modal: Kryptografický 3D Certifikát -->
+  <!-- Modal: Kryptografický Certifikát -->
   <div class="modal" id="cert-modal">
     <div class="modal-content">
       <div class="modal-title">🏆 Polyhedron Master 🏆</div>
@@ -389,16 +338,13 @@
     (function() {
       'use strict';
 
-      // ==========================================
-      // CLOUD REBRÍČEK ENGINE (JSONBin.io API)
-      // ==========================================
       const CloudLeaderboard = (function() {
         const CONFIG = {
           BIN_ID: "6af824de99f2e6510825cd39", 
           API_KEY: "$2a$10$NMWmWIBHuI3CXGmy.bdI4e9r2Zcpwv0iognAWrLhKj5zhHK8c/Up2" 
         };
 
-        const STORAGE_KEY = "chrono_supernova_lb_v3";
+        const STORAGE_KEY = "chrono_supernova_lb_v4";
         const defaultAgents = [
           { name: "NEXUS-PRIME", level: "OMEGA 36", timeMs: 38420, moves: 24, hash: "8F9A2C1E04B7" },
           { name: "ANDROMEDA-X", level: "OMEGA 36", timeMs: 49150, moves: 27, hash: "3D71E90A5C2B" },
@@ -497,9 +443,6 @@
         };
       })();
 
-      // ==========================================
-      // SECURITY CORE (SHA-256)
-      // ==========================================
       const SecurityCore = (function() {
         const _secretSalt = crypto.getRandomValues(new Uint32Array(4)).join('-');
         let _lastActionTime = 0;
@@ -530,9 +473,6 @@
         });
       })();
 
-      // ==========================================
-      // SOUNDSCAPE SYNTHESIZER
-      // ==========================================
       const SoundscapeEngine = (function() {
         let ctx = null;
         let isMuted = false;
@@ -643,9 +583,6 @@
         };
       })();
 
-      // ==========================================
-      // LEVEL ARCHITEKTÚRY (1 až 4)
-      // ==========================================
       const phi = (1 + Math.sqrt(5)) / 2;
       const invPhi = 1 / phi;
 
@@ -714,9 +651,6 @@
         }
       };
 
-      // ==========================================
-      // MAIN GAME ENGINE + VFX ENGINE
-      // ==========================================
       const QuantumPolyhedronEngine = (function() {
         let _player = "AGENT-3000";
         let _timePhase = 0;
@@ -744,7 +678,6 @@
                 _elapsedMs = performance.now() - _timerStart;
                 const formatted = CloudLeaderboard.formatTime(_elapsedMs);
                 document.getElementById('timer-val').innerText = formatted;
-                document.getElementById('timer-val-top').innerText = formatted;
               }
             }, 90);
           }
@@ -780,7 +713,6 @@
 
             document.getElementById('time-slider').value = 0;
             document.getElementById('timer-val').innerText = "00:00.0";
-            document.getElementById('timer-val-top').innerText = "00:00.0";
             document.getElementById('mode-badge').innerText = cfg.badge;
 
             _nodes = cfg.points.map((pt, idx) => ({
@@ -1036,18 +968,14 @@
               this.adjustCameraForScreen();
             });
 
-            const desktopNameInput = document.getElementById('player-name-input');
-            const mobileNameInput = document.getElementById('player-name-mobile');
-
-            const syncPlayerName = (rawValue, sourceEl) => {
-              const clean = rawValue.replace(/[^a-zA-Z0-9\-_ áäčďéíĺľňóôŕšťúýžÁÄČĎÉÍĹĽŇÓÔŔŠŤÚÝŽ]/g, '').trim();
-              _player = clean || "AGENT-3000";
-              if (sourceEl !== desktopNameInput && desktopNameInput) desktopNameInput.value = rawValue;
-              if (sourceEl !== mobileNameInput && mobileNameInput) mobileNameInput.value = rawValue;
-            };
-
-            if (desktopNameInput) desktopNameInput.addEventListener('input', (e) => syncPlayerName(e.target.value, desktopNameInput));
-            if (mobileNameInput) mobileNameInput.addEventListener('input', (e) => syncPlayerName(e.target.value, mobileNameInput));
+            const nameInput = document.getElementById('player-name-input');
+            if (nameInput) {
+              nameInput.addEventListener('input', (e) => {
+                const raw = e.target.value;
+                const clean = raw.replace(/[^a-zA-Z0-9\-_ áäčďéíĺľňóôŕšťúýžÁÄČĎÉÍĹĽŇÓÔŔŠŤÚÝŽ]/g, '').trim();
+                _player = clean || "AGENT-3000";
+              });
+            }
 
             const handleTimeChange = (val) => {
               const parsed = parseInt(val, 10);
@@ -1066,12 +994,10 @@
             const toggleSound = () => {
               SoundscapeEngine.init();
               const isOn = SoundscapeEngine.toggleMute();
-              document.getElementById('audio-toggle-btn').innerText = isOn ? 'Zvuk: ON' : 'Zvuk: OFF';
-              document.getElementById('audio-toggle-m').innerText = isOn ? '🔊' : '🔇';
+              document.getElementById('audio-toggle-btn').innerText = isOn ? '🔊 Zvuk' : '🔇 Ticho';
               showToast(isOn ? "Vesmírny syntetizátor aktivovaný." : "Zvuk stlmený.");
             };
             document.getElementById('audio-toggle-btn').addEventListener('click', toggleSound);
-            document.getElementById('audio-toggle-m').addEventListener('click', toggleSound);
 
             document.getElementById('reset-cam-btn').addEventListener('click', (e) => {
               if (!e.isTrusted) return;
@@ -1263,21 +1189,19 @@
           },
 
           updateHUD() {
-            const phasesFull = ["PAST (t₋₁)", "PRESENT (t₀)", "FUTURE (t₊₁)"];
-            const phasesShort = ["t₋₁", "t₀", "t₊₁"];
+            const phasesFull = ["t₋₁ (Minulosť)", "t₀ (Prítomnosť)", "t₊₁ (Budúcnosť)"];
             document.getElementById('phase-val').innerText = phasesFull[_timePhase + 1];
-            document.getElementById('phase-val-top').innerText = phasesShort[_timePhase + 1];
 
             const totalPercent = this.getTotalStabilization();
             document.getElementById('stab-val').innerText = `${totalPercent}%`;
-            document.getElementById('stab-val-top').innerText = `${totalPercent}%`;
 
-            document.getElementById('moves-val').innerText = _moves;
-            document.getElementById('moves-val-top').innerText = _moves;
+            // Nový pútavý údaj: Kvantová rezonancia synapsie
+            const resonanceFactor = (1.0 + (totalPercent / 100) * 3.8 + (_moves * 0.05)).toFixed(1);
+            document.getElementById('resonance-val').innerText = `SYNAPSE ${resonanceFactor}x`;
 
             const strain = Math.min(100, Math.max(15, _moves * 2.5));
-            document.getElementById('strain-fill').style.width = `${strain}%`;
-            document.getElementById('strain-val').innerText = `IQ ${185 - Math.floor(strain / 4)}`;
+            const iqVal = 185 - Math.floor(strain / 4);
+            document.getElementById('moves-val').innerHTML = `${_moves} <span style="color:#8a99ad;">(IQ ${iqVal})</span>`;
           },
 
           triggerVictory(proofHash, finalTime, cfg) {
