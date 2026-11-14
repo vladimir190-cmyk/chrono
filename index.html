@@ -305,7 +305,7 @@
     </footer>
   </div>
 
-  <!-- Modal: Výber Levelu & Tutoriál -->
+  <!-- Modal: Výber Levelu -->
   <div class="modal" id="levels-modal">
     <div class="modal-content" style="border-color: var(--purple);">
       <div class="modal-title" style="color: #d8a7ff;">🌌 Kvantová Kampaň (Levely 1 – 4)</div>
@@ -531,7 +531,7 @@
       })();
 
       // ==========================================
-      // SOUNDSCAPE SYNTHESIZER (Kombo & Harmónie)
+      // SOUNDSCAPE SYNTHESIZER
       // ==========================================
       const SoundscapeEngine = (function() {
         let ctx = null;
@@ -857,7 +857,6 @@
               if (this.andromedaGroup) this.andromedaGroup.rotation.y += 0.0007;
               if (this.deepStars) this.deepStars.rotation.y -= 0.00015;
 
-              // Animácia 3D fotónových explózií (VFX)
               for (let i = _bursts.length - 1; i >= 0; i--) {
                 const b = _bursts[i];
                 b.life -= 0.032;
@@ -926,13 +925,11 @@
             while (this.polyGroup.children.length > 0) this.polyGroup.remove(this.polyGroup.children[0]);
             _bursts.length = 0;
 
-            // Kvantové jadro
             const coreGeo = new THREE.IcosahedronGeometry(0.62, 1);
             const coreMat = new THREE.MeshPhongMaterial({ color: 0xff007f, emissive: 0xff007f, emissiveIntensity: 1.1, wireframe: true });
             this.coreMesh = new THREE.Mesh(coreGeo, coreMat);
             this.polyGroup.add(this.coreMesh);
 
-            // Orbitálne gyroskopické prstence
             const ringGeo1 = new THREE.TorusGeometry(1.15, 0.025, 16, 64);
             const ringMat1 = new THREE.MeshBasicMaterial({ color: 0x00f3ff, transparent: true, opacity: 0.65 });
             this.gyroRing1 = new THREE.Mesh(ringGeo1, ringMat1);
@@ -1083,7 +1080,6 @@
               this.polyGroup.rotation.set(0, 0, 0);
             });
 
-            // Modál výberu levelov
             document.getElementById('levels-btn').addEventListener('click', () => {
               document.getElementById('levels-modal').style.display = 'flex';
             });
@@ -1188,11 +1184,9 @@
             SoundscapeEngine.playNodePulse(id, _timePhase, node.active[pIdx]);
             this.spawnQuantumBurst(node.pos, node.phaseColors[pIdx], 26, 0.065);
 
-            // Časová kauzalita: Minulosť (t-1) ovplyvňuje Prítomnosť (t0)
             if (pIdx === 0 && node.active[0]) {
               node.active[1] = !node.active[1];
             }
-            // V Level 4 (SINGULARITY) rezonuje aj Prítomnosť do Budúcnosti!
             if (_currentLevelKey === 'level4' && pIdx === 1 && node.active[1]) {
               node.active[2] = !node.active[2];
             }
@@ -1244,7 +1238,6 @@
               _isSolved = true;
               stopTimer();
               SoundscapeEngine.playFanfare();
-              // Supernova explózia zo stredu jadra
               this.spawnQuantumBurst([0, 0, 0], 0xffd700, 140, 0.14);
               this.spawnQuantumBurst([0, 0, 0], 0x00f3ff, 100, 0.11);
 
