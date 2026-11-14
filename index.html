@@ -70,11 +70,8 @@
     /* Mobile Layout: Stats & Header moved to bottom, center completely clear */
     @media (max-width: 768px) {
       .hud { padding: 4px; justify-content: flex-end; }
-      
-      /* Hide desktop side-panel, use bottom mobile stats bar */
       .side-panel { display: none; }
-      
-      header { display: none; } /* Replaced by compact bottom bar */
+      header { display: none; }
 
       .mobile-bottom-hud {
         display: flex !important;
@@ -190,7 +187,7 @@
 
     <!-- Bottom Controls & Mobile HUD -->
     <footer>
-      <!-- Mobile Bottom HUD (Stats moved to bottom) -->
+      <!-- Mobile Bottom HUD -->
       <div class="mobile-bottom-hud">
         <div class="mobile-stats-row">
           <div class="mobile-stat-card" style="border-top-color: var(--green);">
@@ -792,13 +789,14 @@
         setupThreeJS() {
           const container = document.getElementById('canvas-container');
           this.scene = new THREE.Scene();
-          this.scene.fog = new THREE.FogExp2(0x030712, 0.016);
+          // Clear background without heavy exponential fog blinding the center
+          this.scene.background = new THREE.Color(0x030712);
 
           this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
           this.camera.position.set(6, 6, 9);
           this.camera.lookAt(0, 0, 0);
 
-          this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
+          this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, preserveDrawingBuffer: true });
           this.renderer.setSize(window.innerWidth, window.innerHeight);
           this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
           container.appendChild(this.renderer.domElement);
@@ -898,7 +896,7 @@
             this.updateHUD();
           });
 
-          const toggleAudio = (btnEl) => {
+          const toggleAudio = () => {
             AudioEngine.init();
             const active = AudioEngine.toggleMute();
             const txt = active ? '🔊 Zvuk' : '🔇 Ticho';
@@ -907,8 +905,8 @@
             showToast(active ? "Vesmírny syntetizátor aktivovaný." : "Zvuk stlmený.");
           };
 
-          document.getElementById('audio-toggle-btn').addEventListener('click', () => toggleAudio());
-          document.getElementById('mob-audio-btn').addEventListener('click', () => toggleAudio());
+          document.getElementById('audio-toggle-btn').addEventListener('click', toggleAudio);
+          document.getElementById('mob-audio-btn').addEventListener('click', toggleAudio);
 
           document.getElementById('reset-cam-btn').addEventListener('click', () => {
             AudioEngine.init();
