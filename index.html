@@ -328,7 +328,7 @@
       'use strict';
 
       const CloudLeaderboard = (function() {
-        const STORAGE_KEY = "chrono_supernova_local_lb_v2";
+        const STORAGE_KEY = "chrono_supernova_local_lb_v4";
         const defaultAgents = [
           { name: "NEXUS-PRIME", level: "OMEGA 36", timeMs: 38420, moves: 24, hash: "8F9A2C1E04B7" },
           { name: "ANDROMEDA-X", level: "OMEGA 36", timeMs: 49150, moves: 27, hash: "3D71E90A5C2B" },
@@ -338,11 +338,13 @@
 
         return {
           formatTime(ms) {
-            const totalSec = ms / 1000;
-            const mins = Math.floor(totalSec / 60).toString().padStart(2, '0');
-            const secs = Math.floor(totalSec % 60).toString().padStart(2, '0');
-            const tenths = Math.floor((ms % 1000) / 100);
-            return `${mins}:${secs}.${tenths}`;
+            try {
+              const totalSec = ms / 1000;
+              const mins = Math.floor(totalSec / 60).toString().padStart(2, '0');
+              const secs = Math.floor(totalSec % 60).toString().padStart(2, '0');
+              const tenths = Math.floor((ms % 1000) / 100);
+              return `${mins}:${secs}.${tenths}`;
+            } catch(e) { return "00:00.0"; }
           },
 
           fetchScores() {
@@ -369,29 +371,31 @@
           },
 
           renderTable() {
-            const tbody = document.getElementById('leaderboard-body');
-            if (!tbody) return;
-            tbody.innerHTML = '';
-            
-            const scores = this.fetchScores();
-            if (scores.length === 0) {
-              tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#8a99ad;">Zatiaľ žiadni agenti. Buď prvý!</td></tr>';
-              return;
-            }
+            try {
+              const tbody = document.getElementById('leaderboard-body');
+              if (!tbody) return;
+              tbody.innerHTML = '';
+              
+              const scores = this.fetchScores();
+              if (!scores || scores.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#8a99ad;">Zatiaľ žiadni agenti. Buď prvý!</td></tr>';
+                return;
+              }
 
-            scores.forEach((row, index) => {
-              const tr = document.createElement('tr');
-              if (index === 0) tr.className = 'lb-rank-1';
-              tr.innerHTML = `
-                <td>${index + 1}.</td>
-                <td>${row.name}</td>
-                <td style="color:var(--primary); font-size:0.65rem;">${row.level || 'OMEGA 36'}</td>
-                <td>${this.formatTime(row.timeMs)}</td>
-                <td>${row.moves}</td>
-                <td class="lb-hash">${row.hash ? row.hash.substring(0, 8) : 'N/A'}…</td>
-              `;
-              tbody.appendChild(tr);
-            });
+              scores.forEach((row, index) => {
+                const tr = document.createElement('tr');
+                if (index === 0) tr.className = 'lb-rank-1';
+                tr.innerHTML = `
+                  <td>${index + 1}.</td>
+                  <td>${row.name || 'AGENT'}</td>
+                  <td style="color:var(--primary); font-size:0.65rem;">${row.level || 'OMEGA 36'}</td>
+                  <td>${this.formatTime(row.timeMs)}</td>
+                  <td>${row.moves || 0}</td>
+                  <td class="lb-hash">${row.hash ? row.hash.substring(0, 8) : 'N/A'}…</td>
+                `;
+                tbody.appendChild(tr);
+              });
+            } catch(e) {}
           }
         };
       })();
@@ -410,12 +414,12 @@
           resetAudit() { _auditTrail.length = 0; },
           verifyHumanTiming() {
             const now = performance.now();
-            if (now - _lastActionTime < 30) return false;
+            if (now - _lastActionTime < 20) return false;
             _lastActionTime = now;
             return true;
           },
           recordMove(nodeId, phase, totalMoves) {
-            _auditTrail.push(`${nodeId}:${phase}:${totalMoves}:${Math.floor(performance.now())}`);
+            try { _auditTrail.push(`${nodeId}:${phase}:${totalMoves}:${Math.floor(performance.now())}`); } catch(e) {}
           },
           getAuditLength() { return _auditTrail.length; },
           async generateProofHash(player, levelName, moves, timeMs, stateVector) {
@@ -634,30 +638,36 @@
         let _nodes = [], _connections = [], _bursts = [];
 
         function showToast(msg, duration = 3800) {
-          const el = document.getElementById('toast');
-          if (!el) return;
-          el.textContent = msg;
-          el.style.display = 'block';
-          if (_toastTimer) clearTimeout(_toastTimer);
-          _toastTimer = setTimeout(() => { el.style.display = 'none'; }, duration);
+          try {
+            const el = document.getElementById('toast');
+            if (!el) return;
+            el.textContent = msg;
+            el.style.display = 'block';
+            if (_toastTimer) clearTimeout(_toastTimer);
+            _toastTimer = setTimeout(() => { if (el) el.style.display = 'none'; }, duration);
+          } catch(e) {}
         }
 
         function startTimerIfNeeded() {
-          if (_timerStart === null && !_isSolved) {
-            _timerStart = performance.now();
-            _timerInterval = setInterval(() => {
-              if (_timerStart !== null && !_isSolved) {
-                _elapsedMs = performance.now() - _timerStart;
-                const formatted = CloudLeaderboard.formatTime(_elapsedMs);
-                const timerEl = document.getElementById('timer-val');
-                if (timerEl) timerEl.innerText = formatted;
-              }
-            }, 90);
-          }
+          try {
+            if (_timerStart === null && !_isSolved) {
+              _timerStart = performance.now();
+              _timerInterval = setInterval(() => {
+                if (_timerStart !== null && !_isSolved) {
+                  _elapsedMs = performance.now() - _timerStart;
+                  const formatted = CloudLeaderboard.formatTime(_elapsedMs);
+                  const timerEl = document.getElementById('timer-val');
+                  if (timerEl) timerEl.innerText = formatted;
+                }
+              }, 90);
+            }
+          } catch(e) {}
         }
 
         function stopTimer() {
-          if (_timerInterval) { clearInterval(_timerInterval); _timerInterval = null; }
+          try {
+            if (_timerInterval) { clearInterval(_timerInterval); _timerInterval = null; }
+          } catch(e) {}
         }
 
         return {
@@ -669,137 +679,145 @@
               this.adjustCameraForScreen();
             } catch(e) {}
 
-            if (!localStorage.getItem('chrono_supernova_welcome')) {
-              const modal = document.getElementById('levels-modal');
-              if (modal) modal.style.display = 'flex';
-              localStorage.setItem('chrono_supernova_welcome', '1');
-            }
+            try {
+              if (!localStorage.getItem('chrono_supernova_welcome')) {
+                const modal = document.getElementById('levels-modal');
+                if (modal) modal.style.display = 'flex';
+                localStorage.setItem('chrono_supernova_welcome', '1');
+              }
+            } catch(e) {}
           },
 
           loadGameMode(levelKey) {
-            stopTimer();
-            const cfg = LEVELS_CONFIG[levelKey] || LEVELS_CONFIG.level3;
-            _currentLevelKey = cfg.id;
-            _timePhase = 0;
-            _moves = 0;
-            _isSolved = false;
-            _timerStart = null;
-            _elapsedMs = 0;
-            SecurityCore.resetAudit();
+            try {
+              stopTimer();
+              const cfg = LEVELS_CONFIG[levelKey] || LEVELS_CONFIG.level3;
+              _currentLevelKey = cfg.id;
+              _timePhase = 0;
+              _moves = 0;
+              _isSolved = false;
+              _timerStart = null;
+              _elapsedMs = 0;
+              SecurityCore.resetAudit();
 
-            const slider = document.getElementById('time-slider');
-            if (slider) slider.value = 0;
-            const timerEl = document.getElementById('timer-val');
-            if (timerEl) timerEl.innerText = "00:00.0";
-            const badgeEl = document.getElementById('mode-badge');
-            if (badgeEl) badgeEl.innerText = cfg.badge;
+              const slider = document.getElementById('time-slider');
+              if (slider) slider.value = 0;
+              const timerEl = document.getElementById('timer-val');
+              if (timerEl) timerEl.innerText = "00:00.0";
+              const badgeEl = document.getElementById('mode-badge');
+              if (badgeEl) badgeEl.innerText = cfg.badge;
 
-            _nodes = cfg.points.map((pt, idx) => ({
-              id: idx,
-              pos: [pt[0] * cfg.scale, pt[1] * cfg.scale, pt[2] * cfg.scale],
-              phaseColors: [0x00f3ff, 0xff007f, 0xffd700],
-              active: [false, false, false]
-            }));
+              _nodes = cfg.points.map((pt, idx) => ({
+                id: idx,
+                pos: [pt[0] * cfg.scale, pt[1] * cfg.scale, pt[2] * cfg.scale],
+                phaseColors: [0x00f3ff, 0xff007f, 0xffd700],
+                active: [false, false, false]
+              }));
 
-            _connections = [];
-            for (let i = 0; i < _nodes.length; i++) {
-              for (let j = i + 1; j < _nodes.length; j++) {
-                const dist = Math.hypot(
-                  _nodes[i].pos[0] - _nodes[j].pos[0],
-                  _nodes[i].pos[1] - _nodes[j].pos[1],
-                  _nodes[i].pos[2] - _nodes[j].pos[2]
-                );
-                if (dist <= cfg.maxEdgeDist) _connections.push([i, j]);
+              _connections = [];
+              for (let i = 0; i < _nodes.length; i++) {
+                for (let j = i + 1; j < _nodes.length; j++) {
+                  const dist = Math.hypot(
+                    _nodes[i].pos[0] - _nodes[j].pos[0],
+                    _nodes[i].pos[1] - _nodes[j].pos[1],
+                    _nodes[i].pos[2] - _nodes[j].pos[2]
+                  );
+                  if (dist <= cfg.maxEdgeDist) _connections.push([i, j]);
+                }
               }
-            }
 
-            this.rebuildPolyhedronMeshes(cfg);
-            this.updateTimePhaseVisuals();
-            this.updateHUD();
+              this.rebuildPolyhedronMeshes(cfg);
+              this.updateTimePhaseVisuals();
+              this.updateHUD();
+            } catch(e) {}
           },
 
           adjustCameraForScreen() {
-            if (!this.camera) return;
-            const isMobile = window.innerWidth <= 768;
-            const dist = isMobile ? 12.2 : 9.8;
-            this.camera.position.set(dist * 0.65, dist * 0.58, dist);
-            this.camera.lookAt(0, 0, 0);
+            try {
+              if (!this.camera) return;
+              const isMobile = window.innerWidth <= 768;
+              const dist = isMobile ? 12.2 : 9.8;
+              this.camera.position.set(dist * 0.65, dist * 0.58, dist);
+              this.camera.lookAt(0, 0, 0);
+            } catch(e) {}
           },
 
           setupThreeJS() {
-            const container = document.getElementById('canvas-container');
-            if (!container) return;
+            try {
+              const container = document.getElementById('canvas-container');
+              if (!container) return;
 
-            this.scene = new THREE.Scene();
-            this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-            
-            this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
-            this.renderer.setSize(window.innerWidth, window.innerHeight);
-            this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-            container.appendChild(this.renderer.domElement);
+              this.scene = new THREE.Scene();
+              this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+              
+              this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
+              this.renderer.setSize(window.innerWidth, window.innerHeight);
+              this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+              container.appendChild(this.renderer.domElement);
 
-            this.scene.add(new THREE.AmbientLight(0xffffff, 0.55));
-            const p1 = new THREE.PointLight(0x00f3ff, 3.8, 95); p1.position.set(15, 15, 15); this.scene.add(p1);
-            const p2 = new THREE.PointLight(0xff007f, 3.8, 95); p2.position.set(-15, -15, -15); this.scene.add(p2);
-            const p3 = new THREE.PointLight(0xffd700, 2.8, 95); p3.position.set(0, 15, -15); this.scene.add(p3);
+              this.scene.add(new THREE.AmbientLight(0xffffff, 0.55));
+              const p1 = new THREE.PointLight(0x00f3ff, 3.8, 95); p1.position.set(15, 15, 15); this.scene.add(p1);
+              const p2 = new THREE.PointLight(0xff007f, 3.8, 95); p2.position.set(-15, -15, -15); this.scene.add(p2);
+              const p3 = new THREE.PointLight(0xffd700, 2.8, 95); p3.position.set(0, 15, -15); this.scene.add(p3);
 
-            this.createAndromeda3DGalaxy();
-            this.polyGroup = new THREE.Group();
-            this.scene.add(this.polyGroup);
+              this.createAndromeda3DGalaxy();
+              this.polyGroup = new THREE.Group();
+              this.scene.add(this.polyGroup);
 
-            this.raycaster = new THREE.Raycaster();
-            this.mouse = new THREE.Vector2();
+              this.raycaster = new THREE.Raycaster();
+              this.mouse = new THREE.Vector2();
 
-            const animate = () => {
-              requestAnimationFrame(animate);
-              try {
-                const stabFactor = 1 + (this.getTotalStabilization() / 100) * 2.5;
+              const animate = () => {
+                requestAnimationFrame(animate);
+                try {
+                  const stabFactor = 1 + (this.getTotalStabilization() / 100) * 2.5;
 
-                if (this.coreMesh) {
-                  this.coreMesh.rotation.x += 0.015 * stabFactor;
-                  this.coreMesh.rotation.y += 0.02 * stabFactor;
-                  const s = 1 + Math.sin(Date.now() * 0.005) * (0.2 + (stabFactor - 1) * 0.1);
-                  this.coreMesh.scale.set(s, s, s);
-                }
-                if (this.gyroRing1) {
-                  this.gyroRing1.rotation.x += 0.018 * stabFactor;
-                  this.gyroRing1.rotation.y += 0.012 * stabFactor;
-                }
-                if (this.gyroRing2) {
-                  this.gyroRing2.rotation.y -= 0.022 * stabFactor;
-                  this.gyroRing2.rotation.z += 0.015 * stabFactor;
-                }
-                if (this.andromedaGroup) this.andromedaGroup.rotation.y += 0.0007;
-
-                for (let i = _bursts.length - 1; i >= 0; i--) {
-                  const b = _bursts[i];
-                  b.life -= 0.032;
-                  if (b.life <= 0) {
-                    this.polyGroup.remove(b.points);
-                    b.points.geometry.dispose();
-                    b.points.material.dispose();
-                    _bursts.splice(i, 1);
-                  } else {
-                    const posAttr = b.points.geometry.attributes.position;
-                    for (let j = 0; j < posAttr.count; j++) {
-                      posAttr.setXYZ(
-                        j,
-                        posAttr.getX(j) + b.velocities[j * 3],
-                        posAttr.getY(j) + b.velocities[j * 3 + 1],
-                        posAttr.getZ(j) + b.velocities[j * 3 + 2]
-                      );
-                    }
-                    posAttr.needsUpdate = true;
-                    b.points.material.opacity = b.life;
+                  if (this.coreMesh) {
+                    this.coreMesh.rotation.x += 0.015 * stabFactor;
+                    this.coreMesh.rotation.y += 0.02 * stabFactor;
+                    const s = 1 + Math.sin(Date.now() * 0.005) * (0.2 + (stabFactor - 1) * 0.1);
+                    this.coreMesh.scale.set(s, s, s);
                   }
-                }
+                  if (this.gyroRing1) {
+                    this.gyroRing1.rotation.x += 0.018 * stabFactor;
+                    this.gyroRing1.rotation.y += 0.012 * stabFactor;
+                  }
+                  if (this.gyroRing2) {
+                    this.gyroRing2.rotation.y -= 0.022 * stabFactor;
+                    this.gyroRing2.rotation.z += 0.015 * stabFactor;
+                  }
+                  if (this.andromedaGroup) this.andromedaGroup.rotation.y += 0.0007;
 
-                if (this.renderer && this.scene && this.camera) {
-                  this.renderer.render(this.scene, this.camera);
-                }
-              } catch(e) {}
-            };
-            animate();
+                  for (let i = _bursts.length - 1; i >= 0; i--) {
+                    const b = _bursts[i];
+                    b.life -= 0.032;
+                    if (b.life <= 0) {
+                      this.polyGroup.remove(b.points);
+                      if (b.points.geometry) b.points.geometry.dispose();
+                      if (b.points.material) b.points.material.dispose();
+                      _bursts.splice(i, 1);
+                    } else {
+                      const posAttr = b.points.geometry.attributes.position;
+                      for (let j = 0; j < posAttr.count; j++) {
+                        posAttr.setXYZ(
+                          j,
+                          posAttr.getX(j) + b.velocities[j * 3],
+                          posAttr.getY(j) + b.velocities[j * 3 + 1],
+                          posAttr.getZ(j) + b.velocities[j * 3 + 2]
+                        );
+                      }
+                      posAttr.needsUpdate = true;
+                      b.points.material.opacity = b.life;
+                    }
+                  }
+
+                  if (this.renderer && this.scene && this.camera) {
+                    this.renderer.render(this.scene, this.camera);
+                  }
+                } catch(e) {}
+              };
+              animate();
+            } catch(e) {}
           },
 
           spawnQuantumBurst(localPos, colorHex, count = 28, speed = 0.07) {
@@ -841,49 +859,51 @@
           },
 
           rebuildPolyhedronMeshes(cfg) {
-            if (!this.polyGroup) return;
-            while (this.polyGroup.children.length > 0) this.polyGroup.remove(this.polyGroup.children[0]);
-            _bursts.length = 0;
+            try {
+              if (!this.polyGroup) return;
+              while (this.polyGroup.children.length > 0) this.polyGroup.remove(this.polyGroup.children[0]);
+              _bursts.length = 0;
 
-            const coreGeo = new THREE.IcosahedronGeometry(0.62, 1);
-            const coreMat = new THREE.MeshPhongMaterial({ color: 0xff007f, emissive: 0xff007f, emissiveIntensity: 1.1, wireframe: true });
-            this.coreMesh = new THREE.Mesh(coreGeo, coreMat);
-            this.polyGroup.add(this.coreMesh);
+              const coreGeo = new THREE.IcosahedronGeometry(0.62, 1);
+              const coreMat = new THREE.MeshPhongMaterial({ color: 0xff007f, emissive: 0xff007f, emissiveIntensity: 1.1, wireframe: true });
+              this.coreMesh = new THREE.Mesh(coreGeo, coreMat);
+              this.polyGroup.add(this.coreMesh);
 
-            const ringGeo1 = new THREE.TorusGeometry(1.15, 0.025, 16, 64);
-            const ringMat1 = new THREE.MeshBasicMaterial({ color: 0x00f3ff, transparent: true, opacity: 0.65 });
-            this.gyroRing1 = new THREE.Mesh(ringGeo1, ringMat1);
-            this.polyGroup.add(this.gyroRing1);
+              const ringGeo1 = new THREE.TorusGeometry(1.15, 0.025, 16, 64);
+              const ringMat1 = new THREE.MeshBasicMaterial({ color: 0x00f3ff, transparent: true, opacity: 0.65 });
+              this.gyroRing1 = new THREE.Mesh(ringGeo1, ringMat1);
+              this.polyGroup.add(this.gyroRing1);
 
-            const ringGeo2 = new THREE.TorusGeometry(1.42, 0.02, 16, 64);
-            const ringMat2 = new THREE.MeshBasicMaterial({ color: 0xffd700, transparent: true, opacity: 0.5 });
-            this.gyroRing2 = new THREE.Mesh(ringGeo2, ringMat2);
-            this.polyGroup.add(this.gyroRing2);
+              const ringGeo2 = new THREE.TorusGeometry(1.42, 0.02, 16, 64);
+              const ringMat2 = new THREE.MeshBasicMaterial({ color: 0xffd700, transparent: true, opacity: 0.5 });
+              this.gyroRing2 = new THREE.Mesh(ringGeo2, ringMat2);
+              this.polyGroup.add(this.gyroRing2);
 
-            this.nodeMeshes = [];
-            const sphereGeo = new THREE.SphereGeometry(cfg.sphereRadius, 32, 32);
+              this.nodeMeshes = [];
+              const sphereGeo = new THREE.SphereGeometry(cfg.sphereRadius, 32, 32);
 
-            _nodes.forEach(node => {
-              const mat = new THREE.MeshPhongMaterial({
-                color: node.phaseColors[1], emissive: node.phaseColors[1], emissiveIntensity: 0.4, shininess: 150, wireframe: true
+              _nodes.forEach(node => {
+                const mat = new THREE.MeshPhongMaterial({
+                  color: node.phaseColors[1], emissive: node.phaseColors[1], emissiveIntensity: 0.4, shininess: 150, wireframe: true
+                });
+                const mesh = new THREE.Mesh(sphereGeo, mat);
+                mesh.position.set(...node.pos);
+                mesh.userData = { id: node.id };
+                this.polyGroup.add(mesh);
+                this.nodeMeshes.push(mesh);
               });
-              const mesh = new THREE.Mesh(sphereGeo, mat);
-              mesh.position.set(...node.pos);
-              mesh.userData = { id: node.id };
-              this.polyGroup.add(mesh);
-              this.nodeMeshes.push(mesh);
-            });
 
-            this.laserLines = [];
-            _connections.forEach(conn => {
-              const posA = new THREE.Vector3(..._nodes[conn[0]].pos);
-              const posB = new THREE.Vector3(..._nodes[conn[1]].pos);
-              const geo = new THREE.BufferGeometry().setFromPoints([posA, posB]);
-              const mat = new THREE.LineBasicMaterial({ color: 0x1a2638, transparent: true, opacity: 0.45, linewidth: 2 });
-              const line = new THREE.Line(geo, mat);
-              this.polyGroup.add(line);
-              this.laserLines.push({ line, nodes: conn });
-            });
+              this.laserLines = [];
+              _connections.forEach(conn => {
+                const posA = new THREE.Vector3(..._nodes[conn[0]].pos);
+                const posB = new THREE.Vector3(..._nodes[conn[1]].pos);
+                const geo = new THREE.BufferGeometry().setFromPoints([posA, posB]);
+                const mat = new THREE.LineBasicMaterial({ color: 0x1a2638, transparent: true, opacity: 0.45, linewidth: 2 });
+                const line = new THREE.Line(geo, mat);
+                this.polyGroup.add(line);
+                this.laserLines.push({ line, nodes: conn });
+              });
+            } catch(e) {}
           },
 
           createAndromeda3DGalaxy() {
@@ -940,353 +960,373 @@
           },
 
           setupEvents() {
-            window.addEventListener('resize', () => {
-              if (!this.camera || !this.renderer) return;
-              this.camera.aspect = window.innerWidth / window.innerHeight;
-              this.camera.updateProjectionMatrix();
-              this.renderer.setSize(window.innerWidth, window.innerHeight);
-              this.adjustCameraForScreen();
-            });
-
-            const nameInput = document.getElementById('player-name-input');
-            if (nameInput) {
-              nameInput.addEventListener('input', (e) => {
-                const raw = e.target.value;
-                const clean = raw.replace(/[^a-zA-Z0-9\-_ áäčďéíĺľňóôŕšťúýžÁÄČĎÉÍĹĽŇÓÔŔŠŤÚÝŽ]/g, '').trim();
-                _player = clean || "AGENT-3000";
-              });
-            }
-
-            const sliderEl = document.getElementById('time-slider');
-            if (sliderEl) {
-              sliderEl.addEventListener('input', (e) => {
-                const parsed = parseInt(e.target.value, 10);
-                if (![-1, 0, 1].includes(parsed)) return;
-                _timePhase = parsed;
-                SoundscapeEngine.init();
-                SoundscapeEngine.playLaserShift();
-                SoundscapeEngine.shiftDimensionHarmonics(_timePhase);
-                this.updateTimePhaseVisuals();
-                this.updateHUD();
-              });
-            }
-
-            const soundBtn = document.getElementById('audio-toggle-btn');
-            if (soundBtn) {
-              soundBtn.addEventListener('click', () => {
-                SoundscapeEngine.init();
-                const isOn = SoundscapeEngine.toggleMute();
-                soundBtn.innerText = isOn ? '🔊 Zvuk' : '🔇 Ticho';
-                showToast(isOn ? "Vesmírny syntetizátor aktivovaný." : "Zvuk stlmený.");
-              });
-            }
-
-            const camBtn = document.getElementById('reset-cam-btn');
-            if (camBtn) {
-              camBtn.addEventListener('click', (e) => {
-                if (!e.isTrusted) return;
-                SoundscapeEngine.init();
+            try {
+              window.addEventListener('resize', () => {
+                if (!this.camera || !this.renderer) return;
+                this.camera.aspect = window.innerWidth / window.innerHeight;
+                this.camera.updateProjectionMatrix();
+                this.renderer.setSize(window.innerWidth, window.innerHeight);
                 this.adjustCameraForScreen();
-                if (this.polyGroup) this.polyGroup.rotation.set(0, 0, 0);
               });
-            }
 
-            const lvlBtn = document.getElementById('levels-btn');
-            if (lvlBtn) {
-              lvlBtn.addEventListener('click', () => {
-                const modal = document.getElementById('levels-modal');
-                if (modal) modal.style.display = 'flex';
-              });
-            }
-
-            const closeLvlBtn = document.getElementById('close-levels-btn');
-            if (closeLvlBtn) {
-              closeLvlBtn.addEventListener('click', () => {
-                const modal = document.getElementById('levels-modal');
-                if (modal) modal.style.display = 'none';
-              });
-            }
-
-            document.querySelectorAll('.level-card').forEach(card => {
-              card.addEventListener('click', () => {
-                SoundscapeEngine.init();
-                const lvl = card.getAttribute('data-level');
-                const modal = document.getElementById('levels-modal');
-                if (modal) modal.style.display = 'none';
-                this.loadGameMode(lvl);
-                showToast(`Načítaný ${LEVELS_CONFIG[lvl].badge}! Čas beží prvým kliknutím.`);
-              });
-            });
-
-            const lbBtn = document.getElementById('leaderboard-btn');
-            if (lbBtn) {
-              lbBtn.addEventListener('click', () => {
-                const modal = document.getElementById('leaderboard-modal');
-                if (modal) modal.style.display = 'flex';
-                CloudLeaderboard.renderTable();
-              });
-            }
-
-            const closeLbBtn = document.getElementById('close-lb-btn');
-            if (closeLbBtn) {
-              closeLbBtn.addEventListener('click', () => {
-                const modal = document.getElementById('leaderboard-modal');
-                if (modal) modal.style.display = 'none';
-              });
-            }
-
-            const chalBtn = document.getElementById('challenge-btn');
-            if (chalBtn) {
-              chalBtn.addEventListener('click', (e) => {
-                if (!e.isTrusted) return;
-                SoundscapeEngine.init();
-                const cfg = LEVELS_CONFIG[_currentLevelKey];
-                const totalStab = this.getTotalStabilization();
-                const timeFormatted = CloudLeaderboard.formatTime(_elapsedMs);
-                const shareText = `🌌 Riešim 3D kvantový polyéder CHRONO-POLYHEDRON 3000 (${cfg.shortName}) v galaxii Andromeda!\n👤 Agent: ${_player} | Čas: ${timeFormatted} | Stabilizácia: ${totalStab}% | Ťahy: ${_moves}\nTrúfneš si prekonať túto vesmírnu výzvu? 👉 ${window.location.href}`;
-                if (navigator.clipboard) navigator.clipboard.writeText(shareText);
-                showToast("Virálna výzva skopírovaná do schránky!");
-              });
-            }
-
-            const rageBtn = document.getElementById('rage-btn');
-            if (rageBtn) {
-              rageBtn.addEventListener('click', (e) => {
-                if (!e.isTrusted) return;
-                this.loadGameMode(_currentLevelKey);
-                showToast(`Hra reštartovaná (${LEVELS_CONFIG[_currentLevelKey].shortName}). Veľa šťastia, ${_player}!`);
-              });
-            }
-
-            const closeCertBtn = document.getElementById('close-cert-btn');
-            if (closeCertBtn) {
-              closeCertBtn.addEventListener('click', () => {
-                const modal = document.getElementById('cert-modal');
-                if (modal) modal.style.display = 'none';
-              });
-            }
-
-            const nextCertBtn = document.getElementById('next-level-cert-btn');
-            if (nextCertBtn) {
-              nextCertBtn.addEventListener('click', () => {
-                const modal = document.getElementById('cert-modal');
-                if (modal) modal.style.display = 'none';
-                const nextKey = LEVELS_CONFIG[_currentLevelKey].nextLevel;
-                this.loadGameMode(nextKey);
-                showToast(`Štartuje ďalšia úroveň: ${LEVELS_CONFIG[nextKey].badge}! 🚀`);
-              });
-            }
-
-            const downCertBtn = document.getElementById('download-cert-btn');
-            if (downCertBtn) {
-              downCertBtn.addEventListener('click', () => {
-                this.downloadCertificate();
-              });
-            }
-
-            if (!this.renderer) return;
-            const dom = this.renderer.domElement;
-            let isInteracting = false, prevX = 0, prevY = 0, startX = 0, startY = 0;
-
-            const handleStart = (x, y) => {
-              SoundscapeEngine.init();
-              isInteracting = true; prevX = x; prevY = y; startX = x; startY = y;
-            };
-            const handleMove = (x, y) => {
-              if (!isInteracting || !this.polyGroup) return;
-              this.polyGroup.rotation.y += (x - prevX) * 0.0085;
-              this.polyGroup.rotation.x += (y - prevY) * 0.0085;
-              prevX = x; prevY = y;
-            };
-            const handleEnd = (x, y) => {
-              if (!isInteracting) return;
-              isInteracting = false;
-              if (Math.hypot(x - startX, y - startY) < 10) {
-                this.mouse.x = (startX / window.innerWidth) * 2 - 1;
-                this.mouse.y = -(startY / window.innerHeight) * 2 + 1;
-                this.raycaster.setFromCamera(this.mouse, this.camera);
-                const intersects = this.raycaster.intersectObjects(this.nodeMeshes || []);
-                if (intersects.length > 0) this.handleNodeClick(intersects[0].object.userData.id);
+              const nameInput = document.getElementById('player-name-input');
+              if (nameInput) {
+                nameInput.addEventListener('input', (e) => {
+                  const raw = e.target.value;
+                  const clean = raw.replace(/[^a-zA-Z0-9\-_ áäčďéíĺľňóôŕšťúýžÁÄČĎÉÍĹĽŇÓÔŔŠŤÚÝŽ]/g, '').trim();
+                  _player = clean || "AGENT-3000";
+                });
               }
-            };
 
-            dom.addEventListener('mousedown', (e) => { if (e.isTrusted) handleStart(e.clientX, e.clientY); });
-            window.addEventListener('mousemove', (e) => handleMove(e.clientX, e.clientY));
-            window.addEventListener('mouseup', (e) => handleEnd(e.clientX, e.clientY));
-            dom.addEventListener('touchstart', (e) => { if (e.isTrusted && e.touches.length === 1) handleStart(e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
-            window.addEventListener('touchmove', (e) => { if (e.touches.length === 1) handleMove(e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
-            window.addEventListener('touchend', (e) => { if (e.changedTouches.length === 1) handleEnd(e.changedTouches[0].clientX, e.changedTouches[0].clientY); });
+              const sliderEl = document.getElementById('time-slider');
+              if (sliderEl) {
+                sliderEl.addEventListener('input', (e) => {
+                  const parsed = parseInt(e.target.value, 10);
+                  if (![-1, 0, 1].includes(parsed)) return;
+                  _timePhase = parsed;
+                  SoundscapeEngine.init();
+                  SoundscapeEngine.playLaserShift();
+                  SoundscapeEngine.shiftDimensionHarmonics(_timePhase);
+                  this.updateTimePhaseVisuals();
+                  this.updateHUD();
+                });
+              }
+
+              const soundBtn = document.getElementById('audio-toggle-btn');
+              if (soundBtn) {
+                soundBtn.addEventListener('click', () => {
+                  SoundscapeEngine.init();
+                  const isOn = SoundscapeEngine.toggleMute();
+                  soundBtn.innerText = isOn ? '🔊 Zvuk' : '🔇 Ticho';
+                  showToast(isOn ? "Vesmírny syntetizátor aktivovaný." : "Zvuk stlmený.");
+                });
+              }
+
+              const camBtn = document.getElementById('reset-cam-btn');
+              if (camBtn) {
+                camBtn.addEventListener('click', (e) => {
+                  if (!e.isTrusted) return;
+                  SoundscapeEngine.init();
+                  this.adjustCameraForScreen();
+                  if (this.polyGroup) this.polyGroup.rotation.set(0, 0, 0);
+                });
+              }
+
+              const lvlBtn = document.getElementById('levels-btn');
+              if (lvlBtn) {
+                lvlBtn.addEventListener('click', () => {
+                  const modal = document.getElementById('levels-modal');
+                  if (modal) modal.style.display = 'flex';
+                });
+              }
+
+              const closeLvlBtn = document.getElementById('close-levels-btn');
+              if (closeLvlBtn) {
+                closeLvlBtn.addEventListener('click', () => {
+                  const modal = document.getElementById('levels-modal');
+                  if (modal) modal.style.display = 'none';
+                });
+              }
+
+              document.querySelectorAll('.level-card').forEach(card => {
+                card.addEventListener('click', () => {
+                  SoundscapeEngine.init();
+                  const lvl = card.getAttribute('data-level');
+                  const modal = document.getElementById('levels-modal');
+                  if (modal) modal.style.display = 'none';
+                  this.loadGameMode(lvl);
+                  showToast(`Načítaný ${LEVELS_CONFIG[lvl].badge}! Čas beží prvým kliknutím.`);
+                });
+              });
+
+              const lbBtn = document.getElementById('leaderboard-btn');
+              if (lbBtn) {
+                lbBtn.addEventListener('click', () => {
+                  const modal = document.getElementById('leaderboard-modal');
+                  if (modal) modal.style.display = 'flex';
+                  CloudLeaderboard.renderTable();
+                });
+              }
+
+              const closeLbBtn = document.getElementById('close-lb-btn');
+              if (closeLbBtn) {
+                closeLbBtn.addEventListener('click', () => {
+                  const modal = document.getElementById('leaderboard-modal');
+                  if (modal) modal.style.display = 'none';
+                });
+              }
+
+              const chalBtn = document.getElementById('challenge-btn');
+              if (chalBtn) {
+                chalBtn.addEventListener('click', (e) => {
+                  if (!e.isTrusted) return;
+                  SoundscapeEngine.init();
+                  const cfg = LEVELS_CONFIG[_currentLevelKey];
+                  const totalStab = this.getTotalStabilization();
+                  const timeFormatted = CloudLeaderboard.formatTime(_elapsedMs);
+                  const shareText = `🌌 Riešim 3D kvantový polyéder CHRONO-POLYHEDRON 3000 (${cfg.shortName}) v galaxii Andromeda!\n👤 Agent: ${_player} | Čas: ${timeFormatted} | Stabilizácia: ${totalStab}% | Ťahy: ${_moves}\nTrúfneš si prekonať túto vesmírnu výzvu? 👉 ${window.location.href}`;
+                  try {
+                    if (navigator.clipboard) navigator.clipboard.writeText(shareText);
+                  } catch(e) {}
+                  showToast("Virálna výzva skopírovaná do schránky!");
+                });
+              }
+
+              const rageBtn = document.getElementById('rage-btn');
+              if (rageBtn) {
+                rageBtn.addEventListener('click', (e) => {
+                  if (!e.isTrusted) return;
+                  this.loadGameMode(_currentLevelKey);
+                  showToast(`Hra reštartovaná (${LEVELS_CONFIG[_currentLevelKey].shortName}). Veľa šťastia, ${_player}!`);
+                });
+              }
+
+              const closeCertBtn = document.getElementById('close-cert-btn');
+              if (closeCertBtn) {
+                closeCertBtn.addEventListener('click', () => {
+                  const modal = document.getElementById('cert-modal');
+                  if (modal) modal.style.display = 'none';
+                });
+              }
+
+              const nextCertBtn = document.getElementById('next-level-cert-btn');
+              if (nextCertBtn) {
+                nextCertBtn.addEventListener('click', () => {
+                  const modal = document.getElementById('cert-modal');
+                  if (modal) modal.style.display = 'none';
+                  const nextKey = LEVELS_CONFIG[_currentLevelKey].nextLevel;
+                  this.loadGameMode(nextKey);
+                  showToast(`Štartuje ďalšia úroveň: ${LEVELS_CONFIG[nextKey].badge}! 🚀`);
+                });
+              }
+
+              const downCertBtn = document.getElementById('download-cert-btn');
+              if (downCertBtn) {
+                downCertBtn.addEventListener('click', () => {
+                  this.downloadCertificate();
+                });
+              }
+
+              if (!this.renderer) return;
+              const dom = this.renderer.domElement;
+              let isInteracting = false, prevX = 0, prevY = 0, startX = 0, startY = 0;
+
+              const handleStart = (x, y) => {
+                SoundscapeEngine.init();
+                isInteracting = true; prevX = x; prevY = y; startX = x; startY = y;
+              };
+              const handleMove = (x, y) => {
+                if (!isInteracting || !this.polyGroup) return;
+                this.polyGroup.rotation.y += (x - prevX) * 0.0085;
+                this.polyGroup.rotation.x += (y - prevY) * 0.0085;
+                prevX = x; prevY = y;
+              };
+              const handleEnd = (x, y) => {
+                if (!isInteracting) return;
+                isInteracting = false;
+                if (Math.hypot(x - startX, y - startY) < 10) {
+                  this.mouse.x = (startX / window.innerWidth) * 2 - 1;
+                  this.mouse.y = -(startY / window.innerHeight) * 2 + 1;
+                  this.raycaster.setFromCamera(this.mouse, this.camera);
+                  const intersects = this.raycaster.intersectObjects(this.nodeMeshes || []);
+                  if (intersects.length > 0) this.handleNodeClick(intersects[0].object.userData.id);
+                }
+              };
+
+              dom.addEventListener('mousedown', (e) => { if (e.isTrusted) handleStart(e.clientX, e.clientY); });
+              window.addEventListener('mousemove', (e) => handleMove(e.clientX, e.clientY));
+              window.addEventListener('mouseup', (e) => handleEnd(e.clientX, e.clientY));
+              dom.addEventListener('touchstart', (e) => { if (e.isTrusted && e.touches.length === 1) handleStart(e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
+              window.addEventListener('touchmove', (e) => { if (e.touches.length === 1) handleMove(e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
+              window.addEventListener('touchend', (e) => { if (e.changedTouches.length === 1) handleEnd(e.changedTouches[0].clientX, e.changedTouches[0].clientY); });
+            } catch(e) {}
           },
 
           handleNodeClick(id) {
-            if (_isSolved) return;
-            if (!SecurityCore.verifyHumanTiming()) return;
-            if (typeof id !== 'number' || id < 0 || id >= _nodes.length) return;
+            try {
+              if (_isSolved) return;
+              if (!SecurityCore.verifyHumanTiming()) return;
+              if (typeof id !== 'number' || id < 0 || id >= _nodes.length) return;
 
-            startTimerIfNeeded();
-            const pIdx = _timePhase + 1;
-            const node = _nodes[id];
-            node.active[pIdx] = !node.active[pIdx];
-            _moves++;
+              startTimerIfNeeded();
+              const pIdx = _timePhase + 1;
+              const node = _nodes[id];
+              node.active[pIdx] = !node.active[pIdx];
+              _moves++;
 
-            SecurityCore.recordMove(id, _timePhase, _moves);
-            SoundscapeEngine.playNodePulse(id, _timePhase, node.active[pIdx]);
-            this.spawnQuantumBurst(node.pos, node.phaseColors[pIdx], 26, 0.065);
+              SecurityCore.recordMove(id, _timePhase, _moves);
+              SoundscapeEngine.playNodePulse(id, _timePhase, node.active[pIdx]);
+              this.spawnQuantumBurst(node.pos, node.phaseColors[pIdx], 26, 0.065);
 
-            if (pIdx === 0 && node.active[0]) {
-              node.active[1] = !node.active[1];
-            }
-            if (_currentLevelKey === 'level4' && pIdx === 1 && node.active[1]) {
-              node.active[2] = !node.active[2];
-            }
+              if (pIdx === 0 && node.active[0]) {
+                node.active[1] = !node.active[1];
+              }
+              if (_currentLevelKey === 'level4' && pIdx === 1 && node.active[1]) {
+                node.active[2] = !node.active[2];
+              }
 
-            this.updateTimePhaseVisuals();
-            this.checkWinCondition();
-            this.updateHUD();
+              this.updateTimePhaseVisuals();
+              this.checkWinCondition();
+              this.updateHUD();
+            } catch(e) {}
           },
 
           updateTimePhaseVisuals() {
-            if (!this.nodeMeshes || !this.laserLines) return;
-            const pIdx = _timePhase + 1;
-            this.nodeMeshes.forEach((mesh, idx) => {
-              const isActive = _nodes[idx].active[pIdx];
-              const activeColor = _nodes[idx].phaseColors[pIdx];
-              mesh.material.color.setHex(isActive ? activeColor : 0x223344);
-              mesh.material.emissive.setHex(isActive ? activeColor : 0x000000);
-              mesh.material.emissiveIntensity = isActive ? 0.9 : 0;
-              mesh.material.wireframe = !isActive;
-              mesh.scale.setScalar(isActive ? 1.15 : 1.0);
-            });
+            try {
+              if (!this.nodeMeshes || !this.laserLines) return;
+              const pIdx = _timePhase + 1;
+              this.nodeMeshes.forEach((mesh, idx) => {
+                const isActive = _nodes[idx].active[pIdx];
+                const activeColor = _nodes[idx].phaseColors[pIdx];
+                mesh.material.color.setHex(isActive ? activeColor : 0x223344);
+                mesh.material.emissive.setHex(isActive ? activeColor : 0x000000);
+                mesh.material.emissiveIntensity = isActive ? 0.9 : 0;
+                mesh.material.wireframe = !isActive;
+                mesh.scale.setScalar(isActive ? 1.15 : 1.0);
+              });
 
-            this.laserLines.forEach(item => {
-              const [a, b] = item.nodes;
-              if (_nodes[a].active[pIdx] && _nodes[b].active[pIdx]) {
-                item.line.material.color.setHex(_nodes[a].phaseColors[pIdx]);
-                item.line.material.opacity = 0.98;
-              } else {
-                item.line.material.color.setHex(0x1a2638);
-                item.line.material.opacity = 0.28;
-              }
-            });
+              this.laserLines.forEach(item => {
+                const [a, b] = item.nodes;
+                if (_nodes[a].active[pIdx] && _nodes[b].active[pIdx]) {
+                  item.line.material.color.setHex(_nodes[a].phaseColors[pIdx]);
+                  item.line.material.opacity = 0.98;
+                } else {
+                  item.line.material.color.setHex(0x1a2638);
+                  item.line.material.opacity = 0.28;
+                }
+              });
+            } catch(e) {}
           },
 
           getTotalStabilization() {
-            if (_nodes.length === 0) return 0;
-            let totalActive = 0;
-            _nodes.forEach(n => { if (n.active[0]) totalActive++; if (n.active[1]) totalActive++; if (n.active[2]) totalActive++; });
-            return Math.round((totalActive / (_nodes.length * 3)) * 100);
+            try {
+              if (_nodes.length === 0) return 0;
+              let totalActive = 0;
+              _nodes.forEach(n => { if (n.active[0]) totalActive++; if (n.active[1]) totalActive++; if (n.active[2]) totalActive++; });
+              return Math.round((totalActive / (_nodes.length * 3)) * 100);
+            } catch(e) { return 0; }
           },
 
           async checkWinCondition() {
-            if (this.getTotalStabilization() === 100 && !_isSolved) {
-              const cfg = LEVELS_CONFIG[_currentLevelKey];
-              if (_moves < cfg.minMoves || SecurityCore.getAuditLength() !== _moves) {
-                showToast("SECURITY ALERT: Detegovaná nekonzistentná manipulácia!");
-                return;
+            try {
+              if (this.getTotalStabilization() === 100 && !_isSolved) {
+                const cfg = LEVELS_CONFIG[_currentLevelKey];
+                if (_moves < cfg.minMoves || SecurityCore.getAuditLength() !== _moves) {
+                  showToast("SECURITY ALERT: Detegovaná nekonzistentná manipulácia!");
+                  return;
+                }
+
+                _isSolved = true;
+                stopTimer();
+                SoundscapeEngine.playFanfare();
+                this.spawnQuantumBurst([0, 0, 0], 0ffd700, 140, 0.14);
+                this.spawnQuantumBurst([0, 0, 0], 0x00f3ff, 100, 0.11);
+
+                const finalTime = Math.floor(_elapsedMs);
+                const stateVector = _nodes.map(n => n.active.map(b => b ? 1 : 0).join('')).join('');
+                const proofHash = await SecurityCore.generateProofHash(_player, cfg.shortName, _moves, finalTime, stateVector);
+
+                if (cfg.ranked) {
+                  const subEl = document.getElementById('cert-subtitle');
+                  if (subEl) subEl.innerText = `Mriežka ${cfg.shortName} stabilizovaná! Skóre bolo uložené do rebríčka.`;
+                  CloudLeaderboard.submitScore({
+                    name: _player,
+                    level: cfg.shortName,
+                    timeMs: finalTime,
+                    moves: _moves,
+                    hash: proofHash
+                  });
+                } else {
+                  const subEl = document.getElementById('cert-subtitle');
+                  if (subEl) subEl.innerText = `Tréningový stupeň ${cfg.shortName} dokončený! Odomkni Lvl 3 OMEGA pre zápis do rebríčka.`;
+                }
+
+                setTimeout(() => this.triggerVictory(proofHash, finalTime, cfg), 500);
               }
-
-              _isSolved = true;
-              stopTimer();
-              SoundscapeEngine.playFanfare();
-              this.spawnQuantumBurst([0, 0, 0], 0ffd700, 140, 0.14);
-              this.spawnQuantumBurst([0, 0, 0], 0x00f3ff, 100, 0.11);
-
-              const finalTime = Math.floor(_elapsedMs);
-              const stateVector = _nodes.map(n => n.active.map(b => b ? 1 : 0).join('')).join('');
-              const proofHash = await SecurityCore.generateProofHash(_player, cfg.shortName, _moves, finalTime, stateVector);
-
-              if (cfg.ranked) {
-                const subEl = document.getElementById('cert-subtitle');
-                if (subEl) subEl.innerText = `Mriežka ${cfg.shortName} stabilizovaná! Skóre bolo uložené do rebríčka.`;
-                CloudLeaderboard.submitScore({
-                  name: _player,
-                  level: cfg.shortName,
-                  timeMs: finalTime,
-                  moves: _moves,
-                  hash: proofHash
-                });
-              } else {
-                const subEl = document.getElementById('cert-subtitle');
-                if (subEl) subEl.innerText = `Tréningový stupeň ${cfg.shortName} dokončený! Odomkni Lvl 3 OMEGA pre zápis do rebríčka.`;
-              }
-
-              setTimeout(() => this.triggerVictory(proofHash, finalTime, cfg), 500);
-            }
+            } catch(e) {}
           },
 
           updateHUD() {
-            const phasesFull = ["t-1 (Minulosť)", "t0 (Prítomnosť)", "t+1 (Budúcnosť)"];
-            const phaseEl = document.getElementById('phase-val');
-            if (phaseEl) phaseEl.innerText = phasesFull[_timePhase + 1];
+            try {
+              const phasesFull = ["t-1 (Minulosť)", "t0 (Prítomnosť)", "t+1 (Budúcnosť)"];
+              const phaseEl = document.getElementById('phase-val');
+              if (phaseEl) phaseEl.innerText = phasesFull[_timePhase + 1];
 
-            const totalPercent = this.getTotalStabilization();
-            const stabEl = document.getElementById('stab-val');
-            if (stabEl) stabEl.innerText = `${totalPercent}%`;
+              const totalPercent = this.getTotalStabilization();
+              const stabEl = document.getElementById('stab-val');
+              if (stabEl) stabEl.innerText = `${totalPercent}%`;
 
-            const resonanceFactor = (1.0 + (totalPercent / 100) * 3.8 + (_moves * 0.05)).toFixed(1);
-            const resEl = document.getElementById('resonance-val');
-            if (resEl) resEl.innerText = `SYNAPSE ${resonanceFactor}x`;
+              const resonanceFactor = (1.0 + (totalPercent / 100) * 3.8 + (_moves * 0.05)).toFixed(1);
+              const resEl = document.getElementById('resonance-val');
+              if (resEl) resEl.innerText = `SYNAPSE ${resonanceFactor}x`;
 
-            const strain = Math.min(100, Math.max(15, _moves * 2.5));
-            const iqVal = 185 - Math.floor(strain / 4);
-            const movesEl = document.getElementById('moves-val');
-            if (movesEl) movesEl.innerHTML = `${_moves} <span style="color:#8a99ad;">(IQ ${iqVal})</span>`;
+              const strain = Math.min(100, Math.max(15, _moves * 2.5));
+              const iqVal = 185 - Math.floor(strain / 4);
+              const movesEl = document.getElementById('moves-val');
+              if (movesEl) movesEl.innerHTML = `${_moves} <span style="color:#8a99ad;">(IQ ${iqVal})</span>`;
+            } catch(e) {}
           },
 
           triggerVictory(proofHash, finalTime, cfg) {
-            const modal = document.getElementById('cert-modal');
-            if (modal) modal.style.display = 'flex';
-            this.build3DCertificate(proofHash, finalTime, cfg);
+            try {
+              const modal = document.getElementById('cert-modal');
+              if (modal) modal.style.display = 'flex';
+              this.build3DCertificate(proofHash, finalTime, cfg);
+            } catch(e) {}
           },
 
           build3DCertificate(proofHash, finalTime, cfg) {
-            const container = document.getElementById('cert-canvas-container');
-            if (!container) return;
-            container.innerHTML = '';
+            try {
+              const container = document.getElementById('cert-canvas-container');
+              if (!container) return;
+              container.innerHTML = '';
 
-            const canvas = document.createElement('canvas');
-            canvas.width = 2048; 
-            canvas.height = 1280;
-            const ctx = canvas.getContext('2d');
+              const canvas = document.createElement('canvas');
+              canvas.width = 2048; 
+              canvas.height = 1280;
+              const ctx = canvas.getContext('2d');
 
-            ctx.fillStyle = '#050812'; 
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
-            ctx.strokeStyle = cfg.id === 'level4' ? '#ff007f' : '#ffd700';
-            ctx.lineWidth = 20; 
-            ctx.strokeRect(40, 40, canvas.width - 80, canvas.height - 80);
+              ctx.fillStyle = '#050812'; 
+              ctx.fillRect(0, 0, canvas.width, canvas.height);
+              
+              ctx.strokeStyle = cfg.id === 'level4' ? '#ff007f' : '#ffd700';
+              ctx.lineWidth = 20; 
+              ctx.strokeRect(40, 40, canvas.width - 80, canvas.height - 80);
 
-            ctx.fillStyle = '#ffd700'; ctx.font = 'bold 64px sans-serif'; ctx.textAlign = 'center';
-            ctx.fillText(`ANDROMEDA ${cfg.shortName} MASTER`, canvas.width / 2, 180);
+              ctx.fillStyle = '#ffd700'; ctx.font = 'bold 64px sans-serif'; ctx.textAlign = 'center';
+              ctx.fillText(`ANDROMEDA ${cfg.shortName} MASTER`, canvas.width / 2, 180);
 
-            ctx.fillStyle = '#00f3ff'; ctx.font = '42px sans-serif';
-            ctx.fillText('KRYPTOGRAFICKÝ CERTIFIKÁT ÚSPECHU', canvas.width / 2, 270);
+              ctx.fillStyle = '#00f3ff'; ctx.font = '42px sans-serif';
+              ctx.fillText('KRYPTOGRAFICKÝ CERTIFIKÁT ÚSPECHU', canvas.width / 2, 270);
 
-            ctx.fillStyle = '#ffffff'; ctx.font = 'bold 84px sans-serif';
-            ctx.fillText(_player, canvas.width / 2, 480);
+              ctx.fillStyle = '#ffffff'; ctx.font = 'bold 84px sans-serif';
+              ctx.fillText(_player, canvas.width / 2, 480);
 
-            ctx.fillStyle = '#a0aec0'; ctx.font = '38px sans-serif';
-            ctx.fillText(`Úspešne stabilizoval všetky kvantové uzly (${_nodes.length * 3})`, canvas.width / 2, 630);
-            ctx.fillText(`Speedrun čas: ${CloudLeaderboard.formatTime(finalTime)}  •  Počet ťahov: ${_moves}`, canvas.width / 2, 720);
+              ctx.fillStyle = '#a0aec0'; ctx.font = '38px sans-serif';
+              ctx.fillText(`Úspešne stabilizoval všetky kvantové uzly (${_nodes.length * 3})`, canvas.width / 2, 630);
+              ctx.fillText(`Speedrun čas: ${CloudLeaderboard.formatTime(finalTime)}  •  Počet ťahov: ${_moves}`, canvas.width / 2, 720);
 
-            ctx.fillStyle = '#00ff88'; ctx.font = '32px monospace';
-            ctx.fillText(`SHA256-PROOF: ${proofHash}`, canvas.width / 2, 920);
+              ctx.fillStyle = '#00ff88'; ctx.font = '32px monospace';
+              ctx.fillText(`SHA256-PROOF: ${proofHash}`, canvas.width / 2, 920);
 
-            canvas.style.width = '100%';
-            canvas.style.height = '100%';
-            canvas.style.objectFit = 'contain';
-            container.appendChild(canvas);
+              canvas.style.width = '100%';
+              canvas.style.height = '100%';
+              canvas.style.objectFit = 'contain';
+              container.appendChild(canvas);
 
-            this.certCanvasElement = canvas;
+              this.certCanvasElement = canvas;
+            } catch(e) {}
           },
 
           downloadCertificate() {
-            if (!this.certCanvasElement) return;
-            const dataURL = this.certCanvasElement.toDataURL('image/png');
-            const link = document.createElement('a');
-            link.download = `ChronoPolyhedron_${LEVELS_CONFIG[_currentLevelKey].shortName}_${_player}.png`;
-            link.href = dataURL;
-            link.click();
+            try {
+              if (!this.certCanvasElement) return;
+              const dataURL = this.certCanvasElement.toDataURL('image/png');
+              const link = document.createElement('a');
+              link.download = `ChronoPolyhedron_${LEVELS_CONFIG[_currentLevelKey].shortName}_${_player}.png`;
+              link.href = dataURL;
+              link.click();
+            } catch(e) {}
           }
         };
       })();
