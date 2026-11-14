@@ -23,38 +23,37 @@
     #canvas-container { width: 100vw; height: 100vh; position: absolute; top: 0; left: 0; z-index: 1; }
 
     /* HUD Overlay */
-    .hud { position: absolute; z-index: 10; pointer-events: none; display: flex; flex-direction: column; justify-content: space-between; padding: 16px; width: 100%; height: 100%; }
+    .hud { position: absolute; z-index: 10; pointer-events: none; display: flex; flex-direction: column; justify-content: space-between; padding: 14px; width: 100%; height: 100%; }
     .hud * { pointer-events: auto; }
 
-    header { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; flex-wrap: wrap; }
-    .title-box { background: var(--panel); border: 1px solid rgba(0, 243, 255, 0.35); padding: 10px 16px; border-radius: 10px; backdrop-filter: blur(10px); box-shadow: 0 0 20px rgba(0, 243, 255, 0.15); }
-    h1 { font-size: 1.15rem; letter-spacing: 2px; text-transform: uppercase; color: var(--primary); text-shadow: 0 0 8px var(--primary); }
-    .sub { font-size: 0.68rem; color: #8a99ad; margin-top: 3px; }
+    header { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; flex-wrap: wrap; }
+    .title-box { background: var(--panel); border: 1px solid rgba(0, 243, 255, 0.35); padding: 9px 14px; border-radius: 10px; backdrop-filter: blur(10px); box-shadow: 0 0 20px rgba(0, 243, 255, 0.15); }
+    h1 { font-size: 1.05rem; letter-spacing: 1.8px; text-transform: uppercase; color: var(--primary); text-shadow: 0 0 8px var(--primary); }
+    .sub { font-size: 0.65rem; color: #8a99ad; margin-top: 2px; }
     .sec-badge { color: var(--gold); font-weight: bold; }
 
-    .header-right { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-    .user-profile { background: var(--panel); border: 1px solid rgba(255, 0, 127, 0.4); padding: 8px 14px; border-radius: 10px; backdrop-filter: blur(10px); display: flex; align-items: center; gap: 8px; }
-    .user-profile label { font-size: 0.7rem; color: var(--secondary); text-transform: uppercase; font-weight: bold; }
-    .user-profile input { background: rgba(0, 0, 0, 0.55); border: 1px solid var(--primary); color: var(--gold); padding: 5px 8px; border-radius: 5px; font-family: inherit; font-size: 0.8rem; font-weight: bold; outline: none; width: 130px; user-select: text; -webkit-user-select: text; }
+    .header-right { display: flex; gap: 8px; align-items: center; }
+    .user-profile { background: var(--panel); border: 1px solid rgba(255, 0, 127, 0.4); padding: 7px 12px; border-radius: 10px; backdrop-filter: blur(10px); display: flex; align-items: center; gap: 6px; }
+    .user-profile label { font-size: 0.66rem; color: var(--secondary); text-transform: uppercase; font-weight: bold; }
+    .user-profile input { background: rgba(0, 0, 0, 0.55); border: 1px solid var(--primary); color: var(--gold); padding: 4px 7px; border-radius: 5px; font-family: inherit; font-size: 0.76rem; font-weight: bold; outline: none; width: 115px; user-select: text; -webkit-user-select: text; }
     .user-profile input:focus { border-color: var(--gold); box-shadow: 0 0 8px var(--gold); }
 
-    /* Side Panel Stats */
-    .side-panel { position: absolute; right: 16px; top: 88px; display: flex; flex-direction: column; gap: 8px; width: 205px; }
-    .stat-card { background: var(--panel); border: 1px solid rgba(255, 255, 255, 0.1); border-left: 3px solid var(--primary); padding: 8px 12px; border-radius: 8px; backdrop-filter: blur(10px); }
-    .stat-label { font-size: 0.62rem; color: #8a99ad; text-transform: uppercase; letter-spacing: 0.5px; }
-    .stat-value { font-size: 1rem; font-weight: bold; color: #fff; margin-top: 2px; font-variant-numeric: tabular-nums; }
+    /* Side Panel Stats (Desktop) */
+    .side-panel { position: absolute; right: 14px; top: 82px; display: flex; flex-direction: column; gap: 7px; width: 195px; }
+    .stat-card { background: var(--panel); border: 1px solid rgba(255, 255, 255, 0.1); border-left: 3px solid var(--primary); padding: 7px 11px; border-radius: 8px; backdrop-filter: blur(10px); }
+    .stat-label { font-size: 0.58rem; color: #8a99ad; text-transform: uppercase; letter-spacing: 0.4px; }
+    .stat-value { font-size: 0.92rem; font-weight: bold; color: #fff; margin-top: 1px; font-variant-numeric: tabular-nums; }
 
-    /* Brain Strain Meter */
-    .strain-bar-bg { width: 100%; height: 5px; background: rgba(255, 255, 255, 0.1); border-radius: 3px; margin-top: 5px; overflow: hidden; }
+    .strain-bar-bg { width: 100%; height: 4px; background: rgba(255, 255, 255, 0.1); border-radius: 3px; margin-top: 4px; overflow: hidden; }
     .strain-bar-fill { height: 100%; width: 10%; background: linear-gradient(90deg, #00f3ff, #ff007f); transition: width 0.3s; }
 
     /* Bottom Controls */
-    footer { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 6px; width: 100%; }
-    .time-control { background: var(--panel); padding: 10px 20px; border-radius: 30px; border: 1px solid rgba(0, 243, 255, 0.45); backdrop-filter: blur(10px); display: flex; align-items: center; gap: 12px; width: 100%; max-width: 420px; justify-content: center; }
+    footer { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-bottom: 4px; width: 100%; }
+    .time-control { background: var(--panel); padding: 8px 16px; border-radius: 25px; border: 1px solid rgba(0, 243, 255, 0.45); backdrop-filter: blur(10px); display: flex; align-items: center; gap: 10px; width: 100%; max-width: 400px; justify-content: center; }
     .time-slider { flex: 1; accent-color: var(--primary); cursor: pointer; }
 
-    .btn-row { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; max-width: 820px; width: 100%; }
-    .btn { background: rgba(0, 243, 255, 0.12); border: 1px solid var(--primary); color: var(--primary); padding: 8px 13px; border-radius: 8px; cursor: pointer; font-family: inherit; font-size: 0.72rem; font-weight: bold; text-transform: uppercase; transition: all 0.2s; backdrop-filter: blur(5px); }
+    .btn-row { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; max-width: 820px; width: 100%; }
+    .btn { background: rgba(0, 243, 255, 0.12); border: 1px solid var(--primary); color: var(--primary); padding: 7px 12px; border-radius: 8px; cursor: pointer; font-family: inherit; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; transition: all 0.2s; backdrop-filter: blur(5px); }
     .btn:hover, .btn:active { background: var(--primary); color: #000; box-shadow: 0 0 15px var(--primary); }
     .btn-secondary { border-color: var(--secondary); color: var(--secondary); background: rgba(255, 0, 127, 0.12); }
     .btn-secondary:hover, .btn-secondary:active { background: var(--secondary); color: #fff; box-shadow: 0 0 15px var(--secondary); }
@@ -66,15 +65,48 @@
     .btn-green:hover, .btn-green:active { background: var(--green); color: #000; box-shadow: 0 0 15px var(--green); }
 
     /* Toast Notification */
-    #toast { position: fixed; top: 82px; left: 50%; transform: translateX(-50%); background: rgba(10, 15, 30, 0.96); border: 1px solid var(--primary); color: #fff; padding: 10px 18px; border-radius: 10px; font-size: 0.78rem; z-index: 95; max-width: 90vw; text-align: center; box-shadow: 0 0 25px rgba(0, 243, 255, 0.35); display: none; }
+    #toast { position: fixed; top: 88px; left: 50%; transform: translateX(-50%); background: rgba(10, 15, 30, 0.96); border: 1px solid var(--primary); color: #fff; padding: 8px 14px; border-radius: 8px; font-size: 0.72rem; z-index: 95; max-width: 90vw; text-align: center; box-shadow: 0 0 25px rgba(0, 243, 255, 0.35); display: none; }
 
-    /* Mobile Responsive HUD */
+    /* Ultra-Compact Mobile HUD (keeps center clear) */
     @media (max-width: 768px) {
-      .side-panel { position: static; flex-direction: row; flex-wrap: wrap; width: 100%; gap: 6px; margin-top: 6px; }
-      .stat-card { flex: 1 1 30%; padding: 6px 8px; }
-      .stat-value { font-size: 0.82rem; }
-      .btn { padding: 7px 8px; font-size: 0.64rem; }
-      h1 { font-size: 0.95rem; }
+      .hud { padding: 8px; }
+      header { gap: 4px; align-items: center; }
+      .title-box { padding: 4px 8px; border-radius: 7px; }
+      h1 { font-size: 0.72rem; letter-spacing: 1px; }
+      .sub { font-size: 0.52rem; margin-top: 1px; }
+      .header-right { gap: 4px; }
+      .user-profile { padding: 3px 6px; border-radius: 7px; gap: 4px; }
+      .user-profile label { display: none; }
+      .user-profile input { width: 78px; font-size: 0.65rem; padding: 2px 5px; }
+      #audio-toggle-btn { padding: 4px 7px; font-size: 0.6rem; border-radius: 7px; }
+
+      .side-panel {
+        position: static;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        width: 100%;
+        gap: 3px;
+        margin-top: 4px;
+        justify-content: space-between;
+      }
+      .stat-card {
+        flex: 1;
+        padding: 3px 4px;
+        border-left-width: 2px;
+        border-radius: 5px;
+        min-width: 0;
+        text-align: center;
+      }
+      .stat-label { font-size: 0.44rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .stat-value { font-size: 0.64rem; margin-top: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .strain-bar-bg { display: none; }
+
+      footer { gap: 5px; margin-bottom: 2px; }
+      .time-control { padding: 5px 12px; gap: 8px; max-width: 320px; }
+      .time-control span { font-size: 0.6rem !important; }
+      .time-slider { height: 14px; }
+      .btn-row { gap: 4px; }
+      .btn { padding: 5px 6px; font-size: 0.56rem; border-radius: 6px; flex: 1 1 30%; }
     }
 
     /* Modal Styling */
@@ -112,7 +144,7 @@
       <header>
         <div class="title-box">
           <h1>Chrono-Polyhedron 3000</h1>
-          <div class="sub">Andromeda M31 • <span class="sec-badge" id="mode-badge">LVL 3: OMEGA 36</span></div>
+          <div class="sub">Súhvezdie Andromeda • <span class="sec-badge" id="mode-badge">LVL 3: OMEGA 36</span></div>
         </div>
 
         <div class="header-right">
@@ -126,24 +158,24 @@
 
       <div class="side-panel">
         <div class="stat-card" style="border-left-color: var(--green);">
-          <div class="stat-label">Speedrun Čas</div>
+          <div class="stat-label">Čas</div>
           <div class="stat-value" id="timer-val" style="color: var(--green);">00:00.0</div>
         </div>
         <div class="stat-card">
-          <div class="stat-label">Časový stav (Phase)</div>
-          <div class="stat-value" id="phase-val" style="color: var(--primary);">PRESENT (t₀)</div>
+          <div class="stat-label">Fáza</div>
+          <div class="stat-value" id="phase-val" style="color: var(--primary);">t₀</div>
         </div>
         <div class="stat-card" style="border-left-color: var(--gold);">
-          <div class="stat-label">Celková Stabilizácia</div>
+          <div class="stat-label">Stabilizácia</div>
           <div class="stat-value" id="stab-val" style="color: var(--gold);">0%</div>
         </div>
         <div class="stat-card" style="border-left-color: var(--purple);">
-          <div class="stat-label">Brain Strain & Rezonancia</div>
-          <div class="stat-value" id="strain-val">IQ 160 • 1.0x</div>
+          <div class="stat-label">IQ / Rezonancia</div>
+          <div class="stat-value" id="strain-val">160 • 1.0x</div>
           <div class="strain-bar-bg"><div class="strain-bar-fill" id="strain-fill"></div></div>
         </div>
         <div class="stat-card">
-          <div class="stat-label">Počet ťahov</div>
+          <div class="stat-label">Ťahy</div>
           <div class="stat-value" id="moves-val">0</div>
         </div>
       </div>
@@ -151,9 +183,9 @@
 
     <footer>
       <div class="time-control">
-        <span style="font-size: 0.75rem; color: #8a99ad; font-weight: bold;">PAST (t₋₁)</span>
+        <span style="font-size: 0.72rem; color: #8a99ad; font-weight: bold;">PAST (t₋₁)</span>
         <input type="range" min="-1" max="1" value="0" step="1" class="time-slider" id="time-slider">
-        <span style="font-size: 0.75rem; color: #8a99ad; font-weight: bold;">FUTURE (t₊₁)</span>
+        <span style="font-size: 0.72rem; color: #8a99ad; font-weight: bold;">FUTURE (t₊₁)</span>
       </div>
 
       <div class="btn-row">
@@ -330,7 +362,6 @@
         }
       };
 
-      // Local Leaderboard Engine
       const Leaderboard = {
         KEY: "chrono_polyhedron_lb_v1",
         defaults: [
@@ -387,7 +418,6 @@
         }
       };
 
-      // Web Audio API Synthesizer + Ambient Drone
       const AudioEngine = {
         ctx: null,
         isMuted: false,
@@ -506,6 +536,22 @@
         }
       }
 
+      // Helper for soft round star glow texture (no squares!)
+      function createRoundStarTexture() {
+        const c = document.createElement('canvas');
+        c.width = 64;
+        c.height = 64;
+        const ctx = c.getContext('2d');
+        const g = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+        g.addColorStop(0, 'rgba(255, 255, 255, 1)');
+        g.addColorStop(0.25, 'rgba(220, 245, 255, 0.85)');
+        g.addColorStop(0.6, 'rgba(0, 243, 255, 0.2)');
+        g.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        ctx.fillStyle = g;
+        ctx.fillRect(0, 0, 64, 64);
+        return new THREE.CanvasTexture(c);
+      }
+
       return {
         init() {
           this.setupThreeJS();
@@ -516,7 +562,7 @@
 
         adjustCamera() {
           const isMobile = window.innerWidth <= 768;
-          const dist = isMobile ? 11.5 : 9.2;
+          const dist = isMobile ? 12.6 : 9.2;
           this.camera.position.set(dist * 0.65, dist * 0.6, dist);
           this.camera.lookAt(0, 0, 0);
         },
@@ -643,7 +689,8 @@
           geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
           const mat = new THREE.PointsMaterial({
             color: colorHex,
-            size: 0.2,
+            size: 0.25,
+            map: this.starTexture,
             transparent: true,
             opacity: 1,
             blending: THREE.AdditiveBlending,
@@ -655,10 +702,108 @@
           _bursts.push({ points, velocities, life: 1.0 });
         },
 
+        buildAndromedaConstellation() {
+          this.andromedaGroup = new THREE.Group();
+
+          // Accurate astronomical layout of Andromeda Constellation stars
+          const andromedaStars = [
+            { name: "Alpheratz", pos: [-9.5, 4.2, -16], size: 0.95, color: 0xbbeeff },
+            { name: "Delta", pos: [-5.8, 2.8, -16], size: 0.72, color: 0xffd28a },
+            { name: "Mirach", pos: [-2.2, 1.5, -16], size: 0.92, color: 0xff9d5c },
+            { name: "Almach", pos: [3.2, 3.6, -16], size: 0.88, color: 0xffd700 },
+            { name: "Mu", pos: [-2.7, 4.1, -16], size: 0.62, color: 0xffffff },
+            { name: "Nu", pos: [-3.1, 6.3, -16], size: 0.58, color: 0xaaddff },
+            { name: "Pi", pos: [-6.6, 5.8, -16], size: 0.6, color: 0xaaddff },
+            { name: "Iota", pos: [-8.2, 8.8, -16], size: 0.62, color: 0x00f3ff },
+            { name: "Kappa", pos: [-9.5, 9.5, -16], size: 0.55, color: 0x00f3ff },
+            { name: "Omicron", pos: [-11.0, 8.2, -16], size: 0.58, color: 0x00f3ff },
+            { name: "Zeta", pos: [-1.4, -0.8, -16], size: 0.56, color: 0xffb380 },
+            { name: "Eta", pos: [-3.3, -2.1, -16], size: 0.54, color: 0xffb380 },
+            { name: "51 And", pos: [5.8, 5.2, -16], size: 0.62, color: 0xffd28a }
+          ];
+
+          // Constellation connecting lines
+          const linePairs = [
+            [0, 1], [1, 2], [2, 3],
+            [2, 4], [4, 5],
+            [1, 6], [6, 7], [7, 8], [7, 9],
+            [2, 10], [10, 11], [3, 12]
+          ];
+
+          linePairs.forEach(([i, j]) => {
+            const pA = new THREE.Vector3(...andromedaStars[i].pos);
+            const pB = new THREE.Vector3(...andromedaStars[j].pos);
+            const geo = new THREE.BufferGeometry().setFromPoints([pA, pB]);
+            const mat = new THREE.LineBasicMaterial({ color: 0x00f3ff, transparent: true, opacity: 0.35 });
+            this.andromedaGroup.add(new THREE.Line(geo, mat));
+          });
+
+          // Glowing round star sprites for each constellation star
+          andromedaStars.forEach(s => {
+            const spriteMat = new THREE.SpriteMaterial({
+              map: this.starTexture,
+              color: s.color,
+              transparent: true,
+              opacity: 0.95,
+              blending: THREE.AdditiveBlending
+            });
+            const sprite = new THREE.Sprite(spriteMat);
+            sprite.position.set(...s.pos);
+            sprite.scale.set(s.size, s.size, 1);
+            this.andromedaGroup.add(sprite);
+          });
+
+          // M31 Andromeda Galaxy glow right above Nu Andromedae
+          const m31Mat = new THREE.SpriteMaterial({
+            map: this.starTexture,
+            color: 0xd8a7ff,
+            transparent: true,
+            opacity: 0.75,
+            blending: THREE.AdditiveBlending
+          });
+          const m31Sprite = new THREE.Sprite(m31Mat);
+          m31Sprite.position.set(-3.6, 7.2, -15.8);
+          m31Sprite.scale.set(2.8, 1.1, 1);
+          this.andromedaGroup.add(m31Sprite);
+
+          // Soft round background starfield (no squares!)
+          const bgCount = 650;
+          const bgGeo = new THREE.BufferGeometry();
+          const bgPos = new Float32Array(bgCount * 3);
+          const bgCol = new Float32Array(bgCount * 3);
+          const cBlue = new THREE.Color(0x88ddff);
+          const cGold = new THREE.Color(0xffe6a3);
+          const cPurple = new THREE.Color(0xd8a7ff);
+
+          for (let i = 0; i < bgCount; i++) {
+            const i3 = i * 3;
+            bgPos[i3] = (Math.random() - 0.5) * 52;
+            bgPos[i3 + 1] = (Math.random() - 0.5) * 44;
+            bgPos[i3 + 2] = -10 - Math.random() * 25;
+            const c = i % 3 === 0 ? cBlue : (i % 3 === 1 ? cGold : cPurple);
+            bgCol[i3] = c.r; bgCol[i3 + 1] = c.g; bgCol[i3 + 2] = c.b;
+          }
+
+          bgGeo.setAttribute('position', new THREE.BufferAttribute(bgPos, 3));
+          bgGeo.setAttribute('color', new THREE.BufferAttribute(bgCol, 3));
+          const bgMat = new THREE.PointsMaterial({
+            size: 0.24,
+            map: this.starTexture,
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.75,
+            depthWrite: false,
+            blending: THREE.AdditiveBlending
+          });
+          this.andromedaGroup.add(new THREE.Points(bgGeo, bgMat));
+
+          this.scene.add(this.andromedaGroup);
+        },
+
         setupThreeJS() {
           const container = document.getElementById('canvas-container');
           this.scene = new THREE.Scene();
-          this.scene.fog = new THREE.FogExp2(0x030712, 0.025);
+          this.scene.fog = new THREE.FogExp2(0x030712, 0.018);
 
           this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
           this.camera.position.set(6, 6, 9);
@@ -669,8 +814,10 @@
           this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
           container.appendChild(this.renderer.domElement);
 
+          this.starTexture = createRoundStarTexture();
+
           // Lights
-          this.scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+          this.scene.add(new THREE.AmbientLight(0xffffff, 0.55));
           const p1 = new THREE.PointLight(0x00f3ff, 2.2, 60); p1.position.set(12, 12, 12); this.scene.add(p1);
           const p2 = new THREE.PointLight(0xff007f, 2.0, 60); p2.position.set(-12, -12, -12); this.scene.add(p2);
           const p3 = new THREE.PointLight(0xffd700, 1.8, 60); p3.position.set(0, 12, -12); this.scene.add(p3);
@@ -679,28 +826,8 @@
           this.cubeGroup = new THREE.Group();
           this.scene.add(this.cubeGroup);
 
-          // Andromeda Background Starfield
-          const partGeo = new THREE.BufferGeometry();
-          const partCount = 1200;
-          const posArray = new Float32Array(partCount * 3);
-          const colArray = new Float32Array(partCount * 3);
-          const c1 = new THREE.Color(0x00f3ff);
-          const c2 = new THREE.Color(0xffd700);
-          const c3 = new THREE.Color(0xb565ff);
-
-          for (let i = 0; i < partCount; i++) {
-            const i3 = i * 3;
-            posArray[i3] = (Math.random() - 0.5) * 42;
-            posArray[i3 + 1] = (Math.random() - 0.5) * 42;
-            posArray[i3 + 2] = (Math.random() - 0.5) * 42;
-            const c = i % 3 === 0 ? c1 : (i % 3 === 1 ? c2 : c3);
-            colArray[i3] = c.r; colArray[i3 + 1] = c.g; colArray[i3 + 2] = c.b;
-          }
-          partGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-          partGeo.setAttribute('color', new THREE.BufferAttribute(colArray, 3));
-          const partMat = new THREE.PointsMaterial({ size: 0.14, vertexColors: true, transparent: true, opacity: 0.65 });
-          this.particles = new THREE.Points(partGeo, partMat);
-          this.scene.add(this.particles);
+          // Build Andromeda Constellation in background
+          this.buildAndromedaConstellation();
 
           // Interaction Setup
           this.raycaster = new THREE.Raycaster();
@@ -728,7 +855,9 @@
               this.gyroRing2.rotation.y -= 0.02 * stabBoost;
               this.gyroRing2.rotation.z += 0.014 * stabBoost;
             }
-            if (this.particles) this.particles.rotation.y += 0.0006;
+            if (this.andromedaGroup) {
+              this.andromedaGroup.rotation.z = Math.sin(Date.now() * 0.00025) * 0.04;
+            }
 
             for (let i = _bursts.length - 1; i >= 0; i--) {
               const b = _bursts[i];
@@ -766,13 +895,11 @@
             this.adjustCamera();
           });
 
-          // Player Name Input
           document.getElementById('player-name').addEventListener('input', (e) => {
             const clean = e.target.value.replace(/[^a-zA-Z0-9\-_ áäčďéíĺľňóôŕšťúýžÁÄČĎÉÍĹĽŇÓÔŔŠŤÚÝŽ]/g, '').trim();
             _player = clean || "AGENT-3000";
           });
 
-          // Time Phase Slider
           document.getElementById('time-slider').addEventListener('input', (e) => {
             _timePhase = parseInt(e.target.value, 10);
             AudioEngine.init();
@@ -782,7 +909,6 @@
             this.updateHUD();
           });
 
-          // Audio Toggle
           document.getElementById('audio-toggle-btn').addEventListener('click', (e) => {
             AudioEngine.init();
             const active = AudioEngine.toggleMute();
@@ -790,14 +916,12 @@
             showToast(active ? "Vesmírny syntetizátor aktivovaný." : "Zvuk stlmený.");
           });
 
-          // Camera Reset
           document.getElementById('reset-cam-btn').addEventListener('click', () => {
             AudioEngine.init();
             this.adjustCamera();
             this.cubeGroup.rotation.set(0, 0, 0);
           });
 
-          // Levels Modal
           document.getElementById('levels-btn').addEventListener('click', () => {
             document.getElementById('levels-modal').style.display = 'flex';
           });
@@ -814,7 +938,6 @@
             });
           });
 
-          // Leaderboard Modal
           document.getElementById('leaderboard-btn').addEventListener('click', () => {
             Leaderboard.render();
             document.getElementById('leaderboard-modal').style.display = 'flex';
@@ -823,7 +946,6 @@
             document.getElementById('leaderboard-modal').style.display = 'none';
           });
 
-          // AI Oracle Hint
           document.getElementById('oracle-btn').addEventListener('click', () => {
             AudioEngine.init();
             AudioEngine.playBeep(880, 0.16);
@@ -833,24 +955,21 @@
             showToast(hint, 5200);
           });
 
-          // Viral Challenge
           document.getElementById('challenge-btn').addEventListener('click', () => {
             AudioEngine.init();
             const cfg = LEVELS_CONFIG[_currentLevelKey];
             const stab = this.getTotalStabilization();
             const timeStr = Leaderboard.formatTime(_elapsedMs);
-            const text = `🌌 Riešim 3D kvantový polyéder CHRONO-POLYHEDRON 3000 (${cfg.shortName})!\n👤 Agent: ${_player} | Čas: ${timeStr} | Stabilizácia: ${stab}% | Ťahy: ${_moves}\nTrúfneš si prekonať túto výzvu? 👉 ${window.location.href}`;
+            const text = `🌌 Riešim 3D kvantový polyéder CHRONO-POLYHEDRON 3000 (${cfg.shortName}) v súhvezdí Andromeda!\n👤 Agent: ${_player} | Čas: ${timeStr} | Stabilizácia: ${stab}% | Ťahy: ${_moves}\nTrúfneš si prekonať túto výzvu? 👉 ${window.location.href}`;
             try { navigator.clipboard.writeText(text); } catch (e) {}
             showToast("Virálna výzva skopírovaná do schránky!");
           });
 
-          // Reset Game
           document.getElementById('rage-btn').addEventListener('click', () => {
             this.loadLevel(_currentLevelKey);
             showToast(`Hra reštartovaná (${LEVELS_CONFIG[_currentLevelKey].shortName}). Veľa šťastia, ${_player}!`);
           });
 
-          // Certificate Modal Buttons
           document.getElementById('close-cert-btn').addEventListener('click', () => {
             document.getElementById('cert-modal').style.display = 'none';
           });
@@ -864,7 +983,6 @@
             this.downloadCertificate();
           });
 
-          // 3D Mouse & Touch Interaction
           const dom = this.renderer.domElement;
 
           const onPointerDown = (x, y) => {
@@ -924,7 +1042,6 @@
           AudioEngine.playBeep(360 + (id % 12) * 42 + pIdx * 80, 0.12);
           this.spawnQuantumBurst(node.pos, node.phaseColors[pIdx], 24, 0.065);
 
-          // Quantum Resonance Mechanics across time dimensions
           if (pIdx === 0 && node.active[0]) {
             node.active[1] = !node.active[1];
           }
@@ -1010,7 +1127,8 @@
         },
 
         updateHUD() {
-          const phases = ["PAST (t₋₁)", "PRESENT (t₀)", "FUTURE (t₊₁)"];
+          const isMobile = window.innerWidth <= 768;
+          const phases = isMobile ? ["t₋₁", "t₀", "t₊₁"] : ["PAST (t₋₁)", "PRESENT (t₀)", "FUTURE (t₊₁)"];
           document.getElementById('phase-val').innerText = phases[_timePhase + 1];
 
           const totalPercent = this.getTotalStabilization();
@@ -1020,7 +1138,9 @@
           const strain = Math.min(100, Math.max(10, _moves * 3));
           const resonance = (1.0 + (totalPercent / 100) * 3.5 + (_moves * 0.04)).toFixed(1);
           document.getElementById('strain-fill').style.width = `${strain}%`;
-          document.getElementById('strain-val').innerText = `IQ ${175 - Math.floor(strain / 4)} • ${resonance}x`;
+          document.getElementById('strain-val').innerText = isMobile
+            ? `${175 - Math.floor(strain / 4)} • ${resonance}x`
+            : `IQ ${175 - Math.floor(strain / 4)} • ${resonance}x`;
         },
 
         triggerVictory(proofCode, finalTime, cfg) {
