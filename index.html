@@ -3,22 +3,41 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CHRONO-POLYHEDRON 3000</title>
+  <title>CHRONO-POLYHEDRON 3000: Time Edition</title>
   <style>
     body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000103; font-family: sans-serif; color: #fff; }
     #canvas-container { width: 100vw; height: 100vh; position: absolute; top: 0; left: 0; z-index: 1; }
-    .hud { position: absolute; z-index: 10; padding: 20px; font-size: 1.1rem; color: #00f3ff; text-shadow: 0 0 10px #00f3ff; }
+    .hud { position: absolute; z-index: 10; padding: 20px; font-size: 1.1rem; color: #00f3ff; text-shadow: 0 0 10px #00f3ff; display: flex; flex-direction: column; justify-content: space-between; height: 100%; width: 100%; box-sizing: border-box; pointer-events: none; }
+    .hud * { pointer-events: auto; }
+    .control-panel { background: rgba(5, 8, 18, 0.9); border: 1px solid #00f3ff; padding: 15px; border-radius: 12px; backdrop-filter: blur(10px); max-width: 400px; box-shadow: 0 0 20px rgba(0,243,255,0.2); }
+    .time-slider { width: 100%; accent-color: #00f3ff; margin-top: 10px; cursor: pointer; }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
-  <div class="hud">CHRONO-POLYHEDRON 3000: SYSTEM ONLINE <br><span id="info" style="font-size:0.8rem; color:#ffd700;">Kliknutím pridáš stabilizáciu.</span></div>
+  <div class="hud">
+    <div>
+      <h1>CHRONO-POLYHEDRON 3000</h1>
+      <div id="info" style="font-size:0.8rem; color:#ffd700; margin-top: 5px;">Fáza: t0 (Prítomnosť) | Kliknutím upravuješ stav v aktuálnej dimenzii.</div>
+    </div>
+    <div class="control-panel">
+      <label style="font-size: 0.75rem; color: #8a99ad; text-transform: uppercase;">Časová dimenzia:</label>
+      <div style="display: flex; justify-content: space-between; font-size: 0.68rem; color: #00f3ff; margin-top: 5px;">
+        <span>t-1 (Minulosť)</span>
+        <span>t0 (Prítomnosť)</span>
+        <span>t+1 (Budúcnosť)</span>
+      </div>
+      <input type="range" min="-1" max="1" value="0" step="1" class="time-slider" id="time-slider">
+    </div>
+  </div>
+  
   <div id="canvas-container"></div>
+
   <script>
     const container = document.getElementById('canvas-container');
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.z = 6;
+    camera.position.z = 7;
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -29,22 +48,37 @@
     light.position.set(5, 5, 5);
     scene.add(light);
 
-    const geometry = new THREE.IcosahedronGeometry(1.8, 1);
-    const material = new THREE.MeshPhongMaterial({ color: 0x00f3ff, emissive: 0x00f3ff, emissiveIntensity: 0.3, wireframe: true });
-    const mesh = new THREE.Mesh(geometry, material);
-    scene.add(mesh);
+    const geometry = new THREE.IcosahedronGeometry(2, 0);
+    const material = new THREE.MeshPhongMaterial({ color: 0x00f3ff, emissive: 0x00f3ff, emissiveIntensity: 0.4, wireframe: true });
+    const polyhedron = new THREE.Mesh(geometry, material);
+    scene.add(polyhedron);
 
-    let count = 0;
-    window.addEventListener('click', () => {
-      count++;
-      material.color.setHex(count % 2 === 0 ? 0x00f3ff : 0xffd700);
-      document.getElementById('info').innerText = `Stabilizácia uzlov: ${Math.min(100, count * 15)}%`;
+    let currentTimePhase = 0; 
+    let phaseStates = { '-1': 0, '0': 0, '1': 0 };
+
+    const slider = document.getElementById('time-slider');
+    slider.addEventListener('input', (e) => {
+      currentTimePhase = parseInt(e.target.value, 10);
+      const phaseNames = { '-1': 't-1 (Minulosť)', '0': 't0 (Prítomnosť)', '1': 't+1 (Budúcnosť)' };
+      const phaseColors = { '-1': 0x00ff88, '0': 0x00f3ff, '1': 0xffd700 };
+      
+      document.getElementById('info').innerText = `Fáza: ${phaseNames[currentTimePhase]} | Aktivácie: ${phaseStates[currentTimePhase]}`;
+      material.color.setHex(phaseColors[currentTimePhase]);
+      material.emissive.setHex(phaseColors[currentTimePhase]);
+    });
+
+    window.addEventListener('click', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.closest('.control-panel')) return;
+      
+      phaseStates[currentTimePhase]++;
+      const phaseNames = { '-1': 't-1 (Minulosť)', '0': 't0 (Prítomnosť)', '1': 't+1 (Budúcnosť)' };
+      document.getElementById('info').innerText = `Fáza: ${phaseNames[currentTimePhase]} | Aktivácie: ${phaseStates[currentTimePhase]}`;
     });
 
     function animate() {
       requestAnimationFrame(animate);
-      mesh.rotation.x += 0.008;
-      mesh.rotation.y += 0.012;
+      polyhedron.rotation.x += 0.005;
+      polyhedron.rotation.y += 0.008;
       renderer.render(scene, camera);
     }
     animate();
