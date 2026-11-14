@@ -7,8 +7,8 @@
   <meta name="theme-color" content="#000103">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>CHRONO-POLYHEDRON 3000: Omega Edition</title>
-  <link id="pwa-manifest" rel="manifest" href="">
+  <title>CHRONO-POLYHEDRON 3000: Supernova Edition</title>
+  <link id="pwa-manifest" rel="manifest" href="manifest.json">
   <style>
     :root {
       --bg: #000103;
@@ -44,7 +44,7 @@
 
     h1 { font-size: 0.9rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--primary); text-shadow: 0 0 12px var(--primary); }
     .sub { font-size: 0.55rem; color: #8a99ad; margin-top: 1px; display: flex; align-items: center; gap: 5px; }
-    .sec-badge { color: var(--green); font-weight: bold; }
+    .sec-badge { color: var(--gold); font-weight: bold; }
 
     .top-stats-compact {
       background: var(--panel);
@@ -98,7 +98,7 @@
       -webkit-user-select: text;
     }
 
-    .side-panel { position: absolute; right: 12px; top: 75px; display: flex; flex-direction: column; gap: 7px; width: 230px; z-index: 10; }
+    .side-panel { position: absolute; right: 12px; top: 75px; display: flex; flex-direction: column; gap: 7px; width: 235px; z-index: 10; }
     .stat-card {
       background: var(--panel);
       border: 1px solid rgba(255, 255, 255, 0.14);
@@ -146,7 +146,7 @@
     }
     .time-slider { flex: 1; accent-color: var(--primary); cursor: pointer; height: 20px; }
 
-    .btn-group { display: flex; gap: 5px; flex-wrap: wrap; justify-content: center; width: 100%; max-width: 760px; }
+    .btn-group { display: flex; gap: 5px; flex-wrap: wrap; justify-content: center; width: 100%; max-width: 820px; }
     
     .btn {
       background: rgba(0, 243, 255, 0.12);
@@ -174,6 +174,8 @@
     .btn-gold:hover, .btn-gold:active { background: var(--gold); color: #000103; box-shadow: 0 0 25px var(--gold); }
     .btn-green { border-color: var(--green); color: var(--green); background: rgba(0, 255, 136, 0.12); }
     .btn-green:hover, .btn-green:active { background: var(--green); color: #000103; box-shadow: 0 0 20px var(--green); }
+    .btn-purple { border-color: var(--purple); color: #d8a7ff; background: rgba(157, 78, 221, 0.18); }
+    .btn-purple:hover, .btn-purple:active { background: var(--purple); color: #fff; box-shadow: 0 0 22px var(--purple); }
 
     @media (max-width: 768px) {
       .side-panel { display: none; }
@@ -202,18 +204,22 @@
     }
 
     .modal { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 1, 3, 0.92); backdrop-filter: blur(20px); z-index: 100; display: none; justify-content: center; align-items: center; padding: 15px; }
-    .modal-content { background: #050812; border: 1px solid var(--gold); border-radius: 16px; padding: 20px; max-width: 480px; width: 100%; text-align: center; box-shadow: 0 0 45px rgba(255, 215, 0, 0.35); max-height: 90vh; overflow-y: auto; }
+    .modal-content { background: #050812; border: 1px solid var(--gold); border-radius: 16px; padding: 20px; max-width: 520px; width: 100%; text-align: center; box-shadow: 0 0 45px rgba(255, 215, 0, 0.35); max-height: 90vh; overflow-y: auto; }
     .modal-title { color: var(--gold); font-size: 1.2rem; letter-spacing: 1.5px; margin-bottom: 8px; text-transform: uppercase; text-shadow: 0 0 12px var(--gold); }
     #cert-canvas-container { width: 100%; height: 210px; margin: 10px 0; border-radius: 10px; border: 1px solid rgba(255, 215, 0, 0.35); background: #000103; }
 
-    .lb-table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.75rem; text-align: left; }
-    .lb-table th { color: var(--primary); border-bottom: 1px solid rgba(0, 243, 255, 0.3); padding: 6px; text-transform: uppercase; font-size: 0.65rem; }
+    .level-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0; text-align: left; }
+    .level-card { background: rgba(0, 243, 255, 0.05); border: 1px solid rgba(0, 243, 255, 0.25); border-radius: 10px; padding: 12px; cursor: pointer; transition: all 0.2s; }
+    .level-card:hover { transform: translateY(-2px); border-color: var(--gold); background: rgba(255, 215, 0, 0.08); }
+    .level-card h3 { font-size: 0.85rem; color: var(--primary); margin-bottom: 4px; text-transform: uppercase; }
+    .level-card p { font-size: 0.7rem; color: #a0aec0; line-height: 1.35; }
+    .level-tag { display: inline-block; font-size: 0.6rem; padding: 2px 6px; border-radius: 4px; font-weight: bold; margin-bottom: 5px; text-transform: uppercase; }
+
+    .lb-table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.72rem; text-align: left; }
+    .lb-table th { color: var(--primary); border-bottom: 1px solid rgba(0, 243, 255, 0.3); padding: 6px; text-transform: uppercase; font-size: 0.62rem; }
     .lb-table td { padding: 7px 6px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
     .lb-rank-1 { color: var(--gold); font-weight: bold; }
-    .lb-hash { font-family: monospace; color: var(--green); font-size: 0.65rem; }
-
-    .tut-step { background: rgba(0, 243, 255, 0.06); border: 1px solid rgba(0, 243, 255, 0.25); border-radius: 10px; padding: 10px; margin: 8px 0; text-align: left; font-size: 0.78rem; line-height: 1.4; }
-    .tut-step strong { color: var(--primary); }
+    .lb-hash { font-family: monospace; color: var(--green); font-size: 0.62rem; }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
@@ -227,7 +233,7 @@
       <header>
         <div class="title-box">
           <h1>Chrono-Polyhedron</h1>
-          <div class="sub">Andromeda M31 • <span class="sec-badge" id="mode-badge">OMEGA 36</span></div>
+          <div class="sub">Andromeda M31 • <span class="sec-badge" id="mode-badge">LVL 3: OMEGA 36</span></div>
         </div>
 
         <div class="top-stats-compact">
@@ -291,7 +297,7 @@
       <div class="btn-group">
         <button class="btn" id="reset-cam-btn">Reset Pohľadu</button>
         <button class="btn btn-green" id="audio-toggle-btn">Zvuk: ON</button>
-        <button class="btn btn-secondary" id="tutorial-btn">Level 1 Tutoriál</button>
+        <button class="btn btn-purple" id="levels-btn">🌌 Výber Levelu (1-4)</button>
         <button class="btn btn-gold" id="leaderboard-btn">🏆 Globálny Rebríček</button>
         <button class="btn btn-secondary" id="challenge-btn">Virálna Výzva</button>
         <button class="btn btn-gold" id="rage-btn">Reset Hry</button>
@@ -299,26 +305,39 @@
     </footer>
   </div>
 
-  <!-- Modal: Tutoriál -->
-  <div class="modal" id="tutorial-modal">
-    <div class="modal-content" style="border-color: var(--primary);">
-      <div class="modal-title" style="color: var(--primary);">🎮 Kvantový Tréning (Onboarding)</div>
-      <p style="font-size: 0.8rem; color: #a0aec0;">Vitajte v CHRONO-POLYHEDRON 3000. Pochopte fyziku 4D priestoru za 10 sekúnd:</p>
+  <!-- Modal: Výber Levelu & Tutoriál -->
+  <div class="modal" id="levels-modal">
+    <div class="modal-content" style="border-color: var(--purple);">
+      <div class="modal-title" style="color: #d8a7ff;">🌌 Kvantová Kampaň (Levely 1 – 4)</div>
+      <p style="font-size: 0.78rem; color: #a0aec0;">Vyber si úroveň komplexnosti 4D polyédra. Prepínaj časové dimenzie ($t_{-1} \leftrightarrow t_0 \leftrightarrow t_{+1}$) a stabilizuj všetky uzly na 100 %!</p>
       
-      <div class="tut-step">
-        <strong>1. Rotácia & Výber:</strong> Ťahaním prsta alebo myši otáčate 3D polyédrom. Kliknutím na uzol ho aktivujete.
-      </div>
-      <div class="tut-step">
-        <strong>2. Kauzalita Času ($t_{-1} \rightarrow t_0 \rightarrow t_{+1}$):</strong> Posuvníkom dole meníte časovú dimenziu. Aktivácia uzla v <em>Minulosti ($t_{-1}$)</em> prepne ten istý uzol v <em>Prítomnosti ($t_0$)</em>!
-      </div>
-      <div class="tut-step">
-        <strong>3. Cesta k víťazstvu:</strong> <strong>Level 1</strong> má len 9 uzlov na tréning. Režim <strong>Omega</strong> odomyká zápis do <em>globálneho cloudového rebríčka</em> a SHA-256 certifikát!
+      <div class="level-grid">
+        <div class="level-card" data-level="level1">
+          <span class="level-tag" style="background: rgba(0,255,136,0.2); color: var(--green);">Začiatočník • 12 uzlov</span>
+          <h3>Lvl 1: Tetraéder</h3>
+          <p>4 vrcholy × 3 dimenzie. Ideálny tréning na pochopenie časového posunu.</p>
+        </div>
+
+        <div class="level-card" data-level="level2">
+          <span class="level-tag" style="background: rgba(0,243,255,0.2); color: var(--primary);">Pokročilý • 18 uzlov</span>
+          <h3>Lvl 2: Oktaéder</h3>
+          <p>6 vrcholov × 3 dimenzie. Symetrická mriežka s krížovou väzbou.</p>
+        </div>
+
+        <div class="level-card" data-level="level3" style="border-color: var(--gold);">
+          <span class="level-tag" style="background: rgba(255,215,0,0.2); color: var(--gold);">Súťažný • 36 uzlov</span>
+          <h3>Lvl 3: OMEGA Ikosaéder</h3>
+          <p>12 vrcholov × 3 dimenzie. Odomyká svetový rebríček a SHA-256 certifikát.</p>
+        </div>
+
+        <div class="level-card" data-level="level4" style="border-color: var(--secondary);">
+          <span class="level-tag" style="background: rgba(255,0,127,0.2); color: var(--secondary);">Extrémny • 60 uzlov</span>
+          <h3>Lvl 4: SINGULARITY</h3>
+          <p>20 vrcholov × 3 dimenzie (Dodekaéder) + dvojitá časová rezonancia!</p>
+        </div>
       </div>
 
-      <div style="display: flex; gap: 8px; justify-content: center; margin-top: 14px; flex-wrap: wrap;">
-        <button class="btn btn-green" id="start-level1-btn">Spustiť Level 1 (9 uzlov)</button>
-        <button class="btn btn-gold" id="start-omega-btn">Spustiť Omega (36 uzlov)</button>
-      </div>
+      <button class="btn" id="close-levels-btn" style="max-width: 200px;">Pokračovať v hre</button>
     </div>
   </div>
 
@@ -326,20 +345,21 @@
   <div class="modal" id="leaderboard-modal">
     <div class="modal-content">
       <div class="modal-title">🏆 Globálny Rebríček Agentov</div>
-      <p style="font-size: 0.75rem; color: #a0aec0;">Svetoví riešitelia 36-uzlového Omega Polyédra (Cloud Sync)</p>
+      <p style="font-size: 0.75rem; color: #a0aec0;">Svetoví riešitelia režimov OMEGA (36) & SINGULARITY (60)</p>
       
       <table class="lb-table">
         <thead>
           <tr>
             <th>#</th>
             <th>Chrono Agent</th>
+            <th>Level</th>
             <th>Čas</th>
             <th>Ťahy</th>
             <th>Proof</th>
           </tr>
         </thead>
         <tbody id="leaderboard-body">
-          <tr><td colspan="5" style="text-align:center; color:#8a99ad;">Načítavam globálnu sieť...</td></tr>
+          <tr><td colspan="6" style="text-align:center; color:#8a99ad;">Načítavam globálnu sieť...</td></tr>
         </tbody>
       </table>
 
@@ -353,12 +373,13 @@
   <div class="modal" id="cert-modal">
     <div class="modal-content">
       <div class="modal-title">🏆 Polyhedron Master 🏆</div>
-      <p style="font-size: 0.8rem; color: #a0aec0;">Mriežka stabilizovaná! Skóre bolo úspešne odoslané do globálneho cloudu.</p>
+      <p style="font-size: 0.8rem; color: #a0aec0;" id="cert-subtitle">Mriežka stabilizovaná! Skóre bolo zapísané do globálneho rebríčka.</p>
       
       <div id="cert-canvas-container"></div>
 
-      <div style="display: flex; gap: 8px; justify-content: center; margin-top: 10px;">
+      <div style="display: flex; gap: 8px; justify-content: center; margin-top: 10px; flex-wrap: wrap;">
         <button class="btn btn-gold" id="download-cert-btn">Stiahnuť 3D Certifikát (PNG)</button>
+        <button class="btn btn-purple" id="next-level-cert-btn">Ďalší Level 🚀</button>
         <button class="btn" id="close-cert-btn">Zatvoriť</button>
       </div>
     </div>
@@ -377,12 +398,12 @@
           API_KEY: "$2a$10$NMWmWIBHuI3CXGmy.bdI4e9r2Zcpwv0iognAWrLhKj5zhHK8c/Up2" 
         };
 
-        const STORAGE_KEY = "chrono_cloud_fallback_v2";
+        const STORAGE_KEY = "chrono_supernova_lb_v3";
         const defaultAgents = [
-          { name: "NEXUS-PRIME", timeMs: 38420, moves: 24, hash: "8F9A2C1E04B7" },
-          { name: "ANDROMEDA-X", timeMs: 49150, moves: 27, hash: "3D71E90A5C2B" },
-          { name: "QUANTUM-V", timeMs: 62800, moves: 31, hash: "91B4C82F6E10" },
-          { name: "CYBER-NOVA", timeMs: 78340, moves: 35, hash: "5A0E7D3B9F44" }
+          { name: "NEXUS-PRIME", level: "OMEGA 36", timeMs: 38420, moves: 24, hash: "8F9A2C1E04B7" },
+          { name: "ANDROMEDA-X", level: "OMEGA 36", timeMs: 49150, moves: 27, hash: "3D71E90A5C2B" },
+          { name: "QUANTUM-V", level: "OMEGA 36", timeMs: 62800, moves: 31, hash: "91B4C82F6E10" },
+          { name: "CYBER-NOVA", level: "OMEGA 36", timeMs: 78340, moves: 35, hash: "5A0E7D3B9F44" }
         ];
 
         function getLocalFallback() {
@@ -414,8 +435,9 @@
                   headers: { 'X-Master-Key': CONFIG.API_KEY }
                 });
                 const json = await res.json();
-                if (json && json.record && Array.isArray(json.record.scores)) {
-                  return json.record.scores;
+                if (json && json.record) {
+                  if (Array.isArray(json.record)) return json.record;
+                  if (Array.isArray(json.record.scores)) return json.record.scores;
                 }
               } catch (e) {}
             }
@@ -426,7 +448,7 @@
             let scores = await this.fetchScores();
             scores.push(entry);
             scores.sort((a, b) => a.timeMs - b.timeMs || a.moves - b.moves);
-            scores = scores.slice(0, 15);
+            scores = scores.slice(0, 20);
 
             try {
               localStorage.setItem(STORAGE_KEY, JSON.stringify(scores));
@@ -440,7 +462,7 @@
                     'Content-Type': 'application/json',
                     'X-Master-Key': CONFIG.API_KEY
                   },
-                  body: JSON.stringify({ scores: scores })
+                  body: JSON.stringify(scores)
                 });
               } catch (e) {}
             }
@@ -448,13 +470,13 @@
 
           async renderTable() {
             const tbody = document.getElementById('leaderboard-body');
-            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#8a99ad;">Načítavam globálnu sieť...</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#8a99ad;">Načítavam globálnu sieť...</td></tr>`;
             
             const scores = await this.fetchScores();
             tbody.innerHTML = '';
             
             if (scores.length === 0) {
-              tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#8a99ad;">Zatiaľ žiadni agenti. Buď prvý!</td></tr>`;
+              tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#8a99ad;">Zatiaľ žiadni agenti. Buď prvý!</td></tr>`;
               return;
             }
 
@@ -464,6 +486,7 @@
               tr.innerHTML = `
                 <td>${index + 1}.</td>
                 <td>${row.name}</td>
+                <td style="color:var(--primary); font-size:0.65rem;">${row.level || 'OMEGA 36'}</td>
                 <td>${this.formatTime(row.timeMs)}</td>
                 <td>${row.moves}</td>
                 <td class="lb-hash">${row.hash ? row.hash.substring(0, 8) : 'N/A'}…</td>
@@ -472,32 +495,6 @@
             });
           }
         };
-      })();
-
-      // ==========================================
-      // PWA MANIFEST & SERVICE WORKER
-      // ==========================================
-      (function initPWA() {
-        const svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="100" fill="#050812"/><polygon points="256,60 440,170 440,342 256,452 72,342 72,170" fill="none" stroke="#00f3ff" stroke-width="18"/><polygon points="256,60 440,342 72,342" fill="none" stroke="#ff007f" stroke-width="10"/><circle cx="256" cy="256" r="45" fill="#ffd700"/></svg>`;
-        const iconUrl = 'data:image/svg+xml;base64,' + btoa(svgIcon);
-        const manifestObj = {
-          name: "CHRONO-POLYHEDRON 3000: Omega Edition",
-          short_name: "Chrono3000",
-          start_url: ".",
-          display: "standalone",
-          background_color: "#000103",
-          theme_color: "#00f3ff",
-          icons: [{ src: iconUrl, sizes: "512x512", type: "image/svg+xml" }]
-        };
-        const manifestBlob = new Blob([JSON.stringify(manifestObj)], { type: 'application/json' });
-        const manifestLink = document.getElementById('pwa-manifest');
-        if (manifestLink) manifestLink.href = URL.createObjectURL(manifestBlob);
-
-        if ('serviceWorker' in navigator) {
-          const swCode = `self.addEventListener('install', e => self.skipWaiting()); self.addEventListener('activate', e => self.clients.claim());`;
-          const swBlob = new Blob([swCode], { type: 'application/javascript' });
-          navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(() => {});
-        }
       })();
 
       // ==========================================
@@ -512,7 +509,7 @@
           resetAudit() { _auditTrail.length = 0; },
           verifyHumanTiming() {
             const now = performance.now();
-            if (now - _lastActionTime < 40) return false;
+            if (now - _lastActionTime < 35) return false;
             _lastActionTime = now;
             return true;
           },
@@ -520,8 +517,8 @@
             _auditTrail.push(`${nodeId}:${phase}:${totalMoves}:${Math.floor(performance.now())}`);
           },
           getAuditLength() { return _auditTrail.length; },
-          async generateProofHash(player, moves, timeMs, stateVector) {
-            const payload = `${_secretSalt}|${player}|${moves}|${timeMs}|${stateVector}|${_auditTrail.length}`;
+          async generateProofHash(player, levelName, moves, timeMs, stateVector) {
+            const payload = `${_secretSalt}|${player}|${levelName}|${moves}|${timeMs}|${stateVector}|${_auditTrail.length}`;
             if (window.crypto && window.crypto.subtle) {
               const data = new TextEncoder().encode(payload);
               const hashBuffer = await crypto.subtle.digest('SHA-256', data);
@@ -534,7 +531,7 @@
       })();
 
       // ==========================================
-      // SOUNDSCAPE SYNTHESIZER
+      // SOUNDSCAPE SYNTHESIZER (Kombo & Harmónie)
       // ==========================================
       const SoundscapeEngine = (function() {
         let ctx = null;
@@ -594,20 +591,20 @@
             if (masterGain && ctx) masterGain.gain.setTargetAtTime(isMuted ? 0 : 0.25, ctx.currentTime, 0.05);
             return !isMuted;
           },
-          playNodePulse(nodeId, phase) {
+          playNodePulse(nodeId, phase, isActivating) {
             if (!ctx || isMuted) return;
             try {
               const now = ctx.currentTime;
               const osc = ctx.createOscillator();
               const gain = ctx.createGain();
               osc.type = phase === -1 ? 'triangle' : (phase === 0 ? 'sine' : 'sawtooth');
-              const freq = 320 + nodeId * 42 + (phase + 1) * 90;
-              osc.frequency.setValueAtTime(freq, now);
-              osc.frequency.exponentialRampToValueAtTime(freq * 1.25, now + 0.14);
+              const baseFreq = 280 + (nodeId % 12) * 38 + (phase + 1) * 85;
+              osc.frequency.setValueAtTime(baseFreq, now);
+              osc.frequency.exponentialRampToValueAtTime(isActivating ? baseFreq * 1.35 : baseFreq * 0.75, now + 0.16);
               gain.gain.setValueAtTime(0.16, now);
-              gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.16);
+              gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.18);
               osc.connect(gain); gain.connect(masterGain);
-              osc.start(now); osc.stop(now + 0.16);
+              osc.start(now); osc.stop(now + 0.18);
             } catch (e) {}
           },
           playLaserShift() {
@@ -627,7 +624,7 @@
           },
           playFanfare() {
             if (!ctx || isMuted) return;
-            const chord = [523.25, 659.25, 783.99, 1046.50, 1318.51, 1567.98];
+            const chord = [523.25, 659.25, 783.99, 1046.50, 1318.51, 1567.98, 2093.00];
             chord.forEach((freq, idx) => {
               setTimeout(() => {
                 if (!ctx || isMuted) return;
@@ -636,37 +633,100 @@
                 const gain = ctx.createGain();
                 osc.type = 'triangle';
                 osc.frequency.setValueAtTime(freq, now);
-                gain.gain.setValueAtTime(0.18, now);
-                gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.5);
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.55);
                 osc.connect(gain); gain.connect(masterGain);
-                osc.start(now); osc.stop(now + 0.5);
-              }, idx * 100);
+                osc.start(now); osc.stop(now + 0.55);
+              }, idx * 90);
             });
           }
         };
       })();
 
       // ==========================================
-      // MAIN GAME ENGINE
+      // LEVEL ARCHITEKTÚRY (1 až 4)
+      // ==========================================
+      const phi = (1 + Math.sqrt(5)) / 2;
+      const invPhi = 1 / phi;
+
+      const LEVELS_CONFIG = {
+        level1: {
+          id: 'level1',
+          badge: 'LVL 1: TETRA (12)',
+          shortName: 'TETRA 12',
+          nextLevel: 'level2',
+          ranked: false,
+          minMoves: 5,
+          sphereRadius: 0.45,
+          maxEdgeDist: 4.5,
+          scale: 2.2,
+          points: [
+            [1, 1, 1], [1, -1, -1], [-1, 1, -1], [-1, -1, 1]
+          ]
+        },
+        level2: {
+          id: 'level2',
+          badge: 'LVL 2: OKTA (18)',
+          shortName: 'OKTA 18',
+          nextLevel: 'level3',
+          ranked: false,
+          minMoves: 8,
+          sphereRadius: 0.42,
+          maxEdgeDist: 4.3,
+          scale: 2.9,
+          points: [
+            [1, 0, 0], [-1, 0, 0], [0, 1, 0], [0, -1, 0], [0, 0, 1], [0, 0, -1]
+          ]
+        },
+        level3: {
+          id: 'level3',
+          badge: 'LVL 3: OMEGA 36',
+          shortName: 'OMEGA 36',
+          nextLevel: 'level4',
+          ranked: true,
+          minMoves: 18,
+          sphereRadius: 0.38,
+          maxEdgeDist: 3.8,
+          scale: 1.85,
+          points: [
+            [-1, phi, 0], [1, phi, 0], [-1, -phi, 0], [1, -phi, 0],
+            [0, -1, phi], [0, 1, phi], [0, -1, -phi], [0, 1, -phi],
+            [phi, 0, -1], [phi, 0, 1], [-phi, 0, -1], [-phi, 0, 1]
+          ]
+        },
+        level4: {
+          id: 'level4',
+          badge: 'LVL 4: SINGULARITY 60',
+          shortName: 'SINGULARITY 60',
+          nextLevel: 'level3',
+          ranked: true,
+          minMoves: 28,
+          sphereRadius: 0.31,
+          maxEdgeDist: 2.6,
+          scale: 1.95,
+          points: [
+            [1, 1, 1], [1, 1, -1], [1, -1, 1], [1, -1, -1],
+            [-1, 1, 1], [-1, 1, -1], [-1, -1, 1], [-1, -1, -1],
+            [0, invPhi, phi], [0, invPhi, -phi], [0, -invPhi, phi], [0, -invPhi, -phi],
+            [invPhi, phi, 0], [invPhi, -phi, 0], [-invPhi, phi, 0], [-invPhi, -phi, 0],
+            [phi, 0, invPhi], [phi, 0, -invPhi], [-phi, 0, invPhi], [-phi, 0, -invPhi]
+          ]
+        }
+      };
+
+      // ==========================================
+      // MAIN GAME ENGINE + VFX ENGINE
       // ==========================================
       const QuantumPolyhedronEngine = (function() {
         let _player = "AGENT-3000";
         let _timePhase = 0;
         let _moves = 0;
         let _isSolved = false;
-        let _gameMode = 'omega';
+        let _currentLevelKey = 'level3';
         let _toastTimer = null;
         let _timerStart = null, _elapsedMs = 0, _timerInterval = null;
 
-        const phi = (1 + Math.sqrt(5)) / 2;
-        const scale = 1.8;
-        const omegaPoints = [
-          [-1, phi, 0], [1, phi, 0], [-1, -phi, 0], [1, -phi, 0],
-          [0, -1, phi], [0, 1, phi], [0, -1, -phi], [0, 1, -phi],
-          [phi, 0, -1], [phi, 0, 1], [-phi, 0, -1], [-phi, 0, 1]
-        ];
-        const tutorialPoints = [[0, 1.9, 0], [-1.7, -1.2, 0.8], [1.7, -1.2, -0.8]];
-        let _nodes = [], _connections = [];
+        let _nodes = [], _connections = [], _bursts = [];
 
         function showToast(msg, duration = 3800) {
           const el = document.getElementById('toast');
@@ -697,19 +757,20 @@
         return {
           init() {
             this.setupThreeJS();
-            this.loadGameMode('omega');
+            this.loadGameMode('level3');
             this.setupEvents();
             this.adjustCameraForScreen();
 
-            if (!localStorage.getItem('chrono_tutorial_seen')) {
-              document.getElementById('tutorial-modal').style.display = 'flex';
-              localStorage.setItem('chrono_tutorial_seen', '1');
+            if (!localStorage.getItem('chrono_supernova_welcome')) {
+              document.getElementById('levels-modal').style.display = 'flex';
+              localStorage.setItem('chrono_supernova_welcome', '1');
             }
           },
 
-          loadGameMode(mode) {
+          loadGameMode(levelKey) {
             stopTimer();
-            _gameMode = mode;
+            const cfg = LEVELS_CONFIG[levelKey] || LEVELS_CONFIG.level3;
+            _currentLevelKey = cfg.id;
             _timePhase = 0;
             _moves = 0;
             _isSolved = false;
@@ -720,12 +781,11 @@
             document.getElementById('time-slider').value = 0;
             document.getElementById('timer-val').innerText = "00:00.0";
             document.getElementById('timer-val-top').innerText = "00:00.0";
-            document.getElementById('mode-badge').innerText = mode === 'tutorial' ? 'LEVEL 1 (9 UZLOV)' : 'OMEGA 36';
+            document.getElementById('mode-badge').innerText = cfg.badge;
 
-            const pts = mode === 'tutorial' ? tutorialPoints : omegaPoints;
-            _nodes = pts.map((pt, idx) => ({
+            _nodes = cfg.points.map((pt, idx) => ({
               id: idx,
-              pos: [pt[0] * (mode === 'tutorial' ? 1.1 : scale), pt[1] * (mode === 'tutorial' ? 1.1 : scale), pt[2] * (mode === 'tutorial' ? 1.1 : scale)],
+              pos: [pt[0] * cfg.scale, pt[1] * cfg.scale, pt[2] * cfg.scale],
               phaseColors: [0x00f3ff, 0xff007f, 0xffd700],
               active: [false, false, false]
             }));
@@ -733,19 +793,23 @@
             _connections = [];
             for (let i = 0; i < _nodes.length; i++) {
               for (let j = i + 1; j < _nodes.length; j++) {
-                const dist = Math.hypot(_nodes[i].pos[0] - _nodes[j].pos[0], _nodes[i].pos[1] - _nodes[j].pos[1], _nodes[i].pos[2] - _nodes[j].pos[2]);
-                if (mode === 'tutorial' || dist < 3.2) _connections.push([i, j]);
+                const dist = Math.hypot(
+                  _nodes[i].pos[0] - _nodes[j].pos[0],
+                  _nodes[i].pos[1] - _nodes[j].pos[1],
+                  _nodes[i].pos[2] - _nodes[j].pos[2]
+                );
+                if (dist <= cfg.maxEdgeDist) _connections.push([i, j]);
               }
             }
 
-            this.rebuildPolyhedronMeshes();
+            this.rebuildPolyhedronMeshes(cfg);
             this.updateTimePhaseVisuals();
             this.updateHUD();
           },
 
           adjustCameraForScreen() {
             const isMobile = window.innerWidth <= 768;
-            const dist = isMobile ? 11.8 : 9.5;
+            const dist = isMobile ? 12.2 : 9.8;
             this.camera.position.set(dist * 0.65, dist * 0.58, dist);
             this.camera.lookAt(0, 0, 0);
           },
@@ -761,9 +825,9 @@
             container.appendChild(this.renderer.domElement);
 
             this.scene.add(new THREE.AmbientLight(0xffffff, 0.55));
-            const p1 = new THREE.PointLight(0x00f3ff, 3.5, 90); p1.position.set(15, 15, 15); this.scene.add(p1);
-            const p2 = new THREE.PointLight(0xff007f, 3.5, 90); p2.position.set(-15, -15, -15); this.scene.add(p2);
-            const p3 = new THREE.PointLight(0xffd700, 2.5, 90); p3.position.set(0, 15, -15); this.scene.add(p3);
+            const p1 = new THREE.PointLight(0x00f3ff, 3.8, 95); p1.position.set(15, 15, 15); this.scene.add(p1);
+            const p2 = new THREE.PointLight(0xff007f, 3.8, 95); p2.position.set(-15, -15, -15); this.scene.add(p2);
+            const p3 = new THREE.PointLight(0xffd700, 2.8, 95); p3.position.set(0, 15, -15); this.scene.add(p3);
 
             this.createAndromeda3DGalaxy();
             this.polyGroup = new THREE.Group();
@@ -774,33 +838,117 @@
 
             const animate = () => {
               requestAnimationFrame(animate);
+              const stabFactor = 1 + (this.getTotalStabilization() / 100) * 2.5;
+
               if (this.coreMesh) {
-                this.coreMesh.rotation.x += 0.015;
-                this.coreMesh.rotation.y += 0.02;
-                const s = 1 + Math.sin(Date.now() * 0.004) * 0.22;
+                this.coreMesh.rotation.x += 0.015 * stabFactor;
+                this.coreMesh.rotation.y += 0.02 * stabFactor;
+                const s = 1 + Math.sin(Date.now() * 0.005) * (0.2 + (stabFactor - 1) * 0.1);
                 this.coreMesh.scale.set(s, s, s);
+              }
+              if (this.gyroRing1) {
+                this.gyroRing1.rotation.x += 0.018 * stabFactor;
+                this.gyroRing1.rotation.y += 0.012 * stabFactor;
+              }
+              if (this.gyroRing2) {
+                this.gyroRing2.rotation.y -= 0.022 * stabFactor;
+                this.gyroRing2.rotation.z += 0.015 * stabFactor;
               }
               if (this.andromedaGroup) this.andromedaGroup.rotation.y += 0.0007;
               if (this.deepStars) this.deepStars.rotation.y -= 0.00015;
+
+              // Animácia 3D fotónových explózií (VFX)
+              for (let i = _bursts.length - 1; i >= 0; i--) {
+                const b = _bursts[i];
+                b.life -= 0.032;
+                if (b.life <= 0) {
+                  this.polyGroup.remove(b.points);
+                  b.points.geometry.dispose();
+                  b.points.material.dispose();
+                  _bursts.splice(i, 1);
+                } else {
+                  const posAttr = b.points.geometry.attributes.position;
+                  for (let j = 0; j < posAttr.count; j++) {
+                    posAttr.setXYZ(
+                      j,
+                      posAttr.getX(j) + b.velocities[j * 3],
+                      posAttr.getY(j) + b.velocities[j * 3 + 1],
+                      posAttr.getZ(j) + b.velocities[j * 3 + 2]
+                    );
+                  }
+                  posAttr.needsUpdate = true;
+                  b.points.material.opacity = b.life;
+                }
+              }
+
               this.renderer.render(this.scene, this.camera);
             };
             animate();
           },
 
-          rebuildPolyhedronMeshes() {
-            while (this.polyGroup.children.length > 0) this.polyGroup.remove(this.polyGroup.children[0]);
+          spawnQuantumBurst(localPos, colorHex, count = 28, speed = 0.07) {
+            const geo = new THREE.BufferGeometry();
+            const positions = new Float32Array(count * 3);
+            const velocities = [];
 
-            const coreGeo = new THREE.IcosahedronGeometry(0.65, 1);
-            const coreMat = new THREE.MeshPhongMaterial({ color: 0xff007f, emissive: 0xff007f, emissiveIntensity: 1.0, wireframe: true });
+            for (let i = 0; i < count; i++) {
+              positions[i * 3] = localPos[0];
+              positions[i * 3 + 1] = localPos[1];
+              positions[i * 3 + 2] = localPos[2];
+
+              const theta = Math.random() * Math.PI * 2;
+              const phiAngle = Math.acos(2 * Math.random() - 1);
+              const v = (0.4 + Math.random() * 0.8) * speed;
+
+              velocities.push(
+                Math.sin(phiAngle) * Math.cos(theta) * v,
+                Math.sin(phiAngle) * Math.sin(theta) * v,
+                Math.cos(phiAngle) * v
+              );
+            }
+
+            geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            const mat = new THREE.PointsMaterial({
+              color: colorHex,
+              size: 0.22,
+              transparent: true,
+              opacity: 1,
+              blending: THREE.AdditiveBlending,
+              depthWrite: false
+            });
+
+            const points = new THREE.Points(geo, mat);
+            this.polyGroup.add(points);
+            _bursts.push({ points, velocities, life: 1.0 });
+          },
+
+          rebuildPolyhedronMeshes(cfg) {
+            while (this.polyGroup.children.length > 0) this.polyGroup.remove(this.polyGroup.children[0]);
+            _bursts.length = 0;
+
+            // Kvantové jadro
+            const coreGeo = new THREE.IcosahedronGeometry(0.62, 1);
+            const coreMat = new THREE.MeshPhongMaterial({ color: 0xff007f, emissive: 0xff007f, emissiveIntensity: 1.1, wireframe: true });
             this.coreMesh = new THREE.Mesh(coreGeo, coreMat);
             this.polyGroup.add(this.coreMesh);
 
+            // Orbitálne gyroskopické prstence
+            const ringGeo1 = new THREE.TorusGeometry(1.15, 0.025, 16, 64);
+            const ringMat1 = new THREE.MeshBasicMaterial({ color: 0x00f3ff, transparent: true, opacity: 0.65 });
+            this.gyroRing1 = new THREE.Mesh(ringGeo1, ringMat1);
+            this.polyGroup.add(this.gyroRing1);
+
+            const ringGeo2 = new THREE.TorusGeometry(1.42, 0.02, 16, 64);
+            const ringMat2 = new THREE.MeshBasicMaterial({ color: 0xffd700, transparent: true, opacity: 0.5 });
+            this.gyroRing2 = new THREE.Mesh(ringGeo2, ringMat2);
+            this.polyGroup.add(this.gyroRing2);
+
             this.nodeMeshes = [];
-            const sphereGeo = new THREE.SphereGeometry(_gameMode === 'tutorial' ? 0.48 : 0.38, 32, 32);
+            const sphereGeo = new THREE.SphereGeometry(cfg.sphereRadius, 32, 32);
 
             _nodes.forEach(node => {
               const mat = new THREE.MeshPhongMaterial({
-                color: node.phaseColors[1], emissive: node.phaseColors[1], emissiveIntensity: 0.4, shininess: 140, wireframe: true
+                color: node.phaseColors[1], emissive: node.phaseColors[1], emissiveIntensity: 0.4, shininess: 150, wireframe: true
               });
               const mesh = new THREE.Mesh(sphereGeo, mat);
               mesh.position.set(...node.pos);
@@ -834,7 +982,7 @@
             const starTexture = new THREE.CanvasTexture(starCanvas);
 
             this.andromedaGroup = new THREE.Group();
-            const galaxyStars = 4800;
+            const galaxyStars = 5200;
             const gGeo = new THREE.BufferGeometry();
             const gPos = new Float32Array(galaxyStars * 3);
             const gColors = new Float32Array(galaxyStars * 3);
@@ -842,7 +990,7 @@
             const coreColor = new THREE.Color(0xffe6a3);
             const armColorOuter = new THREE.Color(0x00d4ff);
             const armColorAccent = new THREE.Color(0xb565ff);
-            const branches = 4, radius = 26;
+            const branches = 4, radius = 27;
 
             for (let i = 0; i < galaxyStars; i++) {
               const i3 = i * 3;
@@ -872,8 +1020,8 @@
             this.scene.add(this.andromedaGroup);
 
             const bgGeo = new THREE.BufferGeometry();
-            const bgPos = new Float32Array(1200 * 3);
-            for (let i = 0; i < 3600; i += 3) {
+            const bgPos = new Float32Array(1300 * 3);
+            for (let i = 0; i < 3900; i += 3) {
               bgPos[i] = (Math.random() - 0.5) * 120;
               bgPos[i + 1] = (Math.random() - 0.5) * 120;
               bgPos[i + 2] = (Math.random() - 0.5) * 120;
@@ -935,20 +1083,21 @@
               this.polyGroup.rotation.set(0, 0, 0);
             });
 
-            document.getElementById('tutorial-btn').addEventListener('click', () => {
-              document.getElementById('tutorial-modal').style.display = 'flex';
+            // Modál výberu levelov
+            document.getElementById('levels-btn').addEventListener('click', () => {
+              document.getElementById('levels-modal').style.display = 'flex';
             });
-            document.getElementById('start-level1-btn').addEventListener('click', () => {
-              SoundscapeEngine.init();
-              document.getElementById('tutorial-modal').style.display = 'none';
-              this.loadGameMode('tutorial');
-              showToast("Level 1 (Tréning): Stabilizuj 9 uzlov!");
+            document.getElementById('close-levels-btn').addEventListener('click', () => {
+              document.getElementById('levels-modal').style.display = 'none';
             });
-            document.getElementById('start-omega-btn').addEventListener('click', () => {
-              SoundscapeEngine.init();
-              document.getElementById('tutorial-modal').style.display = 'none';
-              this.loadGameMode('omega');
-              showToast("Režim OMEGA (36 uzlov): Čas sa spustí prvým kliknutím!");
+            document.querySelectorAll('.level-card').forEach(card => {
+              card.addEventListener('click', () => {
+                SoundscapeEngine.init();
+                const lvl = card.getAttribute('data-level');
+                document.getElementById('levels-modal').style.display = 'none';
+                this.loadGameMode(lvl);
+                showToast(`Načítaný ${LEVELS_CONFIG[lvl].badge}! Čas beží prvým kliknutím.`);
+              });
             });
 
             document.getElementById('leaderboard-btn').addEventListener('click', async () => {
@@ -962,21 +1111,29 @@
             document.getElementById('challenge-btn').addEventListener('click', (e) => {
               if (!e.isTrusted) return;
               SoundscapeEngine.init();
+              const cfg = LEVELS_CONFIG[_currentLevelKey];
               const totalStab = this.getTotalStabilization();
               const timeFormatted = CloudLeaderboard.formatTime(_elapsedMs);
-              const shareText = `🌌 Riešim 3D kvantový polyéder CHRONO-POLYHEDRON 3000 v galaxii Andromeda!\n👤 Agent: ${_player} | Čas: ${timeFormatted} | Stabilizácia: ${totalStab}% | Ťahy: ${_moves}\nTrúfneš si prekonať túto vesmírnu výzvu? 👉 ${window.location.href}`;
+              const shareText = `🌌 Riešim 3D kvantový polyéder CHRONO-POLYHEDRON 3000 (${cfg.shortName}) v galaxii Andromeda!\n👤 Agent: ${_player} | Čas: ${timeFormatted} | Stabilizácia: ${totalStab}% | Ťahy: ${_moves}\nTrúfneš si prekonať túto vesmírnu výzvu? 👉 ${window.location.href}`;
               if (navigator.clipboard) navigator.clipboard.writeText(shareText);
               showToast("Virálna výzva skopírovaná do schránky!");
             });
 
             document.getElementById('rage-btn').addEventListener('click', (e) => {
               if (!e.isTrusted) return;
-              this.loadGameMode(_gameMode);
-              showToast(`Hra reštartovaná. Veľa šťastia, ${_player}!`);
+              this.loadGameMode(_currentLevelKey);
+              showToast(`Hra reštartovaná (${LEVELS_CONFIG[_currentLevelKey].shortName}). Veľa šťastia, ${_player}!`);
             });
 
             document.getElementById('close-cert-btn').addEventListener('click', () => {
               document.getElementById('cert-modal').style.display = 'none';
+            });
+
+            document.getElementById('next-level-cert-btn').addEventListener('click', () => {
+              document.getElementById('cert-modal').style.display = 'none';
+              const nextKey = LEVELS_CONFIG[_currentLevelKey].nextLevel;
+              this.loadGameMode(nextKey);
+              showToast(`Štartuje ďalšia úroveň: ${LEVELS_CONFIG[nextKey].badge}! 🚀`);
             });
 
             document.getElementById('download-cert-btn').addEventListener('click', () => {
@@ -1028,9 +1185,17 @@
             _moves++;
 
             SecurityCore.recordMove(id, _timePhase, _moves);
-            SoundscapeEngine.playNodePulse(id, _timePhase);
+            SoundscapeEngine.playNodePulse(id, _timePhase, node.active[pIdx]);
+            this.spawnQuantumBurst(node.pos, node.phaseColors[pIdx], 26, 0.065);
 
-            if (pIdx === 0 && node.active[0]) node.active[1] = !node.active[1];
+            // Časová kauzalita: Minulosť (t-1) ovplyvňuje Prítomnosť (t0)
+            if (pIdx === 0 && node.active[0]) {
+              node.active[1] = !node.active[1];
+            }
+            // V Level 4 (SINGULARITY) rezonuje aj Prítomnosť do Budúcnosti!
+            if (_currentLevelKey === 'level4' && pIdx === 1 && node.active[1]) {
+              node.active[2] = !node.active[2];
+            }
 
             this.updateTimePhaseVisuals();
             this.checkWinCondition();
@@ -1044,23 +1209,25 @@
               const activeColor = _nodes[idx].phaseColors[pIdx];
               mesh.material.color.setHex(isActive ? activeColor : 0x223344);
               mesh.material.emissive.setHex(isActive ? activeColor : 0x000000);
-              mesh.material.emissiveIntensity = isActive ? 0.85 : 0;
+              mesh.material.emissiveIntensity = isActive ? 0.9 : 0;
               mesh.material.wireframe = !isActive;
+              mesh.scale.setScalar(isActive ? 1.15 : 1.0);
             });
 
             this.laserLines.forEach(item => {
               const [a, b] = item.nodes;
               if (_nodes[a].active[pIdx] && _nodes[b].active[pIdx]) {
                 item.line.material.color.setHex(_nodes[a].phaseColors[pIdx]);
-                item.line.material.opacity = 0.95;
+                item.line.material.opacity = 0.98;
               } else {
                 item.line.material.color.setHex(0x1a2638);
-                item.line.material.opacity = 0.3;
+                item.line.material.opacity = 0.28;
               }
             });
           },
 
           getTotalStabilization() {
+            if (_nodes.length === 0) return 0;
             let totalActive = 0;
             _nodes.forEach(n => { if (n.active[0]) totalActive++; if (n.active[1]) totalActive++; if (n.active[2]) totalActive++; });
             return Math.round((totalActive / (_nodes.length * 3)) * 100);
@@ -1068,8 +1235,8 @@
 
           async checkWinCondition() {
             if (this.getTotalStabilization() === 100 && !_isSolved) {
-              const minMoves = _gameMode === 'tutorial' ? 4 : 18;
-              if (_moves < minMoves || SecurityCore.getAuditLength() !== _moves) {
+              const cfg = LEVELS_CONFIG[_currentLevelKey];
+              if (_moves < cfg.minMoves || SecurityCore.getAuditLength() !== _moves) {
                 showToast("SECURITY ALERT: Detegovaná nekonzistentná manipulácia!");
                 return;
               }
@@ -1077,25 +1244,28 @@
               _isSolved = true;
               stopTimer();
               SoundscapeEngine.playFanfare();
-
-              if (_gameMode === 'tutorial') {
-                showToast("Level 1 dokončený! Prepínam do režimu OMEGA...", 4000);
-                setTimeout(() => this.loadGameMode('omega'), 2600);
-                return;
-              }
+              // Supernova explózia zo stredu jadra
+              this.spawnQuantumBurst([0, 0, 0], 0xffd700, 140, 0.14);
+              this.spawnQuantumBurst([0, 0, 0], 0x00f3ff, 100, 0.11);
 
               const finalTime = Math.floor(_elapsedMs);
               const stateVector = _nodes.map(n => n.active.map(b => b ? 1 : 0).join('')).join('');
-              const proofHash = await SecurityCore.generateProofHash(_player, _moves, finalTime, stateVector);
+              const proofHash = await SecurityCore.generateProofHash(_player, cfg.shortName, _moves, finalTime, stateVector);
 
-              await CloudLeaderboard.submitScore({
-                name: _player,
-                timeMs: finalTime,
-                moves: _moves,
-                hash: proofHash
-              });
+              if (cfg.ranked) {
+                document.getElementById('cert-subtitle').innerText = `Mriežka ${cfg.shortName} stabilizovaná! Skóre bolo odoslané do svetového rebríčka.`;
+                await CloudLeaderboard.submitScore({
+                  name: _player,
+                  level: cfg.shortName,
+                  timeMs: finalTime,
+                  moves: _moves,
+                  hash: proofHash
+                });
+              } else {
+                document.getElementById('cert-subtitle').innerText = `Tréningový stupeň ${cfg.shortName} dokončený! Odomkni Lvl 3 OMEGA pre zápis do svetového rebríčka.`;
+              }
 
-              setTimeout(() => this.triggerVictory(proofHash, finalTime), 350);
+              setTimeout(() => this.triggerVictory(proofHash, finalTime, cfg), 500);
             }
           },
 
@@ -1112,17 +1282,17 @@
             document.getElementById('moves-val').innerText = _moves;
             document.getElementById('moves-val-top').innerText = _moves;
 
-            const strain = Math.min(100, Math.max(15, _moves * 3));
+            const strain = Math.min(100, Math.max(15, _moves * 2.5));
             document.getElementById('strain-fill').style.width = `${strain}%`;
-            document.getElementById('strain-val').innerText = `IQ ${180 - Math.floor(strain / 4)}`;
+            document.getElementById('strain-val').innerText = `IQ ${185 - Math.floor(strain / 4)}`;
           },
 
-          triggerVictory(proofHash, finalTime) {
+          triggerVictory(proofHash, finalTime, cfg) {
             document.getElementById('cert-modal').style.display = 'flex';
-            this.build3DCertificate(proofHash, finalTime);
+            this.build3DCertificate(proofHash, finalTime, cfg);
           },
 
-          build3DCertificate(proofHash, finalTime) {
+          build3DCertificate(proofHash, finalTime, cfg) {
             const container = document.getElementById('cert-canvas-container');
             container.innerHTML = '';
 
@@ -1141,23 +1311,24 @@
             const ctx = canvas.getContext('2d');
 
             ctx.fillStyle = '#050812'; ctx.fillRect(0, 0, 1024, 640);
-            ctx.strokeStyle = '#ffd700'; ctx.lineWidth = 12; ctx.strokeRect(20, 20, 984, 600);
+            ctx.strokeStyle = cfg.id === 'level4' ? '#ff007f' : '#ffd700';
+            ctx.lineWidth = 12; ctx.strokeRect(20, 20, 984, 600);
 
-            ctx.fillStyle = '#ffd700'; ctx.font = 'bold 36px sans-serif'; ctx.textAlign = 'center';
-            ctx.fillText('ANDROMEDA POLYHEDRON MASTER', 512, 100);
+            ctx.fillStyle = '#ffd700'; ctx.font = 'bold 34px sans-serif'; ctx.textAlign = 'center';
+            ctx.fillText(`ANDROMEDA ${cfg.shortName} MASTER`, 512, 100);
 
-            ctx.fillStyle = '#00f3ff'; ctx.font = '26px sans-serif';
-            ctx.fillText('KRYPTOGRAFICKÝ CERTIFIKÁT ÚSPECHU', 512, 160);
+            ctx.fillStyle = '#00f3ff'; ctx.font = '24px sans-serif';
+            ctx.fillText('KRYPTOGRAFICKÝ CERTIFIKÁT ÚSPECHU', 512, 155);
 
             ctx.fillStyle = '#ffffff'; ctx.font = 'bold 46px sans-serif';
-            ctx.fillText(_player, 512, 275);
+            ctx.fillText(_player, 512, 270);
 
             ctx.fillStyle = '#a0aec0'; ctx.font = '22px sans-serif';
-            ctx.fillText('Úspešne prepojil všetkých 36 kvantových uzlov', 512, 355);
-            ctx.fillText(`Speedrun čas: ${CloudLeaderboard.formatTime(finalTime)} • Počet ťahov: ${_moves}`, 512, 405);
+            ctx.fillText(`Úspešne stabilizoval všetky kvantové uzly (${_nodes.length * 3})`, 512, 350);
+            ctx.fillText(`Speedrun čas: ${CloudLeaderboard.formatTime(finalTime)} • Počet ťahov: ${_moves}`, 512, 400);
 
             ctx.fillStyle = '#00ff88'; ctx.font = '18px monospace';
-            ctx.fillText(`SHA256-PROOF: ${proofHash}`, 512, 525);
+            ctx.fillText(`SHA256-PROOF: ${proofHash}`, 512, 520);
 
             const texture = new THREE.CanvasTexture(canvas);
             const plaque = new THREE.Mesh(plaqueGeo, new THREE.MeshPhongMaterial({ map: texture, shininess: 95 }));
@@ -1183,7 +1354,7 @@
             if (!this.certRenderer) return;
             const dataURL = this.certRenderer.domElement.toDataURL('image/png');
             const link = document.createElement('a');
-            link.download = `ChronoPolyhedron_Omega_${_player}.png`;
+            link.download = `ChronoPolyhedron_${LEVELS_CONFIG[_currentLevelKey].shortName}_${_player}.png`;
             link.href = dataURL;
             link.click();
           }
