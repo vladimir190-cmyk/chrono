@@ -312,7 +312,7 @@
   <div class="modal" id="cert-modal">
     <div class="modal-content">
       <div class="modal-title">🏆 Polyhedron Master 🏆</div>
-      <p style="font-size: 0.8rem; color: #a0aec0;" id="cert-subtitle">Mriežka stabilizovaná! Skóre bolo zapísané do globálneго rebríčka.</p>
+      <p style="font-size: 0.8rem; color: #a0aec0;" id="cert-subtitle">Mriežka stabilizovaná! Skóre bolo zapísané do globálneho rebríčka.</p>
       
       <div id="cert-canvas-container"></div>
 
@@ -334,7 +334,7 @@
           API_KEY: "$2a$10$NMWmWIBHuI3CXGmy.bdI4e9r2Zcpwv0iognAWrLhKj5zhHK8c/Up2" 
         };
 
-        const STORAGE_KEY = "chrono_supernova_lb_v6";
+        const STORAGE_KEY = "chrono_supernova_lb_v7";
         const defaultAgents = [
           { name: "NEXUS-PRIME", level: "OMEGA 36", timeMs: 38420, moves: 24, hash: "8F9A2C1E04B7" },
           { name: "ANDROMEDA-X", level: "OMEGA 36", timeMs: 49150, moves: 27, hash: "3D71E90A5C2B" },
@@ -406,6 +406,7 @@
 
           async renderTable() {
             const tbody = document.getElementById('leaderboard-body');
+            if (!tbody) return;
             tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#8a99ad;">Načítavam globálnu sieť...</td></tr>';
             
             const scores = await this.fetchScores();
@@ -434,7 +435,12 @@
       })();
 
       const SecurityCore = (function() {
-        const _secretSalt = crypto.getRandomValues(new Uint32Array(4)).join('-');
+        let _secretSalt = 'chrono-secure-salt-3000';
+        try {
+          if (window.crypto && window.crypto.getRandomValues) {
+            _secretSalt = crypto.getRandomValues(new Uint32Array(4)).join('-');
+          }
+        } catch(e) {}
         let _lastActionTime = 0;
         const _auditTrail = [];
 
@@ -452,12 +458,14 @@
           getAuditLength() { return _auditTrail.length; },
           async generateProofHash(player, levelName, moves, timeMs, stateVector) {
             const payload = `${_secretSalt}|${player}|${levelName}|${moves}|${timeMs}|${stateVector}|${_auditTrail.length}`;
-            if (window.crypto && window.crypto.subtle) {
-              const data = new TextEncoder().encode(payload);
-              const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-              const hashArray = Array.from(new Uint8Array(hashBuffer));
-              return hashArray.map(b => b.toString(16).padStart(2, '0')).join('').substring(0, 24).toUpperCase();
-            }
+            try {
+              if (window.crypto && window.crypto.subtle) {
+                const data = new TextEncoder().encode(payload);
+                const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+                const hashArray = Array.from(new Uint8Array(hashBuffer));
+                return hashArray.map(b => b.toString(16).padStart(2, '0')).join('').substring(0, 24).toUpperCase();
+              }
+            } catch(e) {}
             return btoa(payload).substring(0, 24).toUpperCase();
           }
         });
@@ -473,12 +481,15 @@
           init() {
             try {
               if (!ctx) {
-                ctx = new (window.AudioContext || window.webkitAudioContext)();
-                masterGain = ctx.createGain();
-                masterGain.gain.setValueAtTime(isMuted ? 0 : 0.25, ctx.currentTime);
-                masterGain.connect(ctx.destination);
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (AudioCtx) {
+                  ctx = new AudioCtx();
+                  masterGain = ctx.createGain();
+                  masterGain.gain.setValueAtTime(isMuted ? 0 : 0.25, ctx.currentTime);
+                  masterGain.connect(ctx.destination);
+                }
               }
-              if (ctx.state === 'suspended') ctx.resume();
+              if (ctx && ctx.state === 'suspended') ctx.resume();
               if (!isAmbientRunning) this.startSpaceDrone();
             } catch(e) {}
           },
@@ -694,7 +705,9 @@
               this.loadGameMode('level3');
               this.setupEvents();
               this.adjustCameraForScreen();
-            } catch(e) {}
+            } catch(e) {
+              console.error("Init error:", e);
+            }
 
             if (!localStorage.getItem('chrono_supernova_welcome')) {
               const modal = document.getElementById('levels-modal');
@@ -755,6 +768,8 @@
 
           setupThreeJS() {
             const container = document.getElementById('canvas-container');
+            if (!container) return;
+
             this.scene = new THREE.Scene();
             this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
             
@@ -820,7 +835,9 @@
                   }
                 }
 
-                this.renderer.render(this.scene, this.camera);
+                if (this.renderer && this.scene && this.camera) {
+                  this.renderer.render(this.scene, this.camera);
+                }
               } catch(e) {}
             };
             animate();
@@ -859,12 +876,13 @@
               });
 
               const points = new THREE.Points(geo, mat);
-              this.polyGroup.add(points);
+              if (this.polyGroup) this.polyGroup.add(points);
               _bursts.push({ points, velocities, life: 1.0 });
             } catch(e) {}
           },
 
           rebuildPolyhedronMeshes(cfg) {
+            if (!this.polyGroup) return;
             while (this.polyGroup.children.length > 0) this.polyGroup.remove(this.polyGroup.children[0]);
             _bursts.length = 0;
 
@@ -980,50 +998,55 @@
               });
             }
 
-            const handleTimeChange = (val) => {
-              const parsed = parseInt(val, 10);
-              if (![-1, 0, 1].includes(parsed)) return;
-              _timePhase = parsed;
-              const slider = document.getElementById('time-slider');
-              if (slider) slider.value = _timePhase;
-              SoundscapeEngine.init();
-              SoundscapeEngine.playLaserShift();
-              SoundscapeEngine.shiftDimensionHarmonics(_timePhase);
-              this.updateTimePhaseVisuals();
-              this.updateHUD();
-            };
-
             const sliderEl = document.getElementById('time-slider');
-            if (sliderEl) sliderEl.addEventListener('input', (e) => handleTimeChange(e.target.value));
+            if (sliderEl) {
+              sliderEl.addEventListener('input', (e) => {
+                const parsed = parseInt(e.target.value, 10);
+                if (![-1, 0, 1].includes(parsed)) return;
+                _timePhase = parsed;
+                SoundscapeEngine.init();
+                SoundscapeEngine.playLaserShift();
+                SoundscapeEngine.shiftDimensionHarmonics(_timePhase);
+                this.updateTimePhaseVisuals();
+                this.updateHUD();
+              });
+            }
 
-            const toggleSound = () => {
-              SoundscapeEngine.init();
-              const isOn = SoundscapeEngine.toggleMute();
-              const btn = document.getElementById('audio-toggle-btn');
-              if (btn) btn.innerText = isOn ? '🔊 Zvuk' : '🔇 Ticho';
-              showToast(isOn ? "Vesmírny syntetizátor aktivovaný." : "Zvuk stlmený.");
-            };
             const soundBtn = document.getElementById('audio-toggle-btn');
-            if (soundBtn) soundBtn.addEventListener('click', toggleSound);
+            if (soundBtn) {
+              soundBtn.addEventListener('click', () => {
+                SoundscapeEngine.init();
+                const isOn = SoundscapeEngine.toggleMute();
+                soundBtn.innerText = isOn ? '🔊 Zvuk' : '🔇 Ticho';
+                showToast(isOn ? "Vesmírny syntetizátor aktivovaný." : "Zvuk stlmený.");
+              });
+            }
 
             const camBtn = document.getElementById('reset-cam-btn');
-            if (camBtn) camBtn.addEventListener('click', (e) => {
-              if (!e.isTrusted) return;
-              SoundscapeEngine.init();
-              this.adjustCameraForScreen();
-              if (this.polyGroup) this.polyGroup.rotation.set(0, 0, 0);
-            });
+            if (camBtn) {
+              camBtn.addEventListener('click', (e) => {
+                if (!e.isTrusted) return;
+                SoundscapeEngine.init();
+                this.adjustCameraForScreen();
+                if (this.polyGroup) this.polyGroup.rotation.set(0, 0, 0);
+              });
+            }
 
             const lvlBtn = document.getElementById('levels-btn');
-            if (lvlBtn) lvlBtn.addEventListener('click', () => {
-              const modal = document.getElementById('levels-modal');
-              if (modal) modal.style.display = 'flex';
-            });
+            if (lvlBtn) {
+              lvlBtn.addEventListener('click', () => {
+                const modal = document.getElementById('levels-modal');
+                if (modal) modal.style.display = 'flex';
+              });
+            }
+
             const closeLvlBtn = document.getElementById('close-levels-btn');
-            if (closeLvlBtn) closeLvlBtn.addEventListener('click', () => {
-              const modal = document.getElementById('levels-modal');
-              if (modal) modal.style.display = 'none';
-            });
+            if (closeLvlBtn) {
+              closeLvlBtn.addEventListener('click', () => {
+                const modal = document.getElementById('levels-modal');
+                if (modal) modal.style.display = 'none';
+              });
+            }
 
             document.querySelectorAll('.level-card').forEach(card => {
               card.addEventListener('click', () => {
@@ -1037,55 +1060,70 @@
             });
 
             const lbBtn = document.getElementById('leaderboard-btn');
-            if (lbBtn) lbBtn.addEventListener('click', async () => {
-              const modal = document.getElementById('leaderboard-modal');
-              if (modal) modal.style.display = 'flex';
-              await CloudLeaderboard.renderTable();
-            });
+            if (lbBtn) {
+              lbBtn.addEventListener('click', async () => {
+                const modal = document.getElementById('leaderboard-modal');
+                if (modal) modal.style.display = 'flex';
+                await CloudLeaderboard.renderTable();
+              });
+            }
+
             const closeLbBtn = document.getElementById('close-lb-btn');
-            if (closeLbBtn) closeLbBtn.addEventListener('click', () => {
-              const modal = document.getElementById('leaderboard-modal');
-              if (modal) modal.style.display = 'none';
-            });
+            if (closeLbBtn) {
+              closeLbBtn.addEventListener('click', () => {
+                const modal = document.getElementById('leaderboard-modal');
+                if (modal) modal.style.display = 'none';
+              });
+            }
 
             const chalBtn = document.getElementById('challenge-btn');
-            if (chalBtn) chalBtn.addEventListener('click', (e) => {
-              if (!e.isTrusted) return;
-              SoundscapeEngine.init();
-              const cfg = LEVELS_CONFIG[_currentLevelKey];
-              const totalStab = this.getTotalStabilization();
-              const timeFormatted = CloudLeaderboard.formatTime(_elapsedMs);
-              const shareText = `🌌 Riešim 3D kvantový polyéder CHRONO-POLYHEDRON 3000 (${cfg.shortName}) v galaxii Andromeda!\n👤 Agent: ${_player} | Čas: ${timeFormatted} | Stabilizácia: ${totalStab}% | Ťahy: ${_moves}\nTrúfneš si prekonať túto vesmírnu výzvu? 👉 ${window.location.href}`;
-              if (navigator.clipboard) navigator.clipboard.writeText(shareText);
-              showToast("Virálna výzva skopírovaná do schránky!");
-            });
+            if (chalBtn) {
+              chalBtn.addEventListener('click', (e) => {
+                if (!e.isTrusted) return;
+                SoundscapeEngine.init();
+                const cfg = LEVELS_CONFIG[_currentLevelKey];
+                const totalStab = this.getTotalStabilization();
+                const timeFormatted = CloudLeaderboard.formatTime(_elapsedMs);
+                const shareText = `🌌 Riešim 3D kvantový polyéder CHRONO-POLYHEDRON 3000 (${cfg.shortName}) v galaxii Andromeda!\n👤 Agent: ${_player} | Čas: ${timeFormatted} | Stabilizácia: ${totalStab}% | Ťahy: ${_moves}\nTrúfneš si prekonať túto vesmírnu výzvu? 👉 ${window.location.href}`;
+                if (navigator.clipboard) navigator.clipboard.writeText(shareText);
+                showToast("Virálna výzva skopírovaná do schránky!");
+              });
+            }
 
             const rageBtn = document.getElementById('rage-btn');
-            if (rageBtn) rageBtn.addEventListener('click', (e) => {
-              if (!e.isTrusted) return;
-              this.loadGameMode(_currentLevelKey);
-              showToast(`Hra reštartovaná (${LEVELS_CONFIG[_currentLevelKey].shortName}). Veľa šťastia, ${_player}!`);
-            });
+            if (rageBtn) {
+              rageBtn.addEventListener('click', (e) => {
+                if (!e.isTrusted) return;
+                this.loadGameMode(_currentLevelKey);
+                showToast(`Hra reštartovaná (${LEVELS_CONFIG[_currentLevelKey].shortName}). Veľa šťastia, ${_player}!`);
+              });
+            }
 
             const closeCertBtn = document.getElementById('close-cert-btn');
-            if (closeCertBtn) closeCertBtn.addEventListener('click', () => {
-              const modal = document.getElementById('cert-modal');
-              if (modal) modal.style.display = 'none';
-            });
+            if (closeCertBtn) {
+              closeCertBtn.addEventListener('click', () => {
+                const modal = document.getElementById('cert-modal');
+                if (modal) modal.style.display = 'none';
+              });
+            }
 
             const nextCertBtn = document.getElementById('next-level-cert-btn');
-            if (nextCertBtn) nextCertBtn.addEventListener('click', () => {
-              const modal = document.getElementById('cert-modal');
-              if (modal) modal.style.display = 'none';
-              const nextKey = LEVELS_CONFIG[_currentLevelKey].nextLevel;
-              this.loadGameMode(nextKey);
-              showToast(`Štartuje ďalšia úroveň: ${LEVELS_CONFIG[nextKey].badge}! 🚀`);
-            });
+            if (nextCertBtn) {
+              nextCertBtn.addEventListener('click', () => {
+                const modal = document.getElementById('cert-modal');
+                if (modal) modal.style.display = 'none';
+                const nextKey = LEVELS_CONFIG[_currentLevelKey].nextLevel;
+                this.loadGameMode(nextKey);
+                showToast(`Štartuje ďalšia úroveň: ${LEVELS_CONFIG[nextKey].badge}! 🚀`);
+              });
+            }
 
             const downCertBtn = document.getElementById('download-cert-btn');
-            if (downCertBtn) downCertBtn.addEventListener('click', () => {
-              this.downloadCertificate();
-            });
+            if (downCertBtn) {
+              downCertBtn.addEventListener('click', () => {
+                this.downloadCertificate();
+              });
+            }
 
             if (!this.renderer) return;
             const dom = this.renderer.domElement;
@@ -1108,7 +1146,7 @@
                 this.mouse.x = (startX / window.innerWidth) * 2 - 1;
                 this.mouse.y = -(startY / window.innerHeight) * 2 + 1;
                 this.raycaster.setFromCamera(this.mouse, this.camera);
-                const intersects = this.raycaster.intersectObjects(this.nodeMeshes);
+                const intersects = this.raycaster.intersectObjects(this.nodeMeshes || []);
                 if (intersects.length > 0) this.handleNodeClick(intersects[0].object.userData.id);
               }
             };
@@ -1149,6 +1187,7 @@
           },
 
           updateTimePhaseVisuals() {
+            if (!this.nodeMeshes || !this.laserLines) return;
             const pIdx = _timePhase + 1;
             this.nodeMeshes.forEach((mesh, idx) => {
               const isActive = _nodes[idx].active[pIdx];
@@ -1293,7 +1332,11 @@
         };
       })();
 
-      window.addEventListener('DOMContentLoaded', () => { QuantumPolyhedronEngine.init(); });
+      if (document.readyState === 'loading') {
+        window.addEventListener('DOMContentLoaded', () => { QuantumPolyhedronEngine.init(); });
+      } else {
+        QuantumPolyhedronEngine.init();
+      }
     })();
   </script>
 </body>
