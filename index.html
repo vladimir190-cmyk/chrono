@@ -13,7 +13,7 @@
       --gold: #ffd700;
       --purple: #9d4edd;
       --green: #00ff88;
-      --panel: rgba(10, 15, 30, 0.92);
+      --panel: rgba(10, 15, 30, 0.9);
       --font: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     }
 
@@ -65,51 +65,49 @@
     .btn-green:hover, .btn-green:active { background: var(--green); color: #000; box-shadow: 0 0 15px var(--green); }
 
     /* Toast Notification */
-    #toast { position: fixed; top: 12px; left: 50%; transform: translateX(-50%); background: rgba(10, 15, 30, 0.96); border: 1px solid var(--primary); color: #fff; padding: 6px 12px; border-radius: 7px; font-size: 0.68rem; z-index: 95; max-width: 90vw; text-align: center; box-shadow: 0 0 25px rgba(0, 243, 255, 0.35); display: none; }
+    #toast { position: fixed; top: 76px; left: 50%; transform: translateX(-50%); background: rgba(10, 15, 30, 0.96); border: 1px solid var(--primary); color: #fff; padding: 6px 12px; border-radius: 7px; font-size: 0.68rem; z-index: 95; max-width: 90vw; text-align: center; box-shadow: 0 0 25px rgba(0, 243, 255, 0.35); display: none; }
 
-    /* Mobile Layout: Stats & Header moved to bottom, center completely clear */
+    /* Super-Compressed Mobile HUD (Center Completely Clear) */
     @media (max-width: 768px) {
-      .hud { padding: 4px; justify-content: flex-end; }
-      .side-panel { display: none; }
-      header { display: none; }
+      .hud { padding: 6px; }
+      header { gap: 3px; align-items: center; }
+      .title-box { padding: 3px 6px; border-radius: 6px; }
+      h1 { font-size: 0.65rem; letter-spacing: 0.8px; }
+      .sub { font-size: 0.46rem; margin-top: 0; }
+      .header-right { gap: 3px; }
+      .user-profile { padding: 2px 5px; border-radius: 6px; gap: 3px; }
+      .user-profile label { display: none; }
+      .user-profile input { width: 68px; font-size: 0.58rem; padding: 2px 4px; }
+      #audio-toggle-btn { padding: 3px 6px; font-size: 0.54rem; border-radius: 6px; }
 
-      .mobile-bottom-hud {
-        display: flex !important;
-        flex-direction: column;
-        gap: 4px;
+      .side-panel {
+        position: static;
+        flex-direction: row;
+        flex-wrap: nowrap;
         width: 100%;
-        margin-bottom: 2px;
-      }
-
-      .mobile-stats-row {
-        display: flex;
-        gap: 3px;
-        width: 100%;
+        gap: 2px;
+        margin-top: 3px;
         justify-content: space-between;
       }
-
-      .mobile-stat-card {
-        background: var(--panel);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-top: 2px solid var(--primary);
-        padding: 3px 4px;
-        border-radius: 5px;
+      .stat-card {
         flex: 1;
+        padding: 2px 3px;
+        border-left-width: 2px;
+        border-radius: 4px;
+        min-width: 0;
         text-align: center;
-        backdrop-filter: blur(10px);
       }
-      .mobile-stat-label { font-size: 0.42rem; color: #8a99ad; text-transform: uppercase; }
-      .mobile-stat-val { font-size: 0.62rem; font-weight: bold; color: #fff; white-space: nowrap; }
+      .stat-label { font-size: 0.4rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .stat-value { font-size: 0.58rem; margin-top: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .strain-bar-bg { display: none; }
 
       footer { gap: 4px; margin-bottom: 1px; }
-      .time-control { padding: 4px 10px; gap: 6px; max-width: 100%; }
+      .time-control { padding: 4px 10px; gap: 6px; max-width: 280px; }
       .time-control span { font-size: 0.54rem !important; }
       .time-slider { height: 12px; }
       .btn-row { gap: 3px; }
       .btn { padding: 4px 5px; font-size: 0.52rem; border-radius: 5px; flex: 1 1 30%; }
     }
-
-    .mobile-bottom-hud { display: none; }
 
     /* Modal Styling */
     .modal { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.88); backdrop-filter: blur(15px); z-index: 100; display: none; justify-content: center; align-items: center; padding: 15px; }
@@ -142,7 +140,6 @@
   <div id="toast"></div>
 
   <div class="hud">
-    <!-- Desktop Header -->
     <div>
       <header>
         <div class="title-box">
@@ -159,7 +156,6 @@
         </div>
       </header>
 
-      <!-- Desktop Side Panel -->
       <div class="side-panel">
         <div class="stat-card" style="border-left-color: var(--green);">
           <div class="stat-label">Čas</div>
@@ -185,52 +181,18 @@
       </div>
     </div>
 
-    <!-- Bottom Controls & Mobile HUD -->
     <footer>
-      <!-- Mobile Bottom HUD -->
-      <div class="mobile-bottom-hud">
-        <div class="mobile-stats-row">
-          <div class="mobile-stat-card" style="border-top-color: var(--green);">
-            <div class="mobile-stat-label">Čas</div>
-            <div class="mobile-stat-val" id="mob-timer-val" style="color: var(--green);">00:00.0</div>
-          </div>
-          <div class="mobile-stat-card">
-            <div class="mobile-stat-label">Fáza</div>
-            <div class="mobile-stat-val" id="mob-phase-val" style="color: var(--primary);">t₀</div>
-          </div>
-          <div class="mobile-stat-card" style="border-top-color: var(--gold);">
-            <div class="mobile-stat-label">Stab.</div>
-            <div class="mobile-stat-val" id="mob-stab-val" style="color: var(--gold);">0%</div>
-          </div>
-          <div class="mobile-stat-card" style="border-top-color: var(--purple);">
-            <div class="mobile-stat-label">IQ/Rez</div>
-            <div class="mobile-stat-val" id="mob-strain-val">160</div>
-          </div>
-          <div class="mobile-stat-card">
-            <div class="mobile-stat-label">Ťahy</div>
-            <div class="mobile-stat-val" id="mob-moves-val">0</div>
-          </div>
-        </div>
-        <div style="display: flex; justify-content: space-between; align-items: center; background: var(--panel); padding: 4px 8px; border-radius: 6px; border: 1px solid rgba(0,243,255,0.25);">
-          <input type="text" id="mob-player-name" value="AGENT-3000" maxlength="16" autocomplete="off" style="background: rgba(0,0,0,0.6); border: 1px solid var(--primary); color: var(--gold); padding: 2px 6px; border-radius: 4px; font-size: 0.65rem; font-weight: bold; width: 110px; outline: none; user-select: text;">
-          <button class="btn btn-green" id="mob-audio-btn" style="padding: 3px 8px; font-size: 0.58rem;">🔊 Zvuk</button>
-          <span style="font-size: 0.56rem; color: var(--gold);" id="mob-mode-badge">LVL 3</span>
-        </div>
-      </div>
-
-      <!-- Time slider -->
       <div class="time-control">
         <span style="font-size: 0.68rem; color: #8a99ad; font-weight: bold;">PAST (t₋₁)</span>
         <input type="range" min="-1" max="1" value="0" step="1" class="time-slider" id="time-slider">
         <span style="font-size: 0.68rem; color: #8a99ad; font-weight: bold;">FUTURE (t₊₁)</span>
       </div>
 
-      <!-- Action Buttons -->
       <div class="btn-row">
-        <button class="btn" id="reset-cam-btn">Reset</button>
-        <button class="btn btn-purple" id="levels-btn">🌌 Levely</button>
+        <button class="btn" id="reset-cam-btn">Reset Pohľadu</button>
+        <button class="btn btn-purple" id="levels-btn">🌌 Levely (1-4)</button>
         <button class="btn btn-gold" id="leaderboard-btn">🏆 Rebríček</button>
-        <button class="btn btn-secondary" id="oracle-btn">Orákulum</button>
+        <button class="btn btn-secondary" id="oracle-btn">AI Orákulum</button>
         <button class="btn btn-secondary" id="challenge-btn">Výzva</button>
         <button class="btn btn-gold" id="rage-btn">Reset Hry</button>
       </div>
@@ -561,9 +523,7 @@
           _timerInterval = setInterval(() => {
             if (_timerStart !== null && !_isSolved) {
               _elapsedMs = Date.now() - _timerStart;
-              const formatted = Leaderboard.formatTime(_elapsedMs);
-              document.getElementById('timer-val').innerText = formatted;
-              document.getElementById('mob-timer-val').innerText = formatted;
+              document.getElementById('timer-val').innerText = Leaderboard.formatTime(_elapsedMs);
             }
           }, 90);
         }
@@ -576,6 +536,7 @@
         }
       }
 
+      // Helper for soft round star glow texture (no squares!)
       function createRoundStarTexture() {
         const c = document.createElement('canvas');
         c.width = 64;
@@ -618,9 +579,7 @@
 
           document.getElementById('time-slider').value = 0;
           document.getElementById('timer-val').innerText = "00:00.0";
-          document.getElementById('mob-timer-val').innerText = "00:00.0";
           document.getElementById('mode-badge').innerText = cfg.badge;
-          document.getElementById('mob-mode-badge').innerText = cfg.shortName;
 
           const paletteSets = [
             [0x00f3ff, 0xff007f, 0xffd700],
@@ -658,6 +617,7 @@
           }
           _bursts.length = 0;
 
+          // Central Quantum Core & Gyro Rings
           const coreGeo = new THREE.IcosahedronGeometry(0.58, 1);
           const coreMat = new THREE.MeshPhongMaterial({ color: 0xff007f, emissive: 0xff007f, emissiveIntensity: 0.9, wireframe: true });
           this.coreMesh = new THREE.Mesh(coreGeo, coreMat);
@@ -673,6 +633,7 @@
           this.gyroRing2 = new THREE.Mesh(ring2Geo, ring2Mat);
           this.cubeGroup.add(this.gyroRing2);
 
+          // Build Nodes
           this.nodeMeshes = [];
           const sphereGeo = new THREE.SphereGeometry(cfg.sphereRadius, 32, 32);
 
@@ -691,6 +652,7 @@
             this.nodeMeshes.push(mesh);
           });
 
+          // Build Connection Lasers
           this.laserLines = [];
           _connections.forEach(conn => {
             const posA = new THREE.Vector3(..._nodes[conn[0]].pos);
@@ -742,6 +704,8 @@
 
         buildAndromedaGalaxy() {
           this.galaxyGroup = new THREE.Group();
+
+          // Veľká rotujúca galaxia Andromeda M31 v pozadí
           const galaxyStars = 2200;
           const gGeo = new THREE.BufferGeometry();
           const gPos = new Float32Array(galaxyStars * 3);
@@ -760,7 +724,7 @@
 
             gPos[i3] = Math.cos(angle) * r;
             gPos[i3 + 1] = (Math.random() - 0.5) * (3.5 * (1 - r / radius));
-            gPos[i3 + 2] = Math.sin(angle) * r * 0.45 - 22;
+            gPos[i3 + 2] = Math.sin(angle) * r * 0.45 - 22; // Hlboko v pozadí
 
             const mixFactor = r / radius;
             const c = r < 4 ? coreColor : (mixFactor < 0.6 ? armColor : outerColor);
@@ -789,36 +753,40 @@
         setupThreeJS() {
           const container = document.getElementById('canvas-container');
           this.scene = new THREE.Scene();
-          // Clear background without heavy exponential fog blinding the center
-          this.scene.background = new THREE.Color(0x030712);
+          this.scene.fog = new THREE.FogExp2(0x030712, 0.016);
 
           this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
           this.camera.position.set(6, 6, 9);
           this.camera.lookAt(0, 0, 0);
 
-          this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, preserveDrawingBuffer: true });
+          this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
           this.renderer.setSize(window.innerWidth, window.innerHeight);
           this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
           container.appendChild(this.renderer.domElement);
 
           this.starTexture = createRoundStarTexture();
 
+          // Lights
           this.scene.add(new THREE.AmbientLight(0xffffff, 0.55));
           const p1 = new THREE.PointLight(0x00f3ff, 2.2, 60); p1.position.set(12, 12, 12); this.scene.add(p1);
           const p2 = new THREE.PointLight(0xff007f, 2.0, 60); p2.position.set(-12, -12, -12); this.scene.add(p2);
           const p3 = new THREE.PointLight(0xffd700, 1.8, 60); p3.position.set(0, 12, -12); this.scene.add(p3);
 
+          // Group for Polyhedron
           this.cubeGroup = new THREE.Group();
           this.scene.add(this.cubeGroup);
 
+          // Build large Andromeda Galaxy in background
           this.buildAndromedaGalaxy();
 
+          // Interaction Setup
           this.raycaster = new THREE.Raycaster();
           this.mouse = new THREE.Vector2();
           this.isDragging = false;
           this.previousMousePosition = { x: 0, y: 0 };
           this.dragStartPos = { x: 0, y: 0 };
 
+          // Animation Loop
           const animate = () => {
             requestAnimationFrame(animate);
 
@@ -838,7 +806,7 @@
               this.gyroRing2.rotation.z += 0.014 * stabBoost;
             }
             if (this.galaxyGroup) {
-              this.galaxyGroup.rotation.y += 0.0007;
+              this.galaxyGroup.rotation.y += 0.0007; // Pomalá rotácia veľkej galaxie Andromeda
             }
 
             for (let i = _bursts.length - 1; i >= 0; i--) {
@@ -877,15 +845,10 @@
             this.adjustCamera();
           });
 
-          const syncNames = (val) => {
-            const clean = val.replace(/[^a-zA-Z0-9\-_ áäčďéíĺľňóôŕšťúýžÁÄČĎÉÍĹĽŇÓÔŔŠŤÚÝŽ]/g, '').trim();
+          document.getElementById('player-name').addEventListener('input', (e) => {
+            const clean = e.target.value.replace(/[^a-zA-Z0-9\-_ áäčďéíĺľňóôŕšťúýžÁÄČĎÉÍĹĽŇÓÔŔŠŤÚÝŽ]/g, '').trim();
             _player = clean || "AGENT-3000";
-            document.getElementById('player-name').value = _player;
-            document.getElementById('mob-player-name').value = _player;
-          };
-
-          document.getElementById('player-name').addEventListener('input', (e) => syncNames(e.target.value));
-          document.getElementById('mob-player-name').addEventListener('input', (e) => syncNames(e.target.value));
+          });
 
           document.getElementById('time-slider').addEventListener('input', (e) => {
             _timePhase = parseInt(e.target.value, 10);
@@ -896,17 +859,12 @@
             this.updateHUD();
           });
 
-          const toggleAudio = () => {
+          document.getElementById('audio-toggle-btn').addEventListener('click', (e) => {
             AudioEngine.init();
             const active = AudioEngine.toggleMute();
-            const txt = active ? '🔊 Zvuk' : '🔇 Ticho';
-            document.getElementById('audio-toggle-btn').innerText = txt;
-            document.getElementById('mob-audio-btn').innerText = txt;
+            e.target.innerText = active ? '🔊 Zvuk' : '🔇 Ticho';
             showToast(active ? "Vesmírny syntetizátor aktivovaný." : "Zvuk stlmený.");
-          };
-
-          document.getElementById('audio-toggle-btn').addEventListener('click', toggleAudio);
-          document.getElementById('mob-audio-btn').addEventListener('click', toggleAudio);
+          });
 
           document.getElementById('reset-cam-btn').addEventListener('click', () => {
             AudioEngine.init();
@@ -1119,26 +1077,20 @@
         },
 
         updateHUD() {
-          const phases = ["PAST (t₋₁)", "PRESENT (t₀)", "FUTURE (t₊₁)"];
-          const mobPhases = ["t₋₁", "t₀", "t₊₁"];
-          
+          const isMobile = window.innerWidth <= 768;
+          const phases = isMobile ? ["t₋₁", "t₀", "t₊₁"] : ["PAST (t₋₁)", "PRESENT (t₀)", "FUTURE (t₊₁)"];
           document.getElementById('phase-val').innerText = phases[_timePhase + 1];
-          document.getElementById('mob-phase-val').innerText = mobPhases[_timePhase + 1];
 
           const totalPercent = this.getTotalStabilization();
           document.getElementById('stab-val').innerText = `${totalPercent}%`;
-          document.getElementById('mob-stab-val').innerText = `${totalPercent}%`;
-
           document.getElementById('moves-val').innerText = _moves;
-          document.getElementById('mob-moves-val').innerText = _moves;
 
           const strain = Math.min(100, Math.max(10, _moves * 3));
           const resonance = (1.0 + (totalPercent / 100) * 3.5 + (_moves * 0.04)).toFixed(1);
-          const iqVal = 175 - Math.floor(strain / 4);
-
           document.getElementById('strain-fill').style.width = `${strain}%`;
-          document.getElementById('strain-val').innerText = `IQ ${iqVal} • ${resonance}x`;
-          document.getElementById('mob-strain-val').innerText = `${iqVal}`;
+          document.getElementById('strain-val').innerText = isMobile
+            ? `${175 - Math.floor(strain / 4)} • ${resonance}x`
+            : `IQ ${175 - Math.floor(strain / 4)} • ${resonance}x`;
         },
 
         triggerVictory(proofCode, finalTime, cfg) {
