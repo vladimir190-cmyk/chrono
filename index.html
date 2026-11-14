@@ -3,18 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="theme-color" content="#000103">
+  <meta name="theme-color" content="#030712">
   <title>CHRONO-POLYHEDRON 3000: Supernova Edition</title>
   <style>
     :root {
-      --bg: #000103;
+      --bg: #030712;
       --primary: #00f3ff;
       --secondary: #ff007f;
       --gold: #ffd700;
       --purple: #9d4edd;
       --green: #00ff88;
-      --panel: rgba(5, 8, 18, 0.92);
-      --font: 'Segoe UI', Roboto, sans-serif;
+      --panel: rgba(10, 15, 30, 0.88);
+      --font: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-tap-highlight-color: transparent; }
@@ -22,168 +22,85 @@
 
     #canvas-container { width: 100vw; height: 100vh; position: absolute; top: 0; left: 0; z-index: 1; }
 
-    .hud { position: absolute; z-index: 10; pointer-events: none; display: flex; flex-direction: column; justify-content: space-between; padding: 12px; width: 100%; height: 100%; }
+    /* HUD Overlay */
+    .hud { position: absolute; z-index: 10; pointer-events: none; display: flex; flex-direction: column; justify-content: space-between; padding: 16px; width: 100%; height: 100%; }
     .hud * { pointer-events: auto; }
 
-    .top-wrapper { display: flex; flex-direction: column; gap: 8px; width: 100%; }
-    header { display: flex; justify-content: space-between; align-items: center; gap: 8px; width: 100%; flex-wrap: wrap; }
-    
-    .title-box {
-      background: var(--panel);
-      border: 1px solid rgba(0, 243, 255, 0.55);
-      padding: 8px 14px;
-      border-radius: 12px;
-      backdrop-filter: blur(12px);
-      box-shadow: 0 0 20px rgba(0, 243, 255, 0.25);
-    }
-
-    h1 { font-size: 0.95rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--primary); text-shadow: 0 0 12px var(--primary); }
-    .sub { font-size: 0.58rem; color: #8a99ad; margin-top: 2px; display: flex; align-items: center; gap: 6px; }
+    header { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; flex-wrap: wrap; }
+    .title-box { background: var(--panel); border: 1px solid rgba(0, 243, 255, 0.35); padding: 10px 16px; border-radius: 10px; backdrop-filter: blur(10px); box-shadow: 0 0 20px rgba(0, 243, 255, 0.15); }
+    h1 { font-size: 1.15rem; letter-spacing: 2px; text-transform: uppercase; color: var(--primary); text-shadow: 0 0 8px var(--primary); }
+    .sub { font-size: 0.68rem; color: #8a99ad; margin-top: 3px; }
     .sec-badge { color: var(--gold); font-weight: bold; }
 
-    .top-stats-bar {
-      background: var(--panel);
-      border: 1px solid rgba(255, 215, 0, 0.45);
-      padding: 7px 14px;
-      border-radius: 12px;
-      backdrop-filter: blur(12px);
-      display: flex;
-      gap: 16px;
-      align-items: center;
-      box-shadow: 0 0 20px rgba(255, 215, 0, 0.18);
-    }
-    .stat-item { font-size: 0.65rem; display: flex; flex-direction: column; align-items: flex-end; }
-    .stat-item span { color: #8a99ad; font-size: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px; }
-    .stat-item strong { color: #fff; font-size: 0.78rem; font-variant-numeric: tabular-nums; }
+    .header-right { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    .user-profile { background: var(--panel); border: 1px solid rgba(255, 0, 127, 0.4); padding: 8px 14px; border-radius: 10px; backdrop-filter: blur(10px); display: flex; align-items: center; gap: 8px; }
+    .user-profile label { font-size: 0.7rem; color: var(--secondary); text-transform: uppercase; font-weight: bold; }
+    .user-profile input { background: rgba(0, 0, 0, 0.55); border: 1px solid var(--primary); color: var(--gold); padding: 5px 8px; border-radius: 5px; font-family: inherit; font-size: 0.8rem; font-weight: bold; outline: none; width: 130px; user-select: text; -webkit-user-select: text; }
+    .user-profile input:focus { border-color: var(--gold); box-shadow: 0 0 8px var(--gold); }
 
-    .player-bar {
-      background: var(--panel);
-      border: 1px solid rgba(255, 0, 127, 0.5);
-      border-left: 3px solid var(--secondary);
-      padding: 6px 12px;
-      border-radius: 10px;
-      backdrop-filter: blur(12px);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      box-shadow: 0 0 15px rgba(255, 0, 127, 0.2);
-    }
-    .player-bar label {
-      font-size: 0.62rem;
-      color: var(--secondary);
-      text-transform: uppercase;
-      font-weight: bold;
-      letter-spacing: 0.6px;
-      white-space: nowrap;
-    }
-    .player-bar input {
-      background: rgba(0, 0, 0, 0.65);
-      border: 1px solid rgba(0, 243, 255, 0.45);
-      color: var(--gold);
-      padding: 4px 10px;
-      border-radius: 6px;
-      font-family: inherit;
-      font-size: 0.75rem;
-      font-weight: bold;
-      outline: none;
-      width: 130px;
-      user-select: text;
-      -webkit-user-select: text;
-    }
+    /* Side Panel Stats */
+    .side-panel { position: absolute; right: 16px; top: 88px; display: flex; flex-direction: column; gap: 8px; width: 205px; }
+    .stat-card { background: var(--panel); border: 1px solid rgba(255, 255, 255, 0.1); border-left: 3px solid var(--primary); padding: 8px 12px; border-radius: 8px; backdrop-filter: blur(10px); }
+    .stat-label { font-size: 0.62rem; color: #8a99ad; text-transform: uppercase; letter-spacing: 0.5px; }
+    .stat-value { font-size: 1rem; font-weight: bold; color: #fff; margin-top: 2px; font-variant-numeric: tabular-nums; }
 
-    footer { display: flex; flex-direction: column; gap: 8px; align-items: center; width: 100%; margin-bottom: 6px; }
-    
-    .time-control {
-      background: var(--panel);
-      padding: 8px 18px;
-      border-radius: 20px;
-      border: 1px solid rgba(0, 243, 255, 0.5);
-      backdrop-filter: blur(12px);
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      width: 100%;
-      max-width: 440px;
-      justify-content: center;
-      box-shadow: 0 0 20px rgba(0,243,255,0.2);
-    }
-    .time-slider { flex: 1; accent-color: var(--primary); cursor: pointer; height: 20px; }
+    /* Brain Strain Meter */
+    .strain-bar-bg { width: 100%; height: 5px; background: rgba(255, 255, 255, 0.1); border-radius: 3px; margin-top: 5px; overflow: hidden; }
+    .strain-bar-fill { height: 100%; width: 10%; background: linear-gradient(90deg, #00f3ff, #ff007f); transition: width 0.3s; }
 
-    .btn-group { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; width: 100%; max-width: 860px; }
-    
-    .btn {
-      background: rgba(0, 243, 255, 0.12);
-      border: 1px solid var(--primary);
-      color: var(--primary);
-      padding: 9px 12px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-family: inherit;
-      font-size: 0.68rem;
-      font-weight: bold;
-      text-transform: uppercase;
-      letter-spacing: 0.7px;
-      transition: all 0.2s;
-      backdrop-filter: blur(10px);
-      text-align: center;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-      flex: 1;
-      min-width: 110px;
-    }
-    .btn:hover, .btn:active { background: var(--primary); color: #000103; box-shadow: 0 0 20px var(--primary); transform: translateY(-1px); }
+    /* Bottom Controls */
+    footer { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 6px; width: 100%; }
+    .time-control { background: var(--panel); padding: 10px 20px; border-radius: 30px; border: 1px solid rgba(0, 243, 255, 0.45); backdrop-filter: blur(10px); display: flex; align-items: center; gap: 12px; width: 100%; max-width: 420px; justify-content: center; }
+    .time-slider { flex: 1; accent-color: var(--primary); cursor: pointer; }
+
+    .btn-row { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; max-width: 820px; width: 100%; }
+    .btn { background: rgba(0, 243, 255, 0.12); border: 1px solid var(--primary); color: var(--primary); padding: 8px 13px; border-radius: 8px; cursor: pointer; font-family: inherit; font-size: 0.72rem; font-weight: bold; text-transform: uppercase; transition: all 0.2s; backdrop-filter: blur(5px); }
+    .btn:hover, .btn:active { background: var(--primary); color: #000; box-shadow: 0 0 15px var(--primary); }
     .btn-secondary { border-color: var(--secondary); color: var(--secondary); background: rgba(255, 0, 127, 0.12); }
-    .btn-secondary:hover, .btn-secondary:active { background: var(--secondary); color: #fff; box-shadow: 0 0 20px var(--secondary); }
+    .btn-secondary:hover, .btn-secondary:active { background: var(--secondary); color: #fff; box-shadow: 0 0 15px var(--secondary); }
     .btn-gold { border-color: var(--gold); color: var(--gold); background: rgba(255, 215, 0, 0.12); }
-    .btn-gold:hover, .btn-gold:active { background: var(--gold); color: #000103; box-shadow: 0 0 25px var(--gold); }
-    .btn-green { border-color: var(--green); color: var(--green); background: rgba(0, 255, 136, 0.12); }
-    .btn-green:hover, .btn-green:active { background: var(--green); color: #000103; box-shadow: 0 0 20px var(--green); }
+    .btn-gold:hover, .btn-gold:active { background: var(--gold); color: #000; box-shadow: 0 0 15px var(--gold); }
     .btn-purple { border-color: var(--purple); color: #d8a7ff; background: rgba(157, 78, 221, 0.18); }
-    .btn-purple:hover, .btn-purple:active { background: var(--purple); color: #fff; box-shadow: 0 0 22px var(--purple); }
+    .btn-purple:hover, .btn-purple:active { background: var(--purple); color: #fff; box-shadow: 0 0 15px var(--purple); }
+    .btn-green { border-color: var(--green); color: var(--green); background: rgba(0, 255, 136, 0.12); }
+    .btn-green:hover, .btn-green:active { background: var(--green); color: #000; box-shadow: 0 0 15px var(--green); }
 
+    /* Toast Notification */
+    #toast { position: fixed; top: 82px; left: 50%; transform: translateX(-50%); background: rgba(10, 15, 30, 0.96); border: 1px solid var(--primary); color: #fff; padding: 10px 18px; border-radius: 10px; font-size: 0.78rem; z-index: 95; max-width: 90vw; text-align: center; box-shadow: 0 0 25px rgba(0, 243, 255, 0.35); display: none; }
+
+    /* Mobile Responsive HUD */
     @media (max-width: 768px) {
-      .top-stats-bar { gap: 8px; padding: 6px 8px; }
-      .stat-item strong { font-size: 0.68rem; }
-      .btn { padding: 8px 4px; font-size: 0.58rem; min-width: 30%; }
-      .player-bar input { width: 90px; }
+      .side-panel { position: static; flex-direction: row; flex-wrap: wrap; width: 100%; gap: 6px; margin-top: 6px; }
+      .stat-card { flex: 1 1 30%; padding: 6px 8px; }
+      .stat-value { font-size: 0.82rem; }
+      .btn { padding: 7px 8px; font-size: 0.64rem; }
+      h1 { font-size: 0.95rem; }
     }
 
-    #toast {
-      position: fixed;
-      top: 115px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(5, 8, 18, 0.96);
-      border: 1px solid var(--primary);
-      color: #fff;
-      padding: 10px 18px;
-      border-radius: 10px;
-      font-size: 0.78rem;
-      z-index: 95;
-      max-width: 90vw;
-      text-align: center;
-      box-shadow: 0 0 25px rgba(0, 243, 255, 0.4);
-      display: none;
-    }
+    /* Modal Styling */
+    .modal { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.88); backdrop-filter: blur(15px); z-index: 100; display: none; justify-content: center; align-items: center; padding: 15px; }
+    .modal-content { background: #0b1120; border: 1px solid var(--gold); border-radius: 14px; padding: 24px; max-width: 520px; width: 100%; text-align: center; box-shadow: 0 0 40px rgba(255, 215, 0, 0.25); position: relative; max-height: 90vh; overflow-y: auto; }
+    .modal-title { color: var(--gold); font-size: 1.35rem; letter-spacing: 1.5px; margin-bottom: 10px; text-transform: uppercase; }
 
-    .modal { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 1, 3, 0.92); backdrop-filter: blur(20px); z-index: 100; display: none; justify-content: center; align-items: center; padding: 15px; }
-    .modal-content { background: #050812; border: 1px solid var(--gold); border-radius: 16px; padding: 22px; max-width: 520px; width: 100%; text-align: center; box-shadow: 0 0 45px rgba(255, 215, 0, 0.35); max-height: 90vh; overflow-y: auto; }
-    .modal-title { color: var(--gold); font-size: 1.25rem; letter-spacing: 1.5px; margin-bottom: 8px; text-transform: uppercase; text-shadow: 0 0 12px var(--gold); }
-    #cert-canvas-container { width: 100%; height: 240px; margin: 12px 0; border-radius: 10px; border: 1px solid rgba(255, 215, 0, 0.35); background: #000103; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-
+    /* Level Cards */
     .level-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0; text-align: left; }
-    .level-card { background: rgba(0, 243, 255, 0.05); border: 1px solid rgba(0, 243, 255, 0.25); border-radius: 10px; padding: 12px; cursor: pointer; transition: all 0.2s; }
-    .level-card:hover { transform: translateY(-2px); border-color: var(--gold); background: rgba(255, 215, 0, 0.08); }
+    .level-card { background: rgba(0, 243, 255, 0.06); border: 1px solid rgba(0, 243, 255, 0.28); border-radius: 10px; padding: 12px; cursor: pointer; transition: all 0.2s; }
+    .level-card:hover { transform: translateY(-2px); border-color: var(--gold); background: rgba(255, 215, 0, 0.1); }
     .level-card h3 { font-size: 0.85rem; color: var(--primary); margin-bottom: 4px; text-transform: uppercase; }
     .level-card p { font-size: 0.7rem; color: #a0aec0; line-height: 1.35; }
-    .level-tag { display: inline-block; font-size: 0.6rem; padding: 2px 6px; border-radius: 4px; font-weight: bold; margin-bottom: 5px; text-transform: uppercase; }
+    .level-tag { display: inline-block; font-size: 0.58rem; padding: 2px 6px; border-radius: 4px; font-weight: bold; margin-bottom: 5px; text-transform: uppercase; }
 
-    .lb-table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.75rem; text-align: left; }
-    .lb-table th { color: var(--primary); border-bottom: 1px solid rgba(0, 243, 255, 0.3); padding: 6px; text-transform: uppercase; font-size: 0.62rem; }
+    /* Leaderboard Table */
+    .lb-table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.76rem; text-align: left; }
+    .lb-table th { color: var(--primary); border-bottom: 1px solid rgba(0, 243, 255, 0.3); padding: 6px; text-transform: uppercase; font-size: 0.64rem; }
     .lb-table td { padding: 7px 6px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
     .lb-rank-1 { color: var(--gold); font-weight: bold; }
-    .lb-hash { font-family: monospace; color: var(--green); font-size: 0.62rem; }
+    .lb-hash { font-family: monospace; color: var(--green); font-size: 0.65rem; }
+
+    /* 3D Certificate Container */
+    #cert-canvas-container { width: 100%; height: 250px; margin: 14px 0; border-radius: 8px; border: 1px solid rgba(255, 215, 0, 0.35); background: #050a14; position: relative; }
   </style>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
 
@@ -191,65 +108,70 @@
   <div id="toast"></div>
 
   <div class="hud">
-    <div class="top-wrapper">
+    <div>
       <header>
         <div class="title-box">
-          <h1>Chrono-Polyhedron</h1>
+          <h1>Chrono-Polyhedron 3000</h1>
           <div class="sub">Andromeda M31 • <span class="sec-badge" id="mode-badge">LVL 3: OMEGA 36</span></div>
         </div>
 
-        <div class="top-stats-bar">
-          <div class="player-bar">
-            <label for="player-name-input">Agent:</label>
-            <input type="text" id="player-name-input" value="AGENT-3000" maxlength="18" autocomplete="off">
+        <div class="header-right">
+          <div class="user-profile">
+            <label for="player-name">Agent:</label>
+            <input type="text" id="player-name" value="AGENT-3000" maxlength="16" autocomplete="off">
           </div>
-          <div class="stat-item">
-            <span>Čas</span>
-            <strong id="timer-val" style="color:var(--green);">00:00.0</strong>
-          </div>
-          <div class="stat-item">
-            <span>Fáza</span>
-            <strong id="phase-val" style="color:var(--primary);">t0</strong>
-          </div>
-          <div class="stat-item">
-            <span>Stabilizácia</span>
-            <strong id="stab-val" style="color:var(--gold);">0%</strong>
-          </div>
-          <div class="stat-item">
-            <span>Kvantová Rezonancia</span>
-            <strong id="resonance-val" style="color: #d8a7ff;">SYNAPSE 1.0x</strong>
-          </div>
-          <div class="stat-item">
-            <span>Ťahy / IQ</span>
-            <strong id="moves-val">0 <span style="color:#8a99ad;">(175)</span></strong>
-          </div>
+          <button class="btn btn-green" id="audio-toggle-btn">🔊 Zvuk</button>
         </div>
-
-        <button class="btn btn-green" id="audio-toggle-btn" style="flex: 0; min-width: auto; padding: 8px 12px;">🔊 Zvuk</button>
       </header>
+
+      <div class="side-panel">
+        <div class="stat-card" style="border-left-color: var(--green);">
+          <div class="stat-label">Speedrun Čas</div>
+          <div class="stat-value" id="timer-val" style="color: var(--green);">00:00.0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Časový stav (Phase)</div>
+          <div class="stat-value" id="phase-val" style="color: var(--primary);">PRESENT (t₀)</div>
+        </div>
+        <div class="stat-card" style="border-left-color: var(--gold);">
+          <div class="stat-label">Celková Stabilizácia</div>
+          <div class="stat-value" id="stab-val" style="color: var(--gold);">0%</div>
+        </div>
+        <div class="stat-card" style="border-left-color: var(--purple);">
+          <div class="stat-label">Brain Strain & Rezonancia</div>
+          <div class="stat-value" id="strain-val">IQ 160 • 1.0x</div>
+          <div class="strain-bar-bg"><div class="strain-bar-fill" id="strain-fill"></div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Počet ťahov</div>
+          <div class="stat-value" id="moves-val">0</div>
+        </div>
+      </div>
     </div>
 
     <footer>
       <div class="time-control">
-        <span style="font-size: 0.7rem; color: #8a99ad; font-weight: bold;">t-1 (Minulosť)</span>
+        <span style="font-size: 0.75rem; color: #8a99ad; font-weight: bold;">PAST (t₋₁)</span>
         <input type="range" min="-1" max="1" value="0" step="1" class="time-slider" id="time-slider">
-        <span style="font-size: 0.7rem; color: #8a99ad; font-weight: bold;">t+1 (Budúcnosť)</span>
+        <span style="font-size: 0.75rem; color: #8a99ad; font-weight: bold;">FUTURE (t₊₁)</span>
       </div>
 
-      <div class="btn-group">
+      <div class="btn-row">
         <button class="btn" id="reset-cam-btn">Reset Pohľadu</button>
-        <button class="btn btn-purple" id="levels-btn">🌌 Výber Levelu (1-4)</button>
+        <button class="btn btn-purple" id="levels-btn">🌌 Levely (1-4)</button>
         <button class="btn btn-gold" id="leaderboard-btn">🏆 Rebríček</button>
-        <button class="btn btn-secondary" id="challenge-btn">Virálna Výzva</button>
+        <button class="btn btn-secondary" id="oracle-btn">AI Orákulum</button>
+        <button class="btn btn-secondary" id="challenge-btn">Výzva</button>
         <button class="btn btn-gold" id="rage-btn">Reset Hry</button>
       </div>
     </footer>
   </div>
 
+  <!-- Levels Modal -->
   <div class="modal" id="levels-modal">
     <div class="modal-content" style="border-color: var(--purple);">
       <div class="modal-title" style="color: #d8a7ff;">🌌 Kvantová Kampaň (Levely 1 - 4)</div>
-      <p style="font-size: 0.78rem; color: #a0aec0;">Vyber si úroveň komplexnosti polyédra. Prepínaj časové dimenzie a stabilizuj všetky uzly na 100 %!</p>
+      <p style="font-size: 0.8rem; color: #a0aec0;">Vyber si úroveň komplexnosti polyédra. Prepínaj časové dimenzie (t₋₁, t₀, t₊₁) a stabilizuj všetky uzly na 100 %!</p>
       
       <div class="level-grid">
         <div class="level-card" data-level="level1">
@@ -277,14 +199,15 @@
         </div>
       </div>
 
-      <button class="btn" id="close-levels-btn" style="max-width: 200px;">Pokračovať v hre</button>
+      <button class="btn" id="close-levels-btn">Pokračovať v hre</button>
     </div>
   </div>
 
+  <!-- Leaderboard Modal -->
   <div class="modal" id="leaderboard-modal">
     <div class="modal-content">
-      <div class="modal-title">🏆 Lokálny Rebríček Agentov</div>
-      <p style="font-size: 0.75rem; color: #a0aec0;">Najlepšie časy a štatistiky uložené v zariadení</p>
+      <div class="modal-title">🏆 Rebríček Agentov</div>
+      <p style="font-size: 0.78rem; color: #a0aec0;">Najlepšie speedrun časy a štatistiky uložené v zariadení</p>
       
       <table class="lb-table">
         <thead>
@@ -294,29 +217,28 @@
             <th>Level</th>
             <th>Čas</th>
             <th>Ťahy</th>
-            <th>Kód</th>
+            <th>Proof</th>
           </tr>
         </thead>
-        <tbody id="leaderboard-body">
-          <tr><td colspan="6" style="text-align:center; color:#8a99ad;">Načítavam dáta...</td></tr>
-        </tbody>
+        <tbody id="leaderboard-body"></tbody>
       </table>
 
-      <div style="display: flex; gap: 8px; justify-content: center; margin-top: 12px;">
+      <div style="display: flex; gap: 10px; justify-content: center; margin-top: 14px;">
         <button class="btn" id="close-lb-btn">Zatvoriť rebríček</button>
       </div>
     </div>
   </div>
 
+  <!-- Certificate Modal -->
   <div class="modal" id="cert-modal">
     <div class="modal-content">
-      <div class="modal-title">🏆 Polyhedron Master 🏆</div>
-      <p style="font-size: 0.8rem; color: #a0aec0;" id="cert-subtitle">Mriežka stabilizovaná! Skóre bolo zapísané do rebríčka.</p>
+      <div class="modal-title">✨ Kvantový Certifikát Úspechu ✨</div>
+      <p style="font-size: 0.82rem; color: #a0aec0;" id="cert-subtitle">Týmto sa potvrdzuje, že riešiteľ úspešne stabilizoval hlavolam 3. tisícročia.</p>
       
       <div id="cert-canvas-container"></div>
 
-      <div style="display: flex; gap: 8px; justify-content: center; margin-top: 10px; flex-wrap: wrap;">
-        <button class="btn btn-gold" id="download-cert-btn">Stiahnuť Ostrý Certifikát (PNG)</button>
+      <div style="display: flex; gap: 8px; justify-content: center; margin-top: 14px; flex-wrap: wrap;">
+        <button class="btn btn-gold" id="download-cert-btn">Stiahnuť 3D Certifikát (PNG)</button>
         <button class="btn btn-purple" id="next-level-cert-btn">Ďalší Level 🚀</button>
         <button class="btn" id="close-cert-btn">Zatvoriť</button>
       </div>
@@ -324,218 +246,21 @@
   </div>
 
   <script>
-    window.addEventListener('DOMContentLoaded', function() {
-      'use strict';
+    const QuantumGameEngine = (function() {
+      let _sessionSig = Math.random().toString(36).substring(2) + Date.now().toString(36);
+      let _player = "AGENT-3000";
+      let _timePhase = 0; // -1: Past, 0: Present, 1: Future
+      let _moves = 0;
+      let _isSolved = false;
+      let _currentLevelKey = 'level3';
+      let _timerStart = null;
+      let _elapsedMs = 0;
+      let _timerInterval = null;
+      let _toastTimer = null;
 
-      const CloudLeaderboard = {
-        STORAGE_KEY: "chrono_supernova_local_lb_v7",
-        defaultAgents: [
-          { name: "NEXUS-PRIME", level: "OMEGA 36", timeMs: 38420, moves: 24, code: "CHRONO-8F9A" },
-          { name: "ANDROMEDA-X", level: "OMEGA 36", timeMs: 49150, moves: 27, code: "CHRONO-3D71" },
-          { name: "QUANTUM-V", level: "OMEGA 36", timeMs: 62800, moves: 31, code: "CHRONO-91B4" },
-          { name: "CYBER-NOVA", level: "OMEGA 36", timeMs: 78340, moves: 35, code: "CHRONO-5A0E" }
-        ],
-
-        formatTime(ms) {
-          try {
-            const totalSec = ms / 1000;
-            const mins = Math.floor(totalSec / 60).toString().padStart(2, '0');
-            const secs = Math.floor(totalSec % 60).toString().padStart(2, '0');
-            const tenths = Math.floor((ms % 1000) / 100);
-            return `${mins}:${secs}.${tenths}`;
-          } catch(e) { return "00:00.0"; }
-        },
-
-        fetchScores() {
-          try {
-            const raw = localStorage.getItem(this.STORAGE_KEY);
-            if (!raw) {
-              localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.defaultAgents));
-              return [...this.defaultAgents];
-            }
-            return JSON.parse(raw);
-          } catch (e) {
-            return [...this.defaultAgents];
-          }
-        },
-
-        submitScore(entry) {
-          try {
-            let scores = this.fetchScores();
-            scores.push(entry);
-            scores.sort((a, b) => a.timeMs - b.timeMs || a.moves - b.moves);
-            scores = scores.slice(0, 20);
-            localStorage.setItem(this.STORAGE_KEY, JSON.stringify(scores));
-          } catch (e) {}
-        },
-
-        renderTable() {
-          try {
-            const tbody = document.getElementById('leaderboard-body');
-            if (!tbody) return;
-            tbody.innerHTML = '';
-            
-            const scores = this.fetchScores();
-            if (!scores || scores.length === 0) {
-              tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#8a99ad;">Zatiaľ žiadni agenti. Buď prvý!</td></tr>';
-              return;
-            }
-
-            scores.forEach((row, index) => {
-              const tr = document.createElement('tr');
-              if (index === 0) tr.className = 'lb-rank-1';
-              tr.innerHTML = `
-                <td>${index + 1}.</td>
-                <td>${row.name || 'AGENT'}</td>
-                <td style="color:var(--primary); font-size:0.65rem;">${row.level || 'OMEGA 36'}</td>
-                <td>${this.formatTime(row.timeMs)}</td>
-                <td>${row.moves || 0}</td>
-                <td class="lb-hash">${row.code || 'CHRONO-3000'}</td>
-              `;
-              tbody.appendChild(tr);
-            });
-          } catch(e) {}
-        }
-      };
-
-      const SoundscapeEngine = {
-        ctx: null,
-        isMuted: false,
-        isAmbientRunning: false,
-        droneOsc1: null,
-        droneOsc2: null,
-        filterNode: null,
-        masterGain: null,
-
-        init() {
-          try {
-            if (!this.ctx) {
-              const AudioCtx = window.AudioContext || window.webkitAudioContext;
-              if (AudioCtx) {
-                this.ctx = new AudioCtx();
-                this.masterGain = this.ctx.createGain();
-                this.masterGain.gain.setValueAtTime(this.isMuted ? 0 : 0.25, this.ctx.currentTime);
-                this.masterGain.connect(this.ctx.destination);
-              }
-            }
-            if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
-            if (!this.isAmbientRunning) this.startSpaceDrone();
-          } catch(e) {}
-        },
-
-        startSpaceDrone() {
-          if (!this.ctx || this.isAmbientRunning) return;
-          try {
-            this.isAmbientRunning = true;
-            this.droneOsc1 = this.ctx.createOscillator();
-            this.droneOsc2 = this.ctx.createOscillator();
-            this.filterNode = this.ctx.createBiquadFilter();
-            const droneGain = this.ctx.createGain();
-
-            this.droneOsc1.type = 'sine'; 
-            this.droneOsc1.frequency.setValueAtTime(55, this.ctx.currentTime);
-            this.droneOsc2.type = 'triangle'; 
-            this.droneOsc2.frequency.setValueAtTime(82.41, this.ctx.currentTime);
-            this.filterNode.type = 'lowpass'; 
-            this.filterNode.frequency.setValueAtTime(180, this.ctx.currentTime);
-
-            const lfo = this.ctx.createOscillator();
-            const lfoGain = this.ctx.createGain();
-            lfo.frequency.setValueAtTime(0.18, this.ctx.currentTime);
-            lfoGain.gain.setValueAtTime(65, this.ctx.currentTime);
-            lfo.connect(lfoGain);
-            lfoGain.connect(this.filterNode.frequency);
-
-            droneGain.gain.setValueAtTime(0.14, this.ctx.currentTime);
-            this.droneOsc1.connect(this.filterNode);
-            this.droneOsc2.connect(this.filterNode);
-            this.filterNode.connect(droneGain);
-            droneGain.connect(this.masterGain);
-
-            this.droneOsc1.start(); 
-            this.droneOsc2.start(); 
-            lfo.start();
-          } catch (e) {}
-        },
-
-        shiftDimensionHarmonics(phase) {
-          if (!this.ctx || !this.droneOsc1 || !this.droneOsc2) return;
-          try {
-            const now = this.ctx.currentTime;
-            const baseFreq = phase === -1 ? 49.0 : (phase === 0 ? 55.0 : 65.41);
-            this.droneOsc1.frequency.exponentialRampToValueAtTime(baseFreq, now + 0.4);
-            this.droneOsc2.frequency.exponentialRampToValueAtTime(baseFreq * 1.5, now + 0.4);
-          } catch(e) {}
-        },
-
-        toggleMute() {
-          this.isMuted = !this.isMuted;
-          if (this.masterGain && this.ctx) {
-            try { this.masterGain.gain.setTargetAtTime(this.isMuted ? 0 : 0.25, this.ctx.currentTime, 0.05); } catch(e) {}
-          }
-          return !this.isMuted;
-        },
-
-        playNodePulse(nodeId, phase, isActivating) {
-          if (!this.ctx || this.isMuted) return;
-          try {
-            const now = this.ctx.currentTime;
-            const osc = this.ctx.createOscillator();
-            const gain = this.ctx.createGain();
-            osc.type = phase === -1 ? 'triangle' : (phase === 0 ? 'sine' : 'sawtooth');
-            const baseFreq = 280 + (nodeId % 12) * 38 + (phase + 1) * 85;
-            osc.frequency.setValueAtTime(baseFreq, now);
-            osc.frequency.exponentialRampToValueAtTime(isActivating ? baseFreq * 1.35 : baseFreq * 0.75, now + 0.16);
-            gain.gain.setValueAtTime(0.16, now);
-            gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.18);
-            osc.connect(gain); 
-            gain.connect(this.masterGain);
-            osc.start(now); 
-            osc.stop(now + 0.18);
-          } catch (e) {}
-        },
-
-        playLaserShift() {
-          if (!this.ctx || this.isMuted) return;
-          try {
-            const now = this.ctx.currentTime;
-            const osc = this.ctx.createOscillator();
-            const gain = this.ctx.createGain();
-            osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(880, now);
-            osc.frequency.exponentialRampToValueAtTime(110, now + 0.22);
-            gain.gain.setValueAtTime(0.1, now);
-            gain.gain.linearRampToValueAtTime(0.001, now + 0.22);
-            osc.connect(gain); 
-            gain.connect(this.masterGain);
-            osc.start(now); 
-            osc.stop(now + 0.22);
-          } catch (e) {}
-        },
-
-        playFanfare() {
-          if (!this.ctx || this.isMuted) return;
-          const chord = [523.25, 659.25, 783.99, 1046.50, 1318.51, 1567.98, 2093.00];
-          chord.forEach((freq, idx) => {
-            setTimeout(() => {
-              if (!this.ctx || this.isMuted) return;
-              try {
-                const now = this.ctx.currentTime;
-                const osc = this.ctx.createOscillator();
-                const gain = this.ctx.createGain();
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(freq, now);
-                gain.gain.setValueAtTime(0.2, now);
-                gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.55);
-                osc.connect(gain); 
-                gain.connect(this.masterGain);
-                osc.start(now); 
-                osc.stop(now + 0.55);
-              } catch(e) {}
-            }, idx * 90);
-          });
-        }
-      };
+      let _nodes = [];
+      let _connections = [];
+      let _bursts = [];
 
       const phi = (1 + Math.sqrt(5)) / 2;
       const invPhi = 1 / phi;
@@ -576,7 +301,7 @@
           nextLevel: 'level4',
           ranked: true,
           minMoves: 12,
-          sphereRadius: 0.38,
+          sphereRadius: 0.36,
           maxEdgeDist: 3.8,
           scale: 1.85,
           points: [
@@ -592,7 +317,7 @@
           nextLevel: 'level3',
           ranked: true,
           minMoves: 20,
-          sphereRadius: 0.31,
+          sphereRadius: 0.3,
           maxEdgeDist: 2.6,
           scale: 1.95,
           points: [
@@ -605,708 +330,789 @@
         }
       };
 
-      const QuantumPolyhedronEngine = {
-        player: "AGENT-3000",
-        timePhase: 0,
-        moves: 0,
-        isSolved: false,
-        currentLevelKey: 'level3',
-        toastTimer: null,
-        timerStart: null,
-        elapsedMs: 0,
-        timerInterval: null,
-        nodes: [],
-        connections: [],
-        bursts: [],
-        scene: null,
-        camera: null,
-        renderer: null,
-        polyGroup: null,
-        coreMesh: null,
-        gyroRing1: null,
-        gyroRing2: null,
-        andromedaGroup: null,
-        nodeMeshes: [],
-        laserLines: [],
-        raycaster: null,
-        mouse: null,
-        certCanvasElement: null,
-
-        showToast(msg, duration = 3800) {
-          try {
-            const el = document.getElementById('toast');
-            if (!el) return;
-            el.textContent = msg;
-            el.style.display = 'block';
-            if (this.toastTimer) clearTimeout(this.toastTimer);
-            this.toastTimer = setTimeout(() => { if (el) el.style.display = 'none'; }, duration);
-          } catch(e) {}
+      // Local Leaderboard Engine
+      const Leaderboard = {
+        KEY: "chrono_polyhedron_lb_v1",
+        defaults: [
+          { name: "NEXUS-PRIME", level: "OMEGA 36", timeMs: 38420, moves: 24, code: "8F9A2C1E" },
+          { name: "ANDROMEDA-X", level: "OMEGA 36", timeMs: 49150, moves: 27, code: "3D71E90A" },
+          { name: "QUANTUM-V", level: "OMEGA 36", timeMs: 62800, moves: 31, code: "91B4C82F" },
+          { name: "CYBER-NOVA", level: "OMEGA 36", timeMs: 78340, moves: 35, code: "5A0E7D3B" }
+        ],
+        formatTime(ms) {
+          const totalSec = ms / 1000;
+          const mins = Math.floor(totalSec / 60).toString().padStart(2, '0');
+          const secs = Math.floor(totalSec % 60).toString().padStart(2, '0');
+          const tenths = Math.floor((ms % 1000) / 100);
+          return `${mins}:${secs}.${tenths}`;
         },
-
-        startTimerIfNeeded() {
+        getAll() {
           try {
-            if (this.timerStart === null && !this.isSolved) {
-              this.timerStart = Date.now();
-              this.timerInterval = setInterval(() => {
-                try {
-                  if (this.timerStart !== null && !this.isSolved) {
-                    this.elapsedMs = Date.now() - this.timerStart;
-                    const formatted = CloudLeaderboard.formatTime(this.elapsedMs);
-                    const timerEl = document.getElementById('timer-val');
-                    if (timerEl) timerEl.innerText = formatted;
-                  }
-                } catch(e) {}
-              }, 90);
+            const raw = localStorage.getItem(this.KEY);
+            if (!raw) {
+              localStorage.setItem(this.KEY, JSON.stringify(this.defaults));
+              return [...this.defaults];
             }
-          } catch(e) {}
+            return JSON.parse(raw);
+          } catch (e) {
+            return [...this.defaults];
+          }
         },
-
-        stopTimer() {
+        add(entry) {
           try {
-            if (this.timerInterval) { clearInterval(this.timerInterval); this.timerInterval = null; }
-          } catch(e) {}
+            let list = this.getAll();
+            list.push(entry);
+            list.sort((a, b) => a.timeMs - b.timeMs || a.moves - b.moves);
+            list = list.slice(0, 20);
+            localStorage.setItem(this.KEY, JSON.stringify(list));
+          } catch (e) {}
         },
-
-        init() {
-          try {
-            this.setupThreeJS();
-            this.loadGameMode('level3');
-            this.setupEvents();
-            this.adjustCameraForScreen();
-          } catch(e) {}
-
-          try {
-            if (!localStorage.getItem('chrono_supernova_welcome')) {
-              const modal = document.getElementById('levels-modal');
-              if (modal) modal.style.display = 'flex';
-              localStorage.setItem('chrono_supernova_welcome', '1');
-            }
-          } catch(e) {}
-        },
-
-        loadGameMode(levelKey) {
-          try {
-            this.stopTimer();
-            const cfg = LEVELS_CONFIG[levelKey] || LEVELS_CONFIG.level3;
-            this.currentLevelKey = cfg.id;
-            this.timePhase = 0;
-            this.moves = 0;
-            this.isSolved = false;
-            this.timerStart = null;
-            this.elapsedMs = 0;
-
-            const slider = document.getElementById('time-slider');
-            if (slider) slider.value = 0;
-            const timerEl = document.getElementById('timer-val');
-            if (timerEl) timerEl.innerText = "00:00.0";
-            const badgeEl = document.getElementById('mode-badge');
-            if (badgeEl) badgeEl.innerText = cfg.badge;
-
-            this.nodes = cfg.points.map((pt, idx) => ({
-              id: idx,
-              pos: [pt[0] * cfg.scale, pt[1] * cfg.scale, pt[2] * cfg.scale],
-              phaseColors: [0x00f3ff, 0xff007f, 0xffd700],
-              active: [false, false, false]
-            }));
-
-            this.connections = [];
-            for (let i = 0; i < this.nodes.length; i++) {
-              for (let j = i + 1; j < this.nodes.length; j++) {
-                const dist = Math.hypot(
-                  this.nodes[i].pos[0] - this.nodes[j].pos[0],
-                  this.nodes[i].pos[1] - this.nodes[j].pos[1],
-                  this.nodes[i].pos[2] - this.nodes[j].pos[2]
-                );
-                if (dist <= cfg.maxEdgeDist) this.connections.push([i, j]);
-              }
-            }
-
-            this.rebuildPolyhedronMeshes(cfg);
-            this.updateTimePhaseVisuals();
-            this.updateHUD();
-          } catch(e) {}
-        },
-
-        adjustCameraForScreen() {
-          try {
-            if (!this.camera) return;
-            const isMobile = window.innerWidth <= 768;
-            const dist = isMobile ? 12.2 : 9.8;
-            this.camera.position.set(dist * 0.65, dist * 0.58, dist);
-            this.camera.lookAt(0, 0, 0);
-          } catch(e) {}
-        },
-
-        setupThreeJS() {
-          try {
-            const container = document.getElementById('canvas-container');
-            if (!container) return;
-
-            this.scene = new THREE.Scene();
-            this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-            
-            this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
-            this.renderer.setSize(window.innerWidth, window.innerHeight);
-            this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-            container.appendChild(this.renderer.domElement);
-
-            this.scene.add(new THREE.AmbientLight(0xffffff, 0.55));
-            const p1 = new THREE.PointLight(0x00f3ff, 3.8, 95); p1.position.set(15, 15, 15); this.scene.add(p1);
-            const p2 = new THREE.PointLight(0xff007f, 3.8, 95); p2.position.set(-15, -15, -15); this.scene.add(p2);
-            const p3 = new THREE.PointLight(0xffd700, 2.8, 95); p3.position.set(0, 15, -15); this.scene.add(p3);
-
-            this.createAndromeda3DGalaxy();
-            this.polyGroup = new THREE.Group();
-            this.scene.add(this.polyGroup);
-
-            this.raycaster = new THREE.Raycaster();
-            this.mouse = new THREE.Vector2();
-
-            const animate = () => {
-              requestAnimationFrame(animate);
-              try {
-                const stabFactor = 1 + (this.getTotalStabilization() / 100) * 2.5;
-
-                if (this.coreMesh) {
-                  this.coreMesh.rotation.x += 0.015 * stabFactor;
-                  this.coreMesh.rotation.y += 0.02 * stabFactor;
-                  const s = 1 + Math.sin(Date.now() * 0.005) * (0.2 + (stabFactor - 1) * 0.1);
-                  this.coreMesh.scale.set(s, s, s);
-                }
-                if (this.gyroRing1) {
-                  this.gyroRing1.rotation.x += 0.018 * stabFactor;
-                  this.gyroRing1.rotation.y += 0.012 * stabFactor;
-                }
-                if (this.gyroRing2) {
-                  this.gyroRing2.rotation.y -= 0.022 * stabFactor;
-                  this.gyroRing2.rotation.z += 0.015 * stabFactor;
-                }
-                if (this.andromedaGroup) this.andromedaGroup.rotation.y += 0.0007;
-
-                for (let i = this.bursts.length - 1; i >= 0; i--) {
-                  const b = this.bursts[i];
-                  b.life -= 0.032;
-                  if (b.life <= 0) {
-                    this.polyGroup.remove(b.points);
-                    if (b.points.geometry) b.points.geometry.dispose();
-                    if (b.points.material) b.points.material.dispose();
-                    this.bursts.splice(i, 1);
-                  } else {
-                    const posAttr = b.points.geometry.attributes.position;
-                    for (let j = 0; j < posAttr.count; j++) {
-                      posAttr.setXYZ(
-                        j,
-                        posAttr.getX(j) + b.velocities[j * 3],
-                        posAttr.getY(j) + b.velocities[j * 3 + 1],
-                        posAttr.getZ(j) + b.velocities[j * 3 + 2]
-                      );
-                    }
-                    posAttr.needsUpdate = true;
-                    b.points.material.opacity = b.life;
-                  }
-                }
-
-                if (this.renderer && this.scene && this.camera) {
-                  this.renderer.render(this.scene, this.camera);
-                }
-              } catch(e) {}
-            };
-            animate();
-          } catch(e) {}
-        },
-
-        spawnQuantumBurst(localPos, colorHex, count = 28, speed = 0.07) {
-          try {
-            const geo = new THREE.BufferGeometry();
-            const positions = new Float32Array(count * 3);
-            const velocities = [];
-
-            for (let i = 0; i < count; i++) {
-              positions[i * 3] = localPos[0];
-              positions[i * 3 + 1] = localPos[1];
-              positions[i * 3 + 2] = localPos[2];
-
-              const theta = Math.random() * Math.PI * 2;
-              const phiAngle = Math.acos(2 * Math.random() - 1);
-              const v = (0.4 + Math.random() * 0.8) * speed;
-
-              velocities.push(
-                Math.sin(phiAngle) * Math.cos(theta) * v,
-                Math.sin(phiAngle) * Math.sin(theta) * v,
-                Math.cos(phiAngle) * v
-              );
-            }
-
-            geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-            const mat = new THREE.PointsMaterial({
-              color: colorHex,
-              size: 0.22,
-              transparent: true,
-              opacity: 1,
-              blending: THREE.AdditiveBlending,
-              depthWrite: false
-            });
-
-            const points = new THREE.Points(geo, mat);
-            if (this.polyGroup) this.polyGroup.add(points);
-            this.bursts.push({ points, velocities, life: 1.0 });
-          } catch(e) {}
-        },
-
-        rebuildPolyhedronMeshes(cfg) {
-          try {
-            if (!this.polyGroup) return;
-            while (this.polyGroup.children.length > 0) this.polyGroup.remove(this.polyGroup.children[0]);
-            this.bursts.length = 0;
-
-            const coreGeo = new THREE.IcosahedronGeometry(0.62, 1);
-            const coreMat = new THREE.MeshPhongMaterial({ color: 0xff007f, emissive: 0xff007f, emissiveIntensity: 1.1, wireframe: true });
-            this.coreMesh = new THREE.Mesh(coreGeo, coreMat);
-            this.polyGroup.add(this.coreMesh);
-
-            const ringGeo1 = new THREE.TorusGeometry(1.15, 0.025, 16, 64);
-            const ringMat1 = new THREE.MeshBasicMaterial({ color: 0x00f3ff, transparent: true, opacity: 0.65 });
-            this.gyroRing1 = new THREE.Mesh(ringGeo1, ringMat1);
-            this.polyGroup.add(this.gyroRing1);
-
-            const ringGeo2 = new THREE.TorusGeometry(1.42, 0.02, 16, 64);
-            const ringMat2 = new THREE.MeshBasicMaterial({ color: 0xffd700, transparent: true, opacity: 0.5 });
-            this.gyroRing2 = new THREE.Mesh(ringGeo2, ringMat2);
-            this.polyGroup.add(this.gyroRing2);
-
-            this.nodeMeshes = [];
-            const sphereGeo = new THREE.SphereGeometry(cfg.sphereRadius, 32, 32);
-
-            this.nodes.forEach(node => {
-              const mat = new THREE.MeshPhongMaterial({
-                color: node.phaseColors[1], emissive: node.phaseColors[1], emissiveIntensity: 0.4, shininess: 150, wireframe: true
-              });
-              const mesh = new THREE.Mesh(sphereGeo, mat);
-              mesh.position.set(...node.pos);
-              mesh.userData = { id: node.id };
-              this.polyGroup.add(mesh);
-              this.nodeMeshes.push(mesh);
-            });
-
-            this.laserLines = [];
-            this.connections.forEach(conn => {
-              const posA = new THREE.Vector3(...this.nodes[conn[0]].pos);
-              const posB = new THREE.Vector3(...this.nodes[conn[1]].pos);
-              const geo = new THREE.BufferGeometry().setFromPoints([posA, posB]);
-              const mat = new THREE.LineBasicMaterial({ color: 0x1a2638, transparent: true, opacity: 0.45, linewidth: 2 });
-              const line = new THREE.Line(geo, mat);
-              this.polyGroup.add(line);
-              this.laserLines.push({ line, nodes: conn });
-            });
-          } catch(e) {}
-        },
-
-        createAndromeda3DGalaxy() {
-          try {
-            this.andromedaGroup = new THREE.Group();
-            const galaxyStars = 1500;
-            const gGeo = new THREE.BufferGeometry();
-            const gPos = new Float32Array(galaxyStars * 3);
-            const gColors = new Float32Array(galaxyStars * 3);
-
-            const coreColor = new THREE.Color(0xffe6a3);
-            const armColorOuter = new THREE.Color(0x00d4ff);
-            const radius = 25;
-
-            for (let i = 0; i < galaxyStars; i++) {
-              const i3 = i * 3;
-              const r = Math.random() * radius;
-              const angle = i * 0.5;
-
-              gPos[i3] = Math.cos(angle) * r;
-              gPos[i3 + 1] = (Math.random() - 0.5) * 2;
-              gPos[i3 + 2] = Math.sin(angle) * r;
-
-              gColors[i3] = coreColor.r; 
-              gColors[i3 + 1] = coreColor.g; 
-              gColors[i3 + 2] = coreColor.b;
-            }
-
-            gGeo.setAttribute('position', new THREE.BufferAttribute(gPos, 3));
-            gGeo.setAttribute('color', new THREE.BufferAttribute(gColors, 3));
-
-            const gMat = new THREE.PointsMaterial({
-              size: 0.25, vertexColors: true, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending
-            });
-            this.andromedaGroup.add(new THREE.Points(gGeo, gMat));
-            this.andromedaGroup.position.set(0, 0, -20);
-            this.scene.add(this.andromedaGroup);
-          } catch(e) {}
-        },
-
-        setupEvents() {
-          try {
-            window.addEventListener('resize', () => {
-              if (!this.camera || !this.renderer) return;
-              this.camera.aspect = window.innerWidth / window.innerHeight;
-              this.camera.updateProjectionMatrix();
-              this.renderer.setSize(window.innerWidth, window.innerHeight);
-              this.adjustCameraForScreen();
-            });
-
-            const nameInput = document.getElementById('player-name-input');
-            if (nameInput) {
-              nameInput.addEventListener('input', (e) => {
-                const raw = e.target.value;
-                const clean = raw.replace(/[^a-zA-Z0-9\-_ áäčďéíĺľňóôŕšťúýžÁÄČĎÉÍĹĽŇÓÔŔŠŤÚÝŽ]/g, '').trim();
-                this.player = clean || "AGENT-3000";
-              });
-            }
-
-            const sliderEl = document.getElementById('time-slider');
-            if (sliderEl) {
-              sliderEl.addEventListener('input', (e) => {
-                const parsed = parseInt(e.target.value, 10);
-                if (![-1, 0, 1].includes(parsed)) return;
-                this.timePhase = parsed;
-                SoundscapeEngine.init();
-                SoundscapeEngine.playLaserShift();
-                SoundscapeEngine.shiftDimensionHarmonics(this.timePhase);
-                this.updateTimePhaseVisuals();
-                this.updateHUD();
-              });
-            }
-
-            const soundBtn = document.getElementById('audio-toggle-btn');
-            if (soundBtn) {
-              soundBtn.addEventListener('click', () => {
-                SoundscapeEngine.init();
-                const isOn = SoundscapeEngine.toggleMute();
-                soundBtn.innerText = isOn ? '🔊 Zvuk' : '🔇 Ticho';
-                this.showToast(isOn ? "Vesmírny syntetizátor aktivovaný." : "Zvuk stlmený.");
-              });
-            }
-
-            const camBtn = document.getElementById('reset-cam-btn');
-            if (camBtn) {
-              camBtn.addEventListener('click', (e) => {
-                if (!e.isTrusted) return;
-                SoundscapeEngine.init();
-                this.adjustCameraForScreen();
-                if (this.polyGroup) this.polyGroup.rotation.set(0, 0, 0);
-              });
-            }
-
-            const lvlBtn = document.getElementById('levels-btn');
-            if (lvlBtn) {
-              lvlBtn.addEventListener('click', () => {
-                const modal = document.getElementById('levels-modal');
-                if (modal) modal.style.display = 'flex';
-              });
-            }
-
-            const closeLvlBtn = document.getElementById('close-levels-btn');
-            if (closeLvlBtn) {
-              closeLvlBtn.addEventListener('click', () => {
-                const modal = document.getElementById('levels-modal');
-                if (modal) modal.style.display = 'none';
-              });
-            }
-
-            document.querySelectorAll('.level-card').forEach(card => {
-              card.addEventListener('click', () => {
-                SoundscapeEngine.init();
-                const lvl = card.getAttribute('data-level');
-                const modal = document.getElementById('levels-modal');
-                if (modal) modal.style.display = 'none';
-                this.loadGameMode(lvl);
-                this.showToast(`Načítaný ${LEVELS_CONFIG[lvl].badge}! Čas beží prvým kliknutím.`);
-              });
-            });
-
-            const lbBtn = document.getElementById('leaderboard-btn');
-            if (lbBtn) {
-              lbBtn.addEventListener('click', () => {
-                const modal = document.getElementById('leaderboard-modal');
-                if (modal) modal.style.display = 'flex';
-                CloudLeaderboard.renderTable();
-              });
-            }
-
-            const closeLbBtn = document.getElementById('close-lb-btn');
-            if (closeLbBtn) {
-              closeLbBtn.addEventListener('click', () => {
-                const modal = document.getElementById('leaderboard-modal');
-                if (modal) modal.style.display = 'none';
-              });
-            }
-
-            const chalBtn = document.getElementById('challenge-btn');
-            if (chalBtn) {
-              chalBtn.addEventListener('click', (e) => {
-                if (!e.isTrusted) return;
-                SoundscapeEngine.init();
-                const cfg = LEVELS_CONFIG[this.currentLevelKey];
-                const totalStab = this.getTotalStabilization();
-                const timeFormatted = CloudLeaderboard.formatTime(this.elapsedMs);
-                const shareText = `🌌 Riešim 3D kvantový polyéder CHRONO-POLYHEDRON 3000 (${cfg.shortName}) v galaxii Andromeda!\n👤 Agent: ${this.player} | Čas: ${timeFormatted} | Stabilizácia: ${totalStab}% | Ťahy: ${this.moves}\nTrúfneš si prekonať túto vesmírnu výzvu? 👉 ${window.location.href}`;
-                try {
-                  if (navigator.clipboard) navigator.clipboard.writeText(shareText);
-                } catch(e) {}
-                this.showToast("Virálna výzva skopírovaná do schránky!");
-              });
-            }
-
-            const rageBtn = document.getElementById('rage-btn');
-            if (rageBtn) {
-              rageBtn.addEventListener('click', (e) => {
-                if (!e.isTrusted) return;
-                this.loadGameMode(this.currentLevelKey);
-                this.showToast(`Hra reštartovaná (${LEVELS_CONFIG[this.currentLevelKey].shortName}). Veľa šťastia, ${this.player}!`);
-              });
-            }
-
-            const closeCertBtn = document.getElementById('close-cert-btn');
-            if (closeCertBtn) {
-              closeCertBtn.addEventListener('click', () => {
-                const modal = document.getElementById('cert-modal');
-                if (modal) modal.style.display = 'none';
-              });
-            }
-
-            const nextCertBtn = document.getElementById('next-level-cert-btn');
-            if (nextCertBtn) {
-              nextCertBtn.addEventListener('click', () => {
-                const modal = document.getElementById('cert-modal');
-                if (modal) modal.style.display = 'none';
-                const nextKey = LEVELS_CONFIG[this.currentLevelKey].nextLevel;
-                this.loadGameMode(nextKey);
-                this.showToast(`Štartuje ďalšia úroveň: ${LEVELS_CONFIG[nextKey].badge}! 🚀`);
-              });
-            }
-
-            const downCertBtn = document.getElementById('download-cert-btn');
-            if (downCertBtn) {
-              downCertBtn.addEventListener('click', () => {
-                this.downloadCertificate();
-              });
-            }
-
-            if (!this.renderer) return;
-            const dom = this.renderer.domElement;
-            let isInteracting = false, prevX = 0, prevY = 0, startX = 0, startY = 0;
-
-            const handleStart = (x, y) => {
-              SoundscapeEngine.init();
-              isInteracting = true; prevX = x; prevY = y; startX = x; startY = y;
-            };
-            const handleMove = (x, y) => {
-              if (!isInteracting || !this.polyGroup) return;
-              this.polyGroup.rotation.y += (x - prevX) * 0.0085;
-              this.polyGroup.rotation.x += (y - prevY) * 0.0085;
-              prevX = x; prevY = y;
-            };
-            const handleEnd = (x, y) => {
-              if (!isInteracting) return;
-              isInteracting = false;
-              if (Math.hypot(x - startX, y - startY) < 10) {
-                this.mouse.x = (startX / window.innerWidth) * 2 - 1;
-                this.mouse.y = -(startY / window.innerHeight) * 2 + 1;
-                this.raycaster.setFromCamera(this.mouse, this.camera);
-                const intersects = this.raycaster.intersectObjects(this.nodeMeshes || []);
-                if (intersects.length > 0) this.handleNodeClick(intersects[0].object.userData.id);
-              }
-            };
-
-            dom.addEventListener('mousedown', (e) => { if (e.isTrusted) handleStart(e.clientX, e.clientY); });
-            window.addEventListener('mousemove', (e) => handleMove(e.clientX, e.clientY));
-            window.addEventListener('mouseup', (e) => handleEnd(e.clientX, e.clientY));
-            dom.addEventListener('touchstart', (e) => { if (e.isTrusted && e.touches.length === 1) handleStart(e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
-            window.addEventListener('touchmove', (e) => { if (e.touches.length === 1) handleMove(e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
-            window.addEventListener('touchend', (e) => { if (e.changedTouches.length === 1) handleEnd(e.changedTouches[0].clientX, e.changedTouches[0].clientY); });
-          } catch(e) {}
-        },
-
-        handleNodeClick(id) {
-          try {
-            if (this.isSolved) return;
-            if (typeof id !== 'number' || id < 0 || id >= this.nodes.length) return;
-
-            this.startTimerIfNeeded();
-            const pIdx = this.timePhase + 1;
-            const node = this.nodes[id];
-            node.active[pIdx] = !node.active[pIdx];
-            this.moves++;
-
-            SoundscapeEngine.playNodePulse(id, this.timePhase, node.active[pIdx]);
-            this.spawnQuantumBurst(node.pos, node.phaseColors[pIdx], 26, 0.065);
-
-            if (pIdx === 0 && node.active[0]) {
-              node.active[1] = !node.active[1];
-            }
-            if (this.currentLevelKey === 'level4' && pIdx === 1 && node.active[1]) {
-              node.active[2] = !node.active[2];
-            }
-
-            this.updateTimePhaseVisuals();
-            this.checkWinCondition();
-            this.updateHUD();
-          } catch(e) {}
-        },
-
-        updateTimePhaseVisuals() {
-          try {
-            if (!this.nodeMeshes || !this.laserLines) return;
-            const pIdx = this.timePhase + 1;
-            this.nodeMeshes.forEach((mesh, idx) => {
-              const isActive = this.nodes[idx].active[pIdx];
-              const activeColor = this.nodes[idx].phaseColors[pIdx];
-              mesh.material.color.setHex(isActive ? activeColor : 0x223344);
-              mesh.material.emissive.setHex(isActive ? activeColor : 0x000000);
-              mesh.material.emissiveIntensity = isActive ? 0.9 : 0;
-              mesh.material.wireframe = !isActive;
-              mesh.scale.setScalar(isActive ? 1.15 : 1.0);
-            });
-
-            this.laserLines.forEach(item => {
-              const [a, b] = item.nodes;
-              if (this.nodes[a].active[pIdx] && this.nodes[b].active[pIdx]) {
-                item.line.material.color.setHex(this.nodes[a].phaseColors[pIdx]);
-                item.line.material.opacity = 0.98;
-              } else {
-                item.line.material.color.setHex(0x1a2638);
-                item.line.material.opacity = 0.28;
-              }
-            });
-          } catch(e) {}
-        },
-
-        getTotalStabilization() {
-          try {
-            if (this.nodes.length === 0) return 0;
-            let totalActive = 0;
-            this.nodes.forEach(n => { if (n.active[0]) totalActive++; if (n.active[1]) totalActive++; if (n.active[2]) totalActive++; });
-            return Math.round((totalActive / (this.nodes.length * 3)) * 100);
-          } catch(e) { return 0; }
-        },
-
-        checkWinCondition() {
-          try {
-            if (this.getTotalStabilization() === 100 && !this.isSolved) {
-              const cfg = LEVELS_CONFIG[this.currentLevelKey];
-              if (this.moves < cfg.minMoves) return;
-
-              this.isSolved = true;
-              this.stopTimer();
-              SoundscapeEngine.playFanfare();
-              this.spawnQuantumBurst([0, 0, 0], 0ffd700, 140, 0.14);
-              this.spawnQuantumBurst([0, 0, 0], 0x00f3ff, 100, 0.11);
-
-              const finalTime = Math.floor(this.elapsedMs);
-              const randCode = "CHRONO-" + Math.random().toString(16).substring(2, 6).toUpperCase();
-
-              if (cfg.ranked) {
-                const subEl = document.getElementById('cert-subtitle');
-                if (subEl) subEl.innerText = `Mriežka ${cfg.shortName} stabilizovaná! Skóre bolo uložené do rebríčka.`;
-                CloudLeaderboard.submitScore({
-                  name: this.player,
-                  level: cfg.shortName,
-                  timeMs: finalTime,
-                  moves: this.moves,
-                  code: randCode
-                });
-              } else {
-                const subEl = document.getElementById('cert-subtitle');
-                if (subEl) subEl.innerText = `Tréningový stupeň ${cfg.shortName} dokončený! Odomkni Lvl 3 OMEGA pre rebríček.`;
-              }
-
-              setTimeout(() => this.triggerVictory(randCode, finalTime, cfg), 500);
-            }
-          } catch(e) {}
-        },
-
-        updateHUD() {
-          try {
-            const phasesFull = ["t-1 (Minulosť)", "t0 (Prítomnosť)", "t+1 (Budúcnosť)"];
-            const phaseEl = document.getElementById('phase-val');
-            if (phaseEl) phaseEl.innerText = phasesFull[this.timePhase + 1];
-
-            const totalPercent = this.getTotalStabilization();
-            const stabEl = document.getElementById('stab-val');
-            if (stabEl) stabEl.innerText = `${totalPercent}%`;
-
-            const resonanceFactor = (1.0 + (totalPercent / 100) * 3.8 + (this.moves * 0.05)).toFixed(1);
-            const resEl = document.getElementById('resonance-val');
-            if (resEl) resEl.innerText = `SYNAPSE ${resonanceFactor}x`;
-
-            const strain = Math.min(100, Math.max(15, this.moves * 2.5));
-            const iqVal = 185 - Math.floor(strain / 4);
-            const movesEl = document.getElementById('moves-val');
-            if (movesEl) movesEl.innerHTML = `${this.moves} <span style="color:#8a99ad;">(IQ ${iqVal})</span>`;
-          } catch(e) {}
-        },
-
-        triggerVictory(code, finalTime, cfg) {
-          try {
-            const modal = document.getElementById('cert-modal');
-            if (modal) modal.style.display = 'flex';
-            this.build3DCertificate(code, finalTime, cfg);
-          } catch(e) {}
-        },
-
-        build3DCertificate(code, finalTime, cfg) {
-          try {
-            const container = document.getElementById('cert-canvas-container');
-            if (!container) return;
-            container.innerHTML = '';
-
-            const canvas = document.createElement('canvas');
-            canvas.width = 2048; 
-            canvas.height = 1280;
-            const ctx = canvas.getContext('2d');
-
-            ctx.fillStyle = '#050812'; 
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
-            ctx.strokeStyle = cfg.id === 'level4' ? '#ff007f' : '#ffd700';
-            ctx.lineWidth = 20; 
-            ctx.strokeRect(40, 40, canvas.width - 80, canvas.height - 80);
-
-            ctx.fillStyle = '#ffd700'; ctx.font = 'bold 64px sans-serif'; ctx.textAlign = 'center';
-            ctx.fillText(`ANDROMEDA ${cfg.shortName} MASTER`, canvas.width / 2, 180);
-
-            ctx.fillStyle = '#00f3ff'; ctx.font = '42px sans-serif';
-            ctx.fillText('KRYPTOGRAFICKÝ CERTIFIKÁT ÚSPECHU', canvas.width / 2, 270);
-
-            ctx.fillStyle = '#ffffff'; ctx.font = 'bold 84px sans-serif';
-            ctx.fillText(this.player, canvas.width / 2, 480);
-
-            ctx.fillStyle = '#a0aec0'; ctx.font = '38px sans-serif';
-            ctx.fillText(`Úspešne stabilizoval všetky kvantové uzly (${this.nodes.length * 3})`, canvas.width / 2, 630);
-            ctx.fillText(`Speedrun čas: ${CloudLeaderboard.formatTime(finalTime)}  •  Počet ťahov: ${this.moves}`, canvas.width / 2, 720);
-
-            ctx.fillStyle = '#00ff88'; ctx.font = '32px monospace';
-            ctx.fillText(`PROOF CODE: ${code}`, canvas.width / 2, 920);
-
-            canvas.style.width = '100%';
-            canvas.style.height = '100%';
-            canvas.style.objectFit = 'contain';
-            container.appendChild(canvas);
-
-            this.certCanvasElement = canvas;
-          } catch(e) {}
-        },
-
-        downloadCertificate() {
-          try {
-            if (!this.certCanvasElement) return;
-            const dataURL = this.certCanvasElement.toDataURL('image/png');
-            const link = document.createElement('a');
-            link.download = `ChronoPolyhedron_${LEVELS_CONFIG[this.currentLevelKey].shortName}_${this.player}.png`;
-            link.href = dataURL;
-            link.click();
-          } catch(e) {}
+        render() {
+          const tbody = document.getElementById('leaderboard-body');
+          tbody.innerHTML = '';
+          const scores = this.getAll();
+          scores.forEach((row, idx) => {
+            const tr = document.createElement('tr');
+            if (idx === 0) tr.className = 'lb-rank-1';
+            tr.innerHTML = `
+              <td>${idx + 1}.</td>
+              <td>${row.name}</td>
+              <td style="color:var(--primary); font-size:0.65rem;">${row.level}</td>
+              <td>${this.formatTime(row.timeMs)}</td>
+              <td>${row.moves}</td>
+              <td class="lb-hash">${row.code}</td>
+            `;
+            tbody.appendChild(tr);
+          });
         }
       };
 
-      window.addEventListener('DOMContentLoaded', () => {
-        QuantumPolyhedronEngine.init();
-      });
-    </script>
+      // Web Audio API Synthesizer + Ambient Drone
+      const AudioEngine = {
+        ctx: null,
+        isMuted: false,
+        droneStarted: false,
+        droneOsc1: null,
+        droneOsc2: null,
+        masterGain: null,
+
+        init() {
+          try {
+            if (!this.ctx) {
+              this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+              this.masterGain = this.ctx.createGain();
+              this.masterGain.gain.setValueAtTime(this.isMuted ? 0 : 0.25, this.ctx.currentTime);
+              this.masterGain.connect(this.ctx.destination);
+            }
+            if (this.ctx.state === 'suspended') this.ctx.resume();
+            if (!this.droneStarted) this.startDrone();
+          } catch (e) {}
+        },
+
+        startDrone() {
+          if (!this.ctx || this.droneStarted) return;
+          try {
+            this.droneStarted = true;
+            this.droneOsc1 = this.ctx.createOscillator();
+            this.droneOsc2 = this.ctx.createOscillator();
+            const filter = this.ctx.createBiquadFilter();
+            const droneGain = this.ctx.createGain();
+
+            this.droneOsc1.type = 'sine';
+            this.droneOsc1.frequency.setValueAtTime(55, this.ctx.currentTime);
+            this.droneOsc2.type = 'triangle';
+            this.droneOsc2.frequency.setValueAtTime(82.41, this.ctx.currentTime);
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(175, this.ctx.currentTime);
+            droneGain.gain.setValueAtTime(0.14, this.ctx.currentTime);
+
+            this.droneOsc1.connect(filter);
+            this.droneOsc2.connect(filter);
+            filter.connect(droneGain);
+            droneGain.connect(this.masterGain);
+
+            this.droneOsc1.start();
+            this.droneOsc2.start();
+          } catch (e) {}
+        },
+
+        shiftHarmonics(phase) {
+          if (!this.ctx || !this.droneOsc1 || !this.droneOsc2) return;
+          try {
+            const baseFreq = phase === -1 ? 49.0 : (phase === 0 ? 55.0 : 65.41);
+            this.droneOsc1.frequency.exponentialRampToValueAtTime(baseFreq, this.ctx.currentTime + 0.35);
+            this.droneOsc2.frequency.exponentialRampToValueAtTime(baseFreq * 1.5, this.ctx.currentTime + 0.35);
+          } catch (e) {}
+        },
+
+        toggleMute() {
+          this.isMuted = !this.isMuted;
+          if (this.masterGain && this.ctx) {
+            this.masterGain.gain.setTargetAtTime(this.isMuted ? 0 : 0.25, this.ctx.currentTime, 0.05);
+          }
+          return !this.isMuted;
+        },
+
+        playBeep(freq = 440, duration = 0.12, type = 'sine') {
+          if (!this.ctx || this.isMuted) return;
+          try {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.frequency.value = freq;
+            osc.type = type;
+            gain.gain.setValueAtTime(0.16, this.ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + duration);
+            osc.connect(gain);
+            gain.connect(this.masterGain);
+            osc.start();
+            osc.stop(this.ctx.currentTime + duration);
+          } catch (e) {}
+        },
+
+        playFanfare() {
+          if (!this.ctx || this.isMuted) return;
+          const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51, 1567.98];
+          notes.forEach((n, i) => {
+            setTimeout(() => this.playBeep(n, 0.35, 'triangle'), i * 110);
+          });
+        }
+      };
+
+      function showToast(msg, duration = 3400) {
+        const el = document.getElementById('toast');
+        if (!el) return;
+        el.textContent = msg;
+        el.style.display = 'block';
+        if (_toastTimer) clearTimeout(_toastTimer);
+        _toastTimer = setTimeout(() => { el.style.display = 'none'; }, duration);
+      }
+
+      function startTimerIfNeeded() {
+        if (_timerStart === null && !_isSolved) {
+          _timerStart = Date.now();
+          _timerInterval = setInterval(() => {
+            if (_timerStart !== null && !_isSolved) {
+              _elapsedMs = Date.now() - _timerStart;
+              document.getElementById('timer-val').innerText = Leaderboard.formatTime(_elapsedMs);
+            }
+          }, 90);
+        }
+      }
+
+      function stopTimer() {
+        if (_timerInterval) {
+          clearInterval(_timerInterval);
+          _timerInterval = null;
+        }
+      }
+
+      return {
+        init() {
+          this.setupThreeJS();
+          this.loadLevel('level3');
+          this.setupEvents();
+          this.adjustCamera();
+        },
+
+        adjustCamera() {
+          const isMobile = window.innerWidth <= 768;
+          const dist = isMobile ? 11.5 : 9.2;
+          this.camera.position.set(dist * 0.65, dist * 0.6, dist);
+          this.camera.lookAt(0, 0, 0);
+        },
+
+        loadLevel(levelKey) {
+          stopTimer();
+          const cfg = LEVELS_CONFIG[levelKey] || LEVELS_CONFIG.level3;
+          _currentLevelKey = cfg.id;
+          _timePhase = 0;
+          _moves = 0;
+          _isSolved = false;
+          _timerStart = null;
+          _elapsedMs = 0;
+
+          document.getElementById('time-slider').value = 0;
+          document.getElementById('timer-val').innerText = "00:00.0";
+          document.getElementById('mode-badge').innerText = cfg.badge;
+
+          const paletteSets = [
+            [0x00f3ff, 0xff007f, 0xffd700],
+            [0xff007f, 0x00f3ff, 0xffd700],
+            [0xffd700, 0xff007f, 0x00f3ff]
+          ];
+
+          _nodes = cfg.points.map((pt, idx) => ({
+            id: idx,
+            pos: [pt[0] * cfg.scale, pt[1] * cfg.scale, pt[2] * cfg.scale],
+            phaseColors: paletteSets[idx % paletteSets.length],
+            active: [false, false, false]
+          }));
+
+          _connections = [];
+          for (let i = 0; i < _nodes.length; i++) {
+            for (let j = i + 1; j < _nodes.length; j++) {
+              const dist = Math.hypot(
+                _nodes[i].pos[0] - _nodes[j].pos[0],
+                _nodes[i].pos[1] - _nodes[j].pos[1],
+                _nodes[i].pos[2] - _nodes[j].pos[2]
+              );
+              if (dist <= cfg.maxEdgeDist) _connections.push([i, j]);
+            }
+          }
+
+          this.rebuildPolyhedron(cfg);
+          this.updateTimePhaseVisuals();
+          this.updateHUD();
+        },
+
+        rebuildPolyhedron(cfg) {
+          while (this.cubeGroup.children.length > 0) {
+            this.cubeGroup.remove(this.cubeGroup.children[0]);
+          }
+          _bursts.length = 0;
+
+          // Central Quantum Core & Gyro Rings
+          const coreGeo = new THREE.IcosahedronGeometry(0.58, 1);
+          const coreMat = new THREE.MeshPhongMaterial({ color: 0xff007f, emissive: 0xff007f, emissiveIntensity: 0.9, wireframe: true });
+          this.coreMesh = new THREE.Mesh(coreGeo, coreMat);
+          this.cubeGroup.add(this.coreMesh);
+
+          const ring1Geo = new THREE.TorusGeometry(1.1, 0.022, 16, 64);
+          const ring1Mat = new THREE.MeshBasicMaterial({ color: 0x00f3ff, transparent: true, opacity: 0.6 });
+          this.gyroRing1 = new THREE.Mesh(ring1Geo, ring1Mat);
+          this.cubeGroup.add(this.gyroRing1);
+
+          const ring2Geo = new THREE.TorusGeometry(1.38, 0.018, 16, 64);
+          const ring2Mat = new THREE.MeshBasicMaterial({ color: 0xffd700, transparent: true, opacity: 0.45 });
+          this.gyroRing2 = new THREE.Mesh(ring2Geo, ring2Mat);
+          this.cubeGroup.add(this.gyroRing2);
+
+          // Build Nodes
+          this.nodeMeshes = [];
+          const sphereGeo = new THREE.SphereGeometry(cfg.sphereRadius, 32, 32);
+
+          _nodes.forEach(node => {
+            const mat = new THREE.MeshPhongMaterial({
+              color: node.phaseColors[1],
+              emissive: node.phaseColors[1],
+              emissiveIntensity: 0.35,
+              shininess: 120,
+              wireframe: true
+            });
+            const mesh = new THREE.Mesh(sphereGeo, mat);
+            mesh.position.set(...node.pos);
+            mesh.userData = { id: node.id };
+            this.cubeGroup.add(mesh);
+            this.nodeMeshes.push(mesh);
+          });
+
+          // Build Connection Lasers
+          this.laserLines = [];
+          _connections.forEach(conn => {
+            const posA = new THREE.Vector3(..._nodes[conn[0]].pos);
+            const posB = new THREE.Vector3(..._nodes[conn[1]].pos);
+            const geo = new THREE.BufferGeometry().setFromPoints([posA, posB]);
+            const mat = new THREE.LineBasicMaterial({ color: 0x1a2638, transparent: true, opacity: 0.4 });
+            const line = new THREE.Line(geo, mat);
+            this.cubeGroup.add(line);
+            this.laserLines.push({ line, nodes: conn });
+          });
+        },
+
+        spawnQuantumBurst(localPos, colorHex, count = 24, speed = 0.065) {
+          const geo = new THREE.BufferGeometry();
+          const positions = new Float32Array(count * 3);
+          const velocities = [];
+
+          for (let i = 0; i < count; i++) {
+            positions[i * 3] = localPos[0];
+            positions[i * 3 + 1] = localPos[1];
+            positions[i * 3 + 2] = localPos[2];
+
+            const theta = Math.random() * Math.PI * 2;
+            const phiAngle = Math.acos(2 * Math.random() - 1);
+            const v = (0.4 + Math.random() * 0.8) * speed;
+
+            velocities.push(
+              Math.sin(phiAngle) * Math.cos(theta) * v,
+              Math.sin(phiAngle) * Math.sin(theta) * v,
+              Math.cos(phiAngle) * v
+            );
+          }
+
+          geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+          const mat = new THREE.PointsMaterial({
+            color: colorHex,
+            size: 0.2,
+            transparent: true,
+            opacity: 1,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
+          });
+
+          const points = new THREE.Points(geo, mat);
+          this.cubeGroup.add(points);
+          _bursts.push({ points, velocities, life: 1.0 });
+        },
+
+        setupThreeJS() {
+          const container = document.getElementById('canvas-container');
+          this.scene = new THREE.Scene();
+          this.scene.fog = new THREE.FogExp2(0x030712, 0.025);
+
+          this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+          this.camera.position.set(6, 6, 9);
+          this.camera.lookAt(0, 0, 0);
+
+          this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
+          this.renderer.setSize(window.innerWidth, window.innerHeight);
+          this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+          container.appendChild(this.renderer.domElement);
+
+          // Lights
+          this.scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+          const p1 = new THREE.PointLight(0x00f3ff, 2.2, 60); p1.position.set(12, 12, 12); this.scene.add(p1);
+          const p2 = new THREE.PointLight(0xff007f, 2.0, 60); p2.position.set(-12, -12, -12); this.scene.add(p2);
+          const p3 = new THREE.PointLight(0xffd700, 1.8, 60); p3.position.set(0, 12, -12); this.scene.add(p3);
+
+          // Group for Polyhedron
+          this.cubeGroup = new THREE.Group();
+          this.scene.add(this.cubeGroup);
+
+          // Andromeda Background Starfield
+          const partGeo = new THREE.BufferGeometry();
+          const partCount = 1200;
+          const posArray = new Float32Array(partCount * 3);
+          const colArray = new Float32Array(partCount * 3);
+          const c1 = new THREE.Color(0x00f3ff);
+          const c2 = new THREE.Color(0xffd700);
+          const c3 = new THREE.Color(0xb565ff);
+
+          for (let i = 0; i < partCount; i++) {
+            const i3 = i * 3;
+            posArray[i3] = (Math.random() - 0.5) * 42;
+            posArray[i3 + 1] = (Math.random() - 0.5) * 42;
+            posArray[i3 + 2] = (Math.random() - 0.5) * 42;
+            const c = i % 3 === 0 ? c1 : (i % 3 === 1 ? c2 : c3);
+            colArray[i3] = c.r; colArray[i3 + 1] = c.g; colArray[i3 + 2] = c.b;
+          }
+          partGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+          partGeo.setAttribute('color', new THREE.BufferAttribute(colArray, 3));
+          const partMat = new THREE.PointsMaterial({ size: 0.14, vertexColors: true, transparent: true, opacity: 0.65 });
+          this.particles = new THREE.Points(partGeo, partMat);
+          this.scene.add(this.particles);
+
+          // Interaction Setup
+          this.raycaster = new THREE.Raycaster();
+          this.mouse = new THREE.Vector2();
+          this.isDragging = false;
+          this.previousMousePosition = { x: 0, y: 0 };
+          this.dragStartPos = { x: 0, y: 0 };
+
+          // Animation Loop
+          const animate = () => {
+            requestAnimationFrame(animate);
+
+            const stabBoost = 1 + (this.getTotalStabilization() / 100) * 2.2;
+            if (this.coreMesh) {
+              this.coreMesh.rotation.x += 0.014 * stabBoost;
+              this.coreMesh.rotation.y += 0.019 * stabBoost;
+              const pulse = 1 + Math.sin(Date.now() * 0.005) * 0.16;
+              this.coreMesh.scale.set(pulse, pulse, pulse);
+            }
+            if (this.gyroRing1) {
+              this.gyroRing1.rotation.x += 0.016 * stabBoost;
+              this.gyroRing1.rotation.y += 0.011 * stabBoost;
+            }
+            if (this.gyroRing2) {
+              this.gyroRing2.rotation.y -= 0.02 * stabBoost;
+              this.gyroRing2.rotation.z += 0.014 * stabBoost;
+            }
+            if (this.particles) this.particles.rotation.y += 0.0006;
+
+            for (let i = _bursts.length - 1; i >= 0; i--) {
+              const b = _bursts[i];
+              b.life -= 0.032;
+              if (b.life <= 0) {
+                this.cubeGroup.remove(b.points);
+                b.points.geometry.dispose();
+                b.points.material.dispose();
+                _bursts.splice(i, 1);
+              } else {
+                const posAttr = b.points.geometry.attributes.position;
+                for (let j = 0; j < posAttr.count; j++) {
+                  posAttr.setXYZ(
+                    j,
+                    posAttr.getX(j) + b.velocities[j * 3],
+                    posAttr.getY(j) + b.velocities[j * 3 + 1],
+                    posAttr.getZ(j) + b.velocities[j * 3 + 2]
+                  );
+                }
+                posAttr.needsUpdate = true;
+                b.points.material.opacity = b.life;
+              }
+            }
+
+            this.renderer.render(this.scene, this.camera);
+          };
+          animate();
+        },
+
+        setupEvents() {
+          window.addEventListener('resize', () => {
+            this.camera.aspect = window.innerWidth / window.innerHeight;
+            this.camera.updateProjectionMatrix();
+            this.renderer.setSize(window.innerWidth, window.innerHeight);
+            this.adjustCamera();
+          });
+
+          // Player Name Input
+          document.getElementById('player-name').addEventListener('input', (e) => {
+            const clean = e.target.value.replace(/[^a-zA-Z0-9\-_ áäčďéíĺľňóôŕšťúýžÁÄČĎÉÍĹĽŇÓÔŔŠŤÚÝŽ]/g, '').trim();
+            _player = clean || "AGENT-3000";
+          });
+
+          // Time Phase Slider
+          document.getElementById('time-slider').addEventListener('input', (e) => {
+            _timePhase = parseInt(e.target.value, 10);
+            AudioEngine.init();
+            AudioEngine.playBeep(300 + (_timePhase + 1) * 200, 0.09, 'sawtooth');
+            AudioEngine.shiftHarmonics(_timePhase);
+            this.updateTimePhaseVisuals();
+            this.updateHUD();
+          });
+
+          // Audio Toggle
+          document.getElementById('audio-toggle-btn').addEventListener('click', (e) => {
+            AudioEngine.init();
+            const active = AudioEngine.toggleMute();
+            e.target.innerText = active ? '🔊 Zvuk' : '🔇 Ticho';
+            showToast(active ? "Vesmírny syntetizátor aktivovaný." : "Zvuk stlmený.");
+          });
+
+          // Camera Reset
+          document.getElementById('reset-cam-btn').addEventListener('click', () => {
+            AudioEngine.init();
+            this.adjustCamera();
+            this.cubeGroup.rotation.set(0, 0, 0);
+          });
+
+          // Levels Modal
+          document.getElementById('levels-btn').addEventListener('click', () => {
+            document.getElementById('levels-modal').style.display = 'flex';
+          });
+          document.getElementById('close-levels-btn').addEventListener('click', () => {
+            document.getElementById('levels-modal').style.display = 'none';
+          });
+          document.querySelectorAll('.level-card').forEach(card => {
+            card.addEventListener('click', () => {
+              AudioEngine.init();
+              const lvl = card.getAttribute('data-level');
+              document.getElementById('levels-modal').style.display = 'none';
+              this.loadLevel(lvl);
+              showToast(`Načítaný ${LEVELS_CONFIG[lvl].badge}! Čas beží prvým kliknutím.`);
+            });
+          });
+
+          // Leaderboard Modal
+          document.getElementById('leaderboard-btn').addEventListener('click', () => {
+            Leaderboard.render();
+            document.getElementById('leaderboard-modal').style.display = 'flex';
+          });
+          document.getElementById('close-lb-btn').addEventListener('click', () => {
+            document.getElementById('leaderboard-modal').style.display = 'none';
+          });
+
+          // AI Oracle Hint
+          document.getElementById('oracle-btn').addEventListener('click', () => {
+            AudioEngine.init();
+            AudioEngine.playBeep(880, 0.16);
+            const hint = _currentLevelKey === 'level4'
+              ? "[QUANTUM ORACLE]: V móde SINGULARITY (60) prepájajú uzly z PAST (t₋₁) do PRESENT (t₀) a z PRESENT (t₀) do FUTURE (t₊₁). Začni v minulosti!"
+              : "[QUANTUM ORACLE]: Ak aktivuješ uzol v minulosti (t₋₁), automaticky sa prepne aj jeho stav v prítomnosti (t₀). Využi túto rezonanciu!";
+            showToast(hint, 5200);
+          });
+
+          // Viral Challenge
+          document.getElementById('challenge-btn').addEventListener('click', () => {
+            AudioEngine.init();
+            const cfg = LEVELS_CONFIG[_currentLevelKey];
+            const stab = this.getTotalStabilization();
+            const timeStr = Leaderboard.formatTime(_elapsedMs);
+            const text = `🌌 Riešim 3D kvantový polyéder CHRONO-POLYHEDRON 3000 (${cfg.shortName})!\n👤 Agent: ${_player} | Čas: ${timeStr} | Stabilizácia: ${stab}% | Ťahy: ${_moves}\nTrúfneš si prekonať túto výzvu? 👉 ${window.location.href}`;
+            try { navigator.clipboard.writeText(text); } catch (e) {}
+            showToast("Virálna výzva skopírovaná do schránky!");
+          });
+
+          // Reset Game
+          document.getElementById('rage-btn').addEventListener('click', () => {
+            this.loadLevel(_currentLevelKey);
+            showToast(`Hra reštartovaná (${LEVELS_CONFIG[_currentLevelKey].shortName}). Veľa šťastia, ${_player}!`);
+          });
+
+          // Certificate Modal Buttons
+          document.getElementById('close-cert-btn').addEventListener('click', () => {
+            document.getElementById('cert-modal').style.display = 'none';
+          });
+          document.getElementById('next-level-cert-btn').addEventListener('click', () => {
+            document.getElementById('cert-modal').style.display = 'none';
+            const nextKey = LEVELS_CONFIG[_currentLevelKey].nextLevel;
+            this.loadLevel(nextKey);
+            showToast(`Štartuje ďalšia úroveň: ${LEVELS_CONFIG[nextKey].badge}! 🚀`);
+          });
+          document.getElementById('download-cert-btn').addEventListener('click', () => {
+            this.downloadCertificate();
+          });
+
+          // 3D Mouse & Touch Interaction
+          const dom = this.renderer.domElement;
+
+          const onPointerDown = (x, y) => {
+            AudioEngine.init();
+            this.isDragging = true;
+            this.previousMousePosition = { x, y };
+            this.dragStartPos = { x, y };
+          };
+
+          const onPointerMove = (x, y) => {
+            if (!this.isDragging) return;
+            const deltaX = x - this.previousMousePosition.x;
+            const deltaY = y - this.previousMousePosition.y;
+            this.cubeGroup.rotation.y += deltaX * 0.0085;
+            this.cubeGroup.rotation.x += deltaY * 0.0085;
+            this.previousMousePosition = { x, y };
+          };
+
+          const onPointerUp = (x, y) => {
+            if (!this.isDragging) return;
+            this.isDragging = false;
+            if (Math.hypot(x - this.dragStartPos.x, y - this.dragStartPos.y) < 10) {
+              this.mouse.x = (this.dragStartPos.x / window.innerWidth) * 2 - 1;
+              this.mouse.y = -(this.dragStartPos.y / window.innerHeight) * 2 + 1;
+              this.raycaster.setFromCamera(this.mouse, this.camera);
+              const intersects = this.raycaster.intersectObjects(this.nodeMeshes);
+              if (intersects.length > 0) {
+                this.handleNodeClick(intersects[0].object.userData.id);
+              }
+            }
+          };
+
+          dom.addEventListener('mousedown', (e) => onPointerDown(e.clientX, e.clientY));
+          window.addEventListener('mousemove', (e) => onPointerMove(e.clientX, e.clientY));
+          window.addEventListener('mouseup', (e) => onPointerUp(e.clientX, e.clientY));
+
+          dom.addEventListener('touchstart', (e) => {
+            if (e.touches.length === 1) onPointerDown(e.touches[0].clientX, e.touches[0].clientY);
+          }, { passive: true });
+          window.addEventListener('touchmove', (e) => {
+            if (e.touches.length === 1) onPointerMove(e.touches[0].clientX, e.touches[0].clientY);
+          }, { passive: true });
+          window.addEventListener('touchend', (e) => {
+            if (e.changedTouches.length === 1) onPointerUp(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
+          });
+        },
+
+        handleNodeClick(id) {
+          if (_isSolved) return;
+
+          startTimerIfNeeded();
+          const pIdx = _timePhase + 1;
+          const node = _nodes[id];
+          node.active[pIdx] = !node.active[pIdx];
+          _moves++;
+
+          AudioEngine.playBeep(360 + (id % 12) * 42 + pIdx * 80, 0.12);
+          this.spawnQuantumBurst(node.pos, node.phaseColors[pIdx], 24, 0.065);
+
+          // Quantum Resonance Mechanics across time dimensions
+          if (pIdx === 0 && node.active[0]) {
+            node.active[1] = !node.active[1];
+          }
+          if (_currentLevelKey === 'level4' && pIdx === 1 && node.active[1]) {
+            node.active[2] = !node.active[2];
+          }
+
+          this.updateTimePhaseVisuals();
+          this.checkWinCondition();
+          this.updateHUD();
+        },
+
+        updateTimePhaseVisuals() {
+          const pIdx = _timePhase + 1;
+
+          this.nodeMeshes.forEach((mesh, idx) => {
+            const isActive = _nodes[idx].active[pIdx];
+            const activeColor = _nodes[idx].phaseColors[pIdx];
+
+            mesh.material.color.setHex(isActive ? activeColor : 0x223344);
+            mesh.material.emissive.setHex(isActive ? activeColor : 0x000000);
+            mesh.material.emissiveIntensity = isActive ? 0.85 : 0;
+            mesh.material.wireframe = !isActive;
+            mesh.scale.setScalar(isActive ? 1.15 : 1.0);
+          });
+
+          this.laserLines.forEach(item => {
+            const [a, b] = item.nodes;
+            const activeA = _nodes[a].active[pIdx];
+            const activeB = _nodes[b].active[pIdx];
+
+            if (activeA && activeB) {
+              item.line.material.color.setHex(_nodes[a].phaseColors[pIdx]);
+              item.line.material.opacity = 0.95;
+            } else {
+              item.line.material.color.setHex(0x1a2638);
+              item.line.material.opacity = 0.25;
+            }
+          });
+        },
+
+        getTotalStabilization() {
+          if (_nodes.length === 0) return 0;
+          let totalActive = 0;
+          _nodes.forEach(n => {
+            if (n.active[0]) totalActive++;
+            if (n.active[1]) totalActive++;
+            if (n.active[2]) totalActive++;
+          });
+          return Math.round((totalActive / (_nodes.length * 3)) * 100);
+        },
+
+        checkWinCondition() {
+          const stabRatio = this.getTotalStabilization();
+          if (stabRatio === 100 && !_isSolved) {
+            const cfg = LEVELS_CONFIG[_currentLevelKey];
+            if (_moves < cfg.minMoves) return;
+
+            _isSolved = true;
+            stopTimer();
+            AudioEngine.playFanfare();
+            this.spawnQuantumBurst([0, 0, 0], 0xffd700, 120, 0.13);
+            this.spawnQuantumBurst([0, 0, 0], 0x00f3ff, 90, 0.1);
+
+            const finalTime = Math.floor(_elapsedMs);
+            const proofCode = btoa(`${_player}_${_moves}_${_sessionSig}`).replace(/[^A-Z0-9]/gi, '').substring(0, 12).toUpperCase();
+
+            if (cfg.ranked) {
+              document.getElementById('cert-subtitle').innerText = `Mriežka ${cfg.shortName} stabilizovaná! Skóre bolo zapísané do rebríčka.`;
+              Leaderboard.add({
+                name: _player,
+                level: cfg.shortName,
+                timeMs: finalTime,
+                moves: _moves,
+                code: proofCode
+              });
+            } else {
+              document.getElementById('cert-subtitle').innerText = `Tréningový stupeň ${cfg.shortName} dokončený! Odomkni Lvl 3 OMEGA pre rebríček.`;
+            }
+
+            setTimeout(() => this.triggerVictory(proofCode, finalTime, cfg), 450);
+          }
+        },
+
+        updateHUD() {
+          const phases = ["PAST (t₋₁)", "PRESENT (t₀)", "FUTURE (t₊₁)"];
+          document.getElementById('phase-val').innerText = phases[_timePhase + 1];
+
+          const totalPercent = this.getTotalStabilization();
+          document.getElementById('stab-val').innerText = `${totalPercent}%`;
+          document.getElementById('moves-val').innerText = _moves;
+
+          const strain = Math.min(100, Math.max(10, _moves * 3));
+          const resonance = (1.0 + (totalPercent / 100) * 3.5 + (_moves * 0.04)).toFixed(1);
+          document.getElementById('strain-fill').style.width = `${strain}%`;
+          document.getElementById('strain-val').innerText = `IQ ${175 - Math.floor(strain / 4)} • ${resonance}x`;
+        },
+
+        triggerVictory(proofCode, finalTime, cfg) {
+          document.getElementById('cert-modal').style.display = 'flex';
+          this.build3DCertificate(proofCode, finalTime, cfg);
+        },
+
+        build3DCertificate(proofCode, finalTime, cfg) {
+          const container = document.getElementById('cert-canvas-container');
+          container.innerHTML = '';
+
+          const scene = new THREE.Scene();
+          const camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 100);
+          camera.position.set(0, 0, 5);
+
+          const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
+          renderer.setSize(container.clientWidth, container.clientHeight);
+          renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+          container.appendChild(renderer.domElement);
+
+          const plaqueGeo = new THREE.BoxGeometry(3.6, 2.2, 0.1);
+          const canvas = document.createElement('canvas');
+          canvas.width = 1024;
+          canvas.height = 640;
+          const ctx = canvas.getContext('2d');
+
+          ctx.fillStyle = '#0a101f';
+          ctx.fillRect(0, 0, 1024, 640);
+
+          ctx.strokeStyle = cfg.id === 'level4' ? '#ff007f' : '#ffd700';
+          ctx.lineWidth = 14;
+          ctx.strokeRect(20, 20, 984, 600);
+
+          ctx.fillStyle = '#ffd700';
+          ctx.font = 'bold 38px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText(`ANDROMEDA ${cfg.shortName} MASTER`, 512, 100);
+
+          ctx.fillStyle = '#00f3ff';
+          ctx.font = '26px sans-serif';
+          ctx.fillText('KVANTOVÝ CERTIFIKÁT ÚSPECHU', 512, 155);
+
+          ctx.fillStyle = '#ffffff';
+          ctx.font = 'bold 48px sans-serif';
+          ctx.fillText(_player, 512, 275);
+
+          ctx.fillStyle = '#a0aec0';
+          ctx.font = '22px sans-serif';
+          ctx.fillText(`Úspešne stabilizoval všetkých ${_nodes.length * 3} kvantových uzlov`, 512, 355);
+          ctx.fillText(`Čas: ${Leaderboard.formatTime(finalTime)} • Počet ťahov: ${_moves} • Rezonancia: 100%`, 512, 405);
+
+          ctx.fillStyle = '#00ff88';
+          ctx.font = '18px monospace';
+          ctx.fillText(`PROOF-VERIFIED: ${proofCode}`, 512, 530);
+
+          const texture = new THREE.CanvasTexture(canvas);
+          const mat = new THREE.MeshPhongMaterial({ map: texture, shininess: 85 });
+          const plaque = new THREE.Mesh(plaqueGeo, mat);
+          scene.add(plaque);
+
+          const light1 = new THREE.PointLight(0xffd700, 1.3, 20);
+          light1.position.set(3, 3, 4);
+          scene.add(light1);
+          scene.add(new THREE.AmbientLight(0xffffff, 0.65));
+
+          this.certRenderer = renderer;
+
+          const certAnimate = () => {
+            if (document.getElementById('cert-modal').style.display === 'flex') {
+              requestAnimationFrame(certAnimate);
+              plaque.rotation.y = Math.sin(Date.now() * 0.0015) * 0.2;
+              plaque.rotation.x = Math.cos(Date.now() * 0.0012) * 0.1;
+              renderer.render(scene, camera);
+            }
+          };
+          certAnimate();
+        },
+
+        downloadCertificate() {
+          if (!this.certRenderer) return;
+          const dataURL = this.certRenderer.domElement.toDataURL('image/png');
+          const link = document.createElement('a');
+          link.download = `ChronoPolyhedron_${LEVELS_CONFIG[_currentLevelKey].shortName}_${_player}.png`;
+          link.href = dataURL;
+          link.click();
+        }
+      };
+    })();
+
+    window.addEventListener('DOMContentLoaded', () => {
+      QuantumGameEngine.init();
+    });
+  </script>
 </body>
 </html>
