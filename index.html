@@ -206,7 +206,7 @@
     .modal { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 1, 3, 0.92); backdrop-filter: blur(20px); z-index: 100; display: none; justify-content: center; align-items: center; padding: 15px; }
     .modal-content { background: #050812; border: 1px solid var(--gold); border-radius: 16px; padding: 20px; max-width: 520px; width: 100%; text-align: center; box-shadow: 0 0 45px rgba(255, 215, 0, 0.35); max-height: 90vh; overflow-y: auto; }
     .modal-title { color: var(--gold); font-size: 1.2rem; letter-spacing: 1.5px; margin-bottom: 8px; text-transform: uppercase; text-shadow: 0 0 12px var(--gold); }
-    #cert-canvas-container { width: 100%; height: 210px; margin: 10px 0; border-radius: 10px; border: 1px solid rgba(255, 215, 0, 0.35); background: #000103; }
+    #cert-canvas-container { width: 100%; height: 230px; margin: 10px 0; border-radius: 10px; border: 1px solid rgba(255, 215, 0, 0.35); background: #000103; display: flex; align-items: center; justify-content: center; overflow: hidden; }
 
     .level-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0; text-align: left; }
     .level-card { background: rgba(0, 243, 255, 0.05); border: 1px solid rgba(0, 243, 255, 0.25); border-radius: 10px; padding: 12px; cursor: pointer; transition: all 0.2s; }
@@ -378,7 +378,7 @@
       <div id="cert-canvas-container"></div>
 
       <div style="display: flex; gap: 8px; justify-content: center; margin-top: 10px; flex-wrap: wrap;">
-        <button class="btn btn-gold" id="download-cert-btn">Stiahnuť 3D Certifikát (PNG)</button>
+        <button class="btn btn-gold" id="download-cert-btn">Stiahnuť Ostrý Certifikát (PNG)</button>
         <button class="btn btn-purple" id="next-level-cert-btn">Ďalší Level 🚀</button>
         <button class="btn" id="close-cert-btn">Zatvoriť</button>
       </div>
@@ -1238,7 +1238,7 @@
               _isSolved = true;
               stopTimer();
               SoundscapeEngine.playFanfare();
-              this.spawnQuantumBurst([0, 0, 0], 0xffd700, 140, 0.14);
+              this.spawnQuantumBurst([0, 0, 0], 0ffd700, 140, 0.14);
               this.spawnQuantumBurst([0, 0, 0], 0x00f3ff, 100, 0.11);
 
               const finalTime = Math.floor(_elapsedMs);
@@ -1289,63 +1289,45 @@
             const container = document.getElementById('cert-canvas-container');
             container.innerHTML = '';
 
-            const scene = new THREE.Scene();
-            const camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 100);
-            camera.position.set(0, 0, 5);
-
-            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
-            renderer.setSize(container.clientWidth, container.clientHeight);
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-            container.appendChild(renderer.domElement);
-
-            const plaqueGeo = new THREE.BoxGeometry(3.6, 2.2, 0.1);
             const canvas = document.createElement('canvas');
-            canvas.width = 1024; canvas.height = 640;
+            canvas.width = 2048; 
+            canvas.height = 1280;
             const ctx = canvas.getContext('2d');
 
-            ctx.fillStyle = '#050812'; ctx.fillRect(0, 0, 1024, 640);
+            ctx.fillStyle = '#050812'; 
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
             ctx.strokeStyle = cfg.id === 'level4' ? '#ff007f' : '#ffd700';
-            ctx.lineWidth = 12; ctx.strokeRect(20, 20, 984, 600);
+            ctx.lineWidth = 20; 
+            ctx.strokeRect(40, 40, canvas.width - 80, canvas.height - 80);
 
-            ctx.fillStyle = '#ffd700'; ctx.font = 'bold 34px sans-serif'; ctx.textAlign = 'center';
-            ctx.fillText(`ANDROMEDA ${cfg.shortName} MASTER`, 512, 100);
+            ctx.fillStyle = '#ffd700'; ctx.font = 'bold 64px sans-serif'; ctx.textAlign = 'center';
+            ctx.fillText(`ANDROMEDA ${cfg.shortName} MASTER`, canvas.width / 2, 180);
 
-            ctx.fillStyle = '#00f3ff'; ctx.font = '24px sans-serif';
-            ctx.fillText('KRYPTOGRAFICKÝ CERTIFIKÁT ÚSPECHU', 512, 155);
+            ctx.fillStyle = '#00f3ff'; ctx.font = '42px sans-serif';
+            ctx.fillText('KRYPTOGRAFICKÝ CERTIFIKÁT ÚSPECHU', canvas.width / 2, 270);
 
-            ctx.fillStyle = '#ffffff'; ctx.font = 'bold 46px sans-serif';
-            ctx.fillText(_player, 512, 270);
+            ctx.fillStyle = '#ffffff'; ctx.font = 'bold 84px sans-serif';
+            ctx.fillText(_player, canvas.width / 2, 480);
 
-            ctx.fillStyle = '#a0aec0'; ctx.font = '22px sans-serif';
-            ctx.fillText(`Úspešne stabilizoval všetky kvantové uzly (${_nodes.length * 3})`, 512, 350);
-            ctx.fillText(`Speedrun čas: ${CloudLeaderboard.formatTime(finalTime)} • Počet ťahov: ${_moves}`, 512, 400);
+            ctx.fillStyle = '#a0aec0'; ctx.font = '38px sans-serif';
+            ctx.fillText(`Úspešne stabilizoval všetky kvantové uzly (${_nodes.length * 3})`, canvas.width / 2, 630);
+            ctx.fillText(`Speedrun čas: ${CloudLeaderboard.formatTime(finalTime)}  •  Počet ťahov: ${_moves}`, canvas.width / 2, 720);
 
-            ctx.fillStyle = '#00ff88'; ctx.font = '18px monospace';
-            ctx.fillText(`SHA256-PROOF: ${proofHash}`, 512, 520);
+            ctx.fillStyle = '#00ff88'; ctx.font = '32px monospace';
+            ctx.fillText(`SHA256-PROOF: ${proofHash}`, canvas.width / 2, 920);
 
-            const texture = new THREE.CanvasTexture(canvas);
-            const plaque = new THREE.Mesh(plaqueGeo, new THREE.MeshPhongMaterial({ map: texture, shininess: 95 }));
-            scene.add(plaque);
+            canvas.style.width = '100%';
+            canvas.style.height = '100%';
+            canvas.style.objectFit = 'contain';
+            container.appendChild(canvas);
 
-            const light1 = new THREE.PointLight(0xffd700, 2.5, 20);
-            light1.position.set(3, 3, 4); scene.add(light1);
-            scene.add(new THREE.AmbientLight(0xffffff, 0.6));
-
-            this.certRenderer = renderer;
-            const certAnimate = () => {
-              if (document.getElementById('cert-modal').style.display === 'flex') {
-                requestAnimationFrame(certAnimate);
-                plaque.rotation.y = Math.sin(Date.now() * 0.0015) * 0.22;
-                plaque.rotation.x = Math.cos(Date.now() * 0.0012) * 0.1;
-                renderer.render(scene, camera);
-              }
-            };
-            certAnimate();
+            this.certCanvasElement = canvas;
           },
 
           downloadCertificate() {
-            if (!this.certRenderer) return;
-            const dataURL = this.certRenderer.domElement.toDataURL('image/png');
+            if (!this.certCanvasElement) return;
+            const dataURL = this.certCanvasElement.toDataURL('image/png');
             const link = document.createElement('a');
             link.download = `ChronoPolyhedron_${LEVELS_CONFIG[_currentLevelKey].shortName}_${_player}.png`;
             link.href = dataURL;
