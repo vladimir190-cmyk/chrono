@@ -324,7 +324,7 @@
   </div>
 
   <script>
-    (function() {
+    window.addEventListener('DOMContentLoaded', function() {
       'use strict';
 
       const CloudLeaderboard = (function() {
@@ -333,7 +333,7 @@
           API_KEY: "$2a$10$NMWmWIBHuI3CXGmy.bdI4e9r2Zcpwv0iognAWrLhKj5zhHK8c/Up2" 
         };
 
-        const STORAGE_KEY = "chrono_supernova_lb_v9";
+        const STORAGE_KEY = "chrono_supernova_lb_v10";
         const defaultAgents = [
           { name: "NEXUS-PRIME", level: "OMEGA 36", timeMs: 38420, moves: 24, hash: "8F9A2C1E04B7" },
           { name: "ANDROMEDA-X", level: "OMEGA 36", timeMs: 49150, moves: 27, hash: "3D71E90A5C2B" },
@@ -807,7 +807,6 @@
                   this.gyroRing2.rotation.z += 0.015 * stabFactor;
                 }
                 if (this.andromedaGroup) this.andromedaGroup.rotation.y += 0.0007;
-                if (this.deepStars) this.deepStars.rotation.y -= 0.00015;
 
                 for (let i = _bursts.length - 1; i >= 0; i--) {
                   const b = _bursts[i];
@@ -1329,12 +1328,8 @@
         };
       })();
 
-      if (document.readyState === 'loading') {
-        window.addEventListener('DOMContentLoaded', () => { QuantumPolyhedronEngine.init(); });
-      } else {
-        QuantumPolyhedronEngine.init();
-      }
-    })();
+      QuantumPolyhedronEngine.init();
+    });
   </script>
 </body>
 </html>
