@@ -5,10 +5,7 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://cdnjs.cloudflare.com https://api.jsonbin.io; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' https://api.jsonbin.io; worker-src 'self' blob:;">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="theme-color" content="#000103">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>CHRONO-POLYHEDRON 3000: Supernova Edition</title>
-  <link id="pwa-manifest" rel="manifest" href="manifest.json">
   <style>
     :root {
       --bg: #000103;
@@ -26,7 +23,6 @@
 
     #canvas-container { width: 100vw; height: 100vh; position: absolute; top: 0; left: 0; z-index: 1; }
 
-    /* HUD Overlay */
     .hud { position: absolute; z-index: 10; pointer-events: none; display: flex; flex-direction: column; justify-content: space-between; padding: 12px; width: 100%; height: 100%; }
     .hud * { pointer-events: auto; }
 
@@ -46,7 +42,6 @@
     .sub { font-size: 0.58rem; color: #8a99ad; margin-top: 2px; display: flex; align-items: center; gap: 6px; }
     .sec-badge { color: var(--gold); font-weight: bold; }
 
-    /* Moderný, jednotný horný panel štatistík (žiadne duplicity) */
     .top-stats-bar {
       background: var(--panel);
       border: 1px solid rgba(255, 215, 0, 0.45);
@@ -62,7 +57,6 @@
     .stat-item span { color: #8a99ad; font-size: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px; }
     .stat-item strong { color: #fff; font-size: 0.78rem; font-variant-numeric: tabular-nums; }
 
-    /* Panel pre meno lúštiteľa (univerzálny pre PC aj Mobil) */
     .player-bar {
       background: var(--panel);
       border: 1px solid rgba(255, 0, 127, 0.5);
@@ -205,7 +199,6 @@
           <div class="sub">Andromeda M31 • <span class="sec-badge" id="mode-badge">LVL 3: OMEGA 36</span></div>
         </div>
 
-        <!-- Jednotný horný panel štatistík bez duplicity + nový pútavý údaj -->
         <div class="top-stats-bar">
           <div class="player-bar">
             <label for="player-name-input">Agent:</label>
@@ -217,7 +210,7 @@
           </div>
           <div class="stat-item">
             <span>Fáza</span>
-            <strong id="phase-val" style="color:var(--primary);">t₀</strong>
+            <strong id="phase-val" style="color:var(--primary);">t0</strong>
           </div>
           <div class="stat-item">
             <span>Stabilizácia</span>
@@ -239,9 +232,9 @@
 
     <footer>
       <div class="time-control">
-        <span style="font-size: 0.7rem; color: #8a99ad; font-weight: bold;">t₋₁ (Minulosť)</span>
+        <span style="font-size: 0.7rem; color: #8a99ad; font-weight: bold;">t-1 (Minulosť)</span>
         <input type="range" min="-1" max="1" value="0" step="1" class="time-slider" id="time-slider">
-        <span style="font-size: 0.7rem; color: #8a99ad; font-weight: bold;">t₊₁ (Budúcnosť)</span>
+        <span style="font-size: 0.7rem; color: #8a99ad; font-weight: bold;">t+1 (Budúcnosť)</span>
       </div>
 
       <div class="btn-group">
@@ -254,11 +247,10 @@
     </footer>
   </div>
 
-  <!-- Modal: Výber Levelu -->
   <div class="modal" id="levels-modal">
     <div class="modal-content" style="border-color: var(--purple);">
-      <div class="modal-title" style="color: #d8a7ff;">🌌 Kvantová Kampaň (Levely 1 – 4)</div>
-      <p style="font-size: 0.78rem; color: #a0aec0;">Vyber si úroveň komplexnosti 4D polyédra. Prepínaj časové dimenzie ($t_{-1} \leftrightarrow t_0 \leftrightarrow t_{+1}$) a stabilizuj všetky uzly na 100 %!</p>
+      <div class="modal-title" style="color: #d8a7ff;">🌌 Kvantová Kampaň (Levely 1 - 4)</div>
+      <p style="font-size: 0.78rem; color: #a0aec0;">Vyber si úroveň komplexnosti 4D polyédra. Prepínaj časové dimenzie a stabilizuj všetky uzly na 100 %!</p>
       
       <div class="level-grid">
         <div class="level-card" data-level="level1">
@@ -290,7 +282,6 @@
     </div>
   </div>
 
-  <!-- Modal: Globálny Rebríček -->
   <div class="modal" id="leaderboard-modal">
     <div class="modal-content">
       <div class="modal-title">🏆 Globálny Rebríček Agentov</div>
@@ -318,11 +309,10 @@
     </div>
   </div>
 
-  <!-- Modal: Kryptografický Certifikát -->
   <div class="modal" id="cert-modal">
     <div class="modal-content">
       <div class="modal-title">🏆 Polyhedron Master 🏆</div>
-      <p style="font-size: 0.8rem; color: #a0aec0;" id="cert-subtitle">Mriežka stabilizovaná! Skóre bolo zapísané do globálneho rebríčka.</p>
+      <p style="font-size: 0.8rem; color: #a0aec0;" id="cert-subtitle">Mriežka stabilizovaná! Skóre bolo zapísané do globálneго rebríčka.</p>
       
       <div id="cert-canvas-container"></div>
 
@@ -344,7 +334,7 @@
           API_KEY: "$2a$10$NMWmWIBHuI3CXGmy.bdI4e9r2Zcpwv0iognAWrLhKj5zhHK8c/Up2" 
         };
 
-        const STORAGE_KEY = "chrono_supernova_lb_v4";
+        const STORAGE_KEY = "chrono_supernova_lb_v6";
         const defaultAgents = [
           { name: "NEXUS-PRIME", level: "OMEGA 36", timeMs: 38420, moves: 24, hash: "8F9A2C1E04B7" },
           { name: "ANDROMEDA-X", level: "OMEGA 36", timeMs: 49150, moves: 27, hash: "3D71E90A5C2B" },
@@ -416,13 +406,13 @@
 
           async renderTable() {
             const tbody = document.getElementById('leaderboard-body');
-            tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#8a99ad;">Načítavam globálnu sieť...</td></tr>`;
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#8a99ad;">Načítavam globálnu sieť...</td></tr>';
             
             const scores = await this.fetchScores();
             tbody.innerHTML = '';
             
             if (scores.length === 0) {
-              tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#8a99ad;">Zatiaľ žiadni agenti. Buď prvý!</td></tr>`;
+              tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#8a99ad;">Zatiaľ žiadni agenti. Buď prvý!</td></tr>';
               return;
             }
 
@@ -481,14 +471,16 @@
 
         return {
           init() {
-            if (!ctx) {
-              ctx = new (window.AudioContext || window.webkitAudioContext)();
-              masterGain = ctx.createGain();
-              masterGain.gain.setValueAtTime(isMuted ? 0 : 0.25, ctx.currentTime);
-              masterGain.connect(ctx.destination);
-            }
-            if (ctx.state === 'suspended') ctx.resume();
-            if (!isAmbientRunning) this.startSpaceDrone();
+            try {
+              if (!ctx) {
+                ctx = new (window.AudioContext || window.webkitAudioContext)();
+                masterGain = ctx.createGain();
+                masterGain.gain.setValueAtTime(isMuted ? 0 : 0.25, ctx.currentTime);
+                masterGain.connect(ctx.destination);
+              }
+              if (ctx.state === 'suspended') ctx.resume();
+              if (!isAmbientRunning) this.startSpaceDrone();
+            } catch(e) {}
           },
           startSpaceDrone() {
             if (!ctx || isAmbientRunning) return;
@@ -521,14 +513,18 @@
           },
           shiftDimensionHarmonics(phase) {
             if (!ctx || !droneOsc1 || !droneOsc2) return;
-            const now = ctx.currentTime;
-            const baseFreq = phase === -1 ? 49.0 : (phase === 0 ? 55.0 : 65.41);
-            droneOsc1.frequency.exponentialRampToValueAtTime(baseFreq, now + 0.4);
-            droneOsc2.frequency.exponentialRampToValueAtTime(baseFreq * 1.5, now + 0.4);
+            try {
+              const now = ctx.currentTime;
+              const baseFreq = phase === -1 ? 49.0 : (phase === 0 ? 55.0 : 65.41);
+              droneOsc1.frequency.exponentialRampToValueAtTime(baseFreq, now + 0.4);
+              droneOsc2.frequency.exponentialRampToValueAtTime(baseFreq * 1.5, now + 0.4);
+            } catch(e) {}
           },
           toggleMute() {
             isMuted = !isMuted;
-            if (masterGain && ctx) masterGain.gain.setTargetAtTime(isMuted ? 0 : 0.25, ctx.currentTime, 0.05);
+            if (masterGain && ctx) {
+              try { masterGain.gain.setTargetAtTime(isMuted ? 0 : 0.25, ctx.currentTime, 0.05); } catch(e) {}
+            }
             return !isMuted;
           },
           playNodePulse(nodeId, phase, isActivating) {
@@ -568,15 +564,17 @@
             chord.forEach((freq, idx) => {
               setTimeout(() => {
                 if (!ctx || isMuted) return;
-                const now = ctx.currentTime;
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(freq, now);
-                gain.gain.setValueAtTime(0.2, now);
-                gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.55);
-                osc.connect(gain); gain.connect(masterGain);
-                osc.start(now); osc.stop(now + 0.55);
+                try {
+                  const now = ctx.currentTime;
+                  const osc = ctx.createOscillator();
+                  const gain = ctx.createGain();
+                  osc.type = 'triangle';
+                  osc.frequency.setValueAtTime(freq, now);
+                  gain.gain.setValueAtTime(0.2, now);
+                  gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.55);
+                  osc.connect(gain); gain.connect(masterGain);
+                  osc.start(now); osc.stop(now + 0.55);
+                } catch(e) {}
               }, idx * 90);
             });
           }
@@ -664,6 +662,7 @@
 
         function showToast(msg, duration = 3800) {
           const el = document.getElementById('toast');
+          if (!el) return;
           el.textContent = msg;
           el.style.display = 'block';
           if (_toastTimer) clearTimeout(_toastTimer);
@@ -677,7 +676,8 @@
               if (_timerStart !== null && !_isSolved) {
                 _elapsedMs = performance.now() - _timerStart;
                 const formatted = CloudLeaderboard.formatTime(_elapsedMs);
-                document.getElementById('timer-val').innerText = formatted;
+                const timerEl = document.getElementById('timer-val');
+                if (timerEl) timerEl.innerText = formatted;
               }
             }, 90);
           }
@@ -689,13 +689,16 @@
 
         return {
           init() {
-            this.setupThreeJS();
-            this.loadGameMode('level3');
-            this.setupEvents();
-            this.adjustCameraForScreen();
+            try {
+              this.setupThreeJS();
+              this.loadGameMode('level3');
+              this.setupEvents();
+              this.adjustCameraForScreen();
+            } catch(e) {}
 
             if (!localStorage.getItem('chrono_supernova_welcome')) {
-              document.getElementById('levels-modal').style.display = 'flex';
+              const modal = document.getElementById('levels-modal');
+              if (modal) modal.style.display = 'flex';
               localStorage.setItem('chrono_supernova_welcome', '1');
             }
           },
@@ -711,9 +714,12 @@
             _elapsedMs = 0;
             SecurityCore.resetAudit();
 
-            document.getElementById('time-slider').value = 0;
-            document.getElementById('timer-val').innerText = "00:00.0";
-            document.getElementById('mode-badge').innerText = cfg.badge;
+            const slider = document.getElementById('time-slider');
+            if (slider) slider.value = 0;
+            const timerEl = document.getElementById('timer-val');
+            if (timerEl) timerEl.innerText = "00:00.0";
+            const badgeEl = document.getElementById('mode-badge');
+            if (badgeEl) badgeEl.innerText = cfg.badge;
 
             _nodes = cfg.points.map((pt, idx) => ({
               id: idx,
@@ -740,6 +746,7 @@
           },
 
           adjustCameraForScreen() {
+            if (!this.camera) return;
             const isMobile = window.innerWidth <= 768;
             const dist = isMobile ? 12.2 : 9.8;
             this.camera.position.set(dist * 0.65, dist * 0.58, dist);
@@ -770,87 +777,91 @@
 
             const animate = () => {
               requestAnimationFrame(animate);
-              const stabFactor = 1 + (this.getTotalStabilization() / 100) * 2.5;
+              try {
+                const stabFactor = 1 + (this.getTotalStabilization() / 100) * 2.5;
 
-              if (this.coreMesh) {
-                this.coreMesh.rotation.x += 0.015 * stabFactor;
-                this.coreMesh.rotation.y += 0.02 * stabFactor;
-                const s = 1 + Math.sin(Date.now() * 0.005) * (0.2 + (stabFactor - 1) * 0.1);
-                this.coreMesh.scale.set(s, s, s);
-              }
-              if (this.gyroRing1) {
-                this.gyroRing1.rotation.x += 0.018 * stabFactor;
-                this.gyroRing1.rotation.y += 0.012 * stabFactor;
-              }
-              if (this.gyroRing2) {
-                this.gyroRing2.rotation.y -= 0.022 * stabFactor;
-                this.gyroRing2.rotation.z += 0.015 * stabFactor;
-              }
-              if (this.andromedaGroup) this.andromedaGroup.rotation.y += 0.0007;
-              if (this.deepStars) this.deepStars.rotation.y -= 0.00015;
-
-              for (let i = _bursts.length - 1; i >= 0; i--) {
-                const b = _bursts[i];
-                b.life -= 0.032;
-                if (b.life <= 0) {
-                  this.polyGroup.remove(b.points);
-                  b.points.geometry.dispose();
-                  b.points.material.dispose();
-                  _bursts.splice(i, 1);
-                } else {
-                  const posAttr = b.points.geometry.attributes.position;
-                  for (let j = 0; j < posAttr.count; j++) {
-                    posAttr.setXYZ(
-                      j,
-                      posAttr.getX(j) + b.velocities[j * 3],
-                      posAttr.getY(j) + b.velocities[j * 3 + 1],
-                      posAttr.getZ(j) + b.velocities[j * 3 + 2]
-                    );
-                  }
-                  posAttr.needsUpdate = true;
-                  b.points.material.opacity = b.life;
+                if (this.coreMesh) {
+                  this.coreMesh.rotation.x += 0.015 * stabFactor;
+                  this.coreMesh.rotation.y += 0.02 * stabFactor;
+                  const s = 1 + Math.sin(Date.now() * 0.005) * (0.2 + (stabFactor - 1) * 0.1);
+                  this.coreMesh.scale.set(s, s, s);
                 }
-              }
+                if (this.gyroRing1) {
+                  this.gyroRing1.rotation.x += 0.018 * stabFactor;
+                  this.gyroRing1.rotation.y += 0.012 * stabFactor;
+                }
+                if (this.gyroRing2) {
+                  this.gyroRing2.rotation.y -= 0.022 * stabFactor;
+                  this.gyroRing2.rotation.z += 0.015 * stabFactor;
+                }
+                if (this.andromedaGroup) this.andromedaGroup.rotation.y += 0.0007;
+                if (this.deepStars) this.deepStars.rotation.y -= 0.00015;
 
-              this.renderer.render(this.scene, this.camera);
+                for (let i = _bursts.length - 1; i >= 0; i--) {
+                  const b = _bursts[i];
+                  b.life -= 0.032;
+                  if (b.life <= 0) {
+                    this.polyGroup.remove(b.points);
+                    b.points.geometry.dispose();
+                    b.points.material.dispose();
+                    _bursts.splice(i, 1);
+                  } else {
+                    const posAttr = b.points.geometry.attributes.position;
+                    for (let j = 0; j < posAttr.count; j++) {
+                      posAttr.setXYZ(
+                        j,
+                        posAttr.getX(j) + b.velocities[j * 3],
+                        posAttr.getY(j) + b.velocities[j * 3 + 1],
+                        posAttr.getZ(j) + b.velocities[j * 3 + 2]
+                      );
+                    }
+                    posAttr.needsUpdate = true;
+                    b.points.material.opacity = b.life;
+                  }
+                }
+
+                this.renderer.render(this.scene, this.camera);
+              } catch(e) {}
             };
             animate();
           },
 
           spawnQuantumBurst(localPos, colorHex, count = 28, speed = 0.07) {
-            const geo = new THREE.BufferGeometry();
-            const positions = new Float32Array(count * 3);
-            const velocities = [];
+            try {
+              const geo = new THREE.BufferGeometry();
+              const positions = new Float32Array(count * 3);
+              const velocities = [];
 
-            for (let i = 0; i < count; i++) {
-              positions[i * 3] = localPos[0];
-              positions[i * 3 + 1] = localPos[1];
-              positions[i * 3 + 2] = localPos[2];
+              for (let i = 0; i < count; i++) {
+                positions[i * 3] = localPos[0];
+                positions[i * 3 + 1] = localPos[1];
+                positions[i * 3 + 2] = localPos[2];
 
-              const theta = Math.random() * Math.PI * 2;
-              const phiAngle = Math.acos(2 * Math.random() - 1);
-              const v = (0.4 + Math.random() * 0.8) * speed;
+                const theta = Math.random() * Math.PI * 2;
+                const phiAngle = Math.acos(2 * Math.random() - 1);
+                const v = (0.4 + Math.random() * 0.8) * speed;
 
-              velocities.push(
-                Math.sin(phiAngle) * Math.cos(theta) * v,
-                Math.sin(phiAngle) * Math.sin(theta) * v,
-                Math.cos(phiAngle) * v
-              );
-            }
+                velocities.push(
+                  Math.sin(phiAngle) * Math.cos(theta) * v,
+                  Math.sin(phiAngle) * Math.sin(theta) * v,
+                  Math.cos(phiAngle) * v
+                );
+              }
 
-            geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-            const mat = new THREE.PointsMaterial({
-              color: colorHex,
-              size: 0.22,
-              transparent: true,
-              opacity: 1,
-              blending: THREE.AdditiveBlending,
-              depthWrite: false
-            });
+              geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+              const mat = new THREE.PointsMaterial({
+                color: colorHex,
+                size: 0.22,
+                transparent: true,
+                opacity: 1,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false
+              });
 
-            const points = new THREE.Points(geo, mat);
-            this.polyGroup.add(points);
-            _bursts.push({ points, velocities, life: 1.0 });
+              const points = new THREE.Points(geo, mat);
+              this.polyGroup.add(points);
+              _bursts.push({ points, velocities, life: 1.0 });
+            } catch(e) {}
           },
 
           rebuildPolyhedronMeshes(cfg) {
@@ -899,69 +910,61 @@
           },
 
           createAndromeda3DGalaxy() {
-            const starCanvas = document.createElement('canvas');
-            starCanvas.width = 64; starCanvas.height = 64;
-            const sCtx = starCanvas.getContext('2d');
-            const sGrad = sCtx.createRadialGradient(32, 32, 0, 32, 32, 32);
-            sGrad.addColorStop(0, 'rgba(255, 255, 255, 1)');
-            sGrad.addColorStop(0.25, 'rgba(255, 255, 255, 0.85)');
-            sGrad.addColorStop(0.6, 'rgba(180, 220, 255, 0.2)');
-            sGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
-            sCtx.fillStyle = sGrad; sCtx.fillRect(0, 0, 64, 64);
-            const starTexture = new THREE.CanvasTexture(starCanvas);
+            try {
+              const starCanvas = document.createElement('canvas');
+              starCanvas.width = 64; starCanvas.height = 64;
+              const sCtx = starCanvas.getContext('2d');
+              const sGrad = sCtx.createRadialGradient(32, 32, 0, 32, 32, 32);
+              sGrad.addColorStop(0, 'rgba(255, 255, 255, 1)');
+              sGrad.addColorStop(0.25, 'rgba(255, 255, 255, 0.85)');
+              sGrad.addColorStop(0.6, 'rgba(180, 220, 255, 0.2)');
+              sGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+              sCtx.fillStyle = sGrad; sCtx.fillRect(0, 0, 64, 64);
+              const starTexture = new THREE.CanvasTexture(starCanvas);
 
-            this.andromedaGroup = new THREE.Group();
-            const galaxyStars = 5200;
-            const gGeo = new THREE.BufferGeometry();
-            const gPos = new Float32Array(galaxyStars * 3);
-            const gColors = new Float32Array(galaxyStars * 3);
+              this.andromedaGroup = new THREE.Group();
+              const galaxyStars = 3000;
+              const gGeo = new THREE.BufferGeometry();
+              const gPos = new Float32Array(galaxyStars * 3);
+              const gColors = new Float32Array(galaxyStars * 3);
 
-            const coreColor = new THREE.Color(0xffe6a3);
-            const armColorOuter = new THREE.Color(0x00d4ff);
-            const armColorAccent = new THREE.Color(0xb565ff);
-            const branches = 4, radius = 27;
+              const coreColor = new THREE.Color(0xffe6a3);
+              const armColorOuter = new THREE.Color(0x00d4ff);
+              const armColorAccent = new THREE.Color(0xb565ff);
+              const branches = 4, radius = 27;
 
-            for (let i = 0; i < galaxyStars; i++) {
-              const i3 = i * 3;
-              const r = Math.pow(Math.random(), 1.6) * radius;
-              const spinAngle = r * 0.28;
-              const branchAngle = ((i % branches) / branches) * Math.PI * 2;
-              const spread = Math.pow(Math.random(), 2.4) * (r * 0.28 + 0.35);
+              for (let i = 0; i < galaxyStars; i++) {
+                const i3 = i * 3;
+                const r = Math.pow(Math.random(), 1.6) * radius;
+                const spinAngle = r * 0.28;
+                const branchAngle = ((i % branches) / branches) * Math.PI * 2;
+                const spread = Math.pow(Math.random(), 2.4) * (r * 0.28 + 0.35);
 
-              gPos[i3] = Math.cos(branchAngle + spinAngle) * r + (Math.random() - 0.5) * spread;
-              gPos[i3 + 1] = (Math.random() - 0.5) * (spread * 0.28);
-              gPos[i3 + 2] = Math.sin(branchAngle + spinAngle) * r + (Math.random() - 0.5) * spread;
+                gPos[i3] = Math.cos(branchAngle + spinAngle) * r + (Math.random() - 0.5) * spread;
+                gPos[i3 + 1] = (Math.random() - 0.5) * (spread * 0.28);
+                gPos[i3 + 2] = Math.sin(branchAngle + spinAngle) * r + (Math.random() - 0.5) * spread;
 
-              const mixedColor = coreColor.clone().lerp((i % 5 === 0) ? armColorAccent : armColorOuter, Math.min(1, r / (radius * 0.72)));
-              gColors[i3] = mixedColor.r; gColors[i3 + 1] = mixedColor.g; gColors[i3 + 2] = mixedColor.b;
-            }
+                const mixedColor = coreColor.clone().lerp((i % 5 === 0) ? armColorAccent : armColorOuter, Math.min(1, r / (radius * 0.72)));
+                gColors[i3] = mixedColor.r; gColors[i3 + 1] = mixedColor.g; gColors[i3 + 2] = mixedColor.b;
+              }
 
-            gGeo.setAttribute('position', new THREE.BufferAttribute(gPos, 3));
-            gGeo.setAttribute('color', new THREE.BufferAttribute(gColors, 3));
+              gGeo.setAttribute('position', new THREE.BufferAttribute(gPos, 3));
+              gGeo.setAttribute('color', new THREE.BufferAttribute(gColors, 3));
 
-            const gMat = new THREE.PointsMaterial({
-              size: 0.32, map: starTexture, vertexColors: true, transparent: true, opacity: 0.95, depthWrite: false, blending: THREE.AdditiveBlending
-            });
-            this.andromedaGroup.add(new THREE.Points(gGeo, gMat));
-            this.andromedaGroup.position.set(0, 1.5, -24);
-            this.andromedaGroup.rotation.x = Math.PI * 0.34;
-            this.andromedaGroup.rotation.z = -Math.PI * 0.18;
-            this.scene.add(this.andromedaGroup);
-
-            const bgGeo = new THREE.BufferGeometry();
-            const bgPos = new Float32Array(1300 * 3);
-            for (let i = 0; i < 3900; i += 3) {
-              bgPos[i] = (Math.random() - 0.5) * 120;
-              bgPos[i + 1] = (Math.random() - 0.5) * 120;
-              bgPos[i + 2] = (Math.random() - 0.5) * 120;
-            }
-            bgGeo.setAttribute('position', new THREE.BufferAttribute(bgPos, 3));
-            this.deepStars = new THREE.Points(bgGeo, new THREE.PointsMaterial({ size: 0.22, map: starTexture, color: 0xffffff, transparent: true, opacity: 0.75, depthWrite: false }));
-            this.scene.add(this.deepStars);
+              const gMat = new THREE.PointsMaterial({
+                size: 0.35, map: starTexture, vertexColors: true, transparent: true, opacity: 0.95, depthWrite: false, blending: THREE.AdditiveBlending
+              });
+              this.andromedaGroup.add(new THREE.Points(gGeo, gMat));
+              this.andromedaGroup.position.set(0, 1.5, -24);
+              this.andromedaGroup.rotation.x = Math.PI * 0.34;
+              this.andromedaGroup.rotation.z = -Math.PI * 0.18;
+              this.scene.add(this.andromedaGroup);
+            } catch(e) {}
           },
 
           setupEvents() {
             window.addEventListener('resize', () => {
+              if (!this.camera || !this.renderer) return;
               this.camera.aspect = window.innerWidth / window.innerHeight;
               this.camera.updateProjectionMatrix();
               this.renderer.setSize(window.innerWidth, window.innerHeight);
@@ -981,7 +984,8 @@
               const parsed = parseInt(val, 10);
               if (![-1, 0, 1].includes(parsed)) return;
               _timePhase = parsed;
-              document.getElementById('time-slider').value = _timePhase;
+              const slider = document.getElementById('time-slider');
+              if (slider) slider.value = _timePhase;
               SoundscapeEngine.init();
               SoundscapeEngine.playLaserShift();
               SoundscapeEngine.shiftDimensionHarmonics(_timePhase);
@@ -989,48 +993,63 @@
               this.updateHUD();
             };
 
-            document.getElementById('time-slider').addEventListener('input', (e) => handleTimeChange(e.target.value));
+            const sliderEl = document.getElementById('time-slider');
+            if (sliderEl) sliderEl.addEventListener('input', (e) => handleTimeChange(e.target.value));
 
             const toggleSound = () => {
               SoundscapeEngine.init();
               const isOn = SoundscapeEngine.toggleMute();
-              document.getElementById('audio-toggle-btn').innerText = isOn ? '🔊 Zvuk' : '🔇 Ticho';
+              const btn = document.getElementById('audio-toggle-btn');
+              if (btn) btn.innerText = isOn ? '🔊 Zvuk' : '🔇 Ticho';
               showToast(isOn ? "Vesmírny syntetizátor aktivovaný." : "Zvuk stlmený.");
             };
-            document.getElementById('audio-toggle-btn').addEventListener('click', toggleSound);
+            const soundBtn = document.getElementById('audio-toggle-btn');
+            if (soundBtn) soundBtn.addEventListener('click', toggleSound);
 
-            document.getElementById('reset-cam-btn').addEventListener('click', (e) => {
+            const camBtn = document.getElementById('reset-cam-btn');
+            if (camBtn) camBtn.addEventListener('click', (e) => {
               if (!e.isTrusted) return;
               SoundscapeEngine.init();
               this.adjustCameraForScreen();
-              this.polyGroup.rotation.set(0, 0, 0);
+              if (this.polyGroup) this.polyGroup.rotation.set(0, 0, 0);
             });
 
-            document.getElementById('levels-btn').addEventListener('click', () => {
-              document.getElementById('levels-modal').style.display = 'flex';
+            const lvlBtn = document.getElementById('levels-btn');
+            if (lvlBtn) lvlBtn.addEventListener('click', () => {
+              const modal = document.getElementById('levels-modal');
+              if (modal) modal.style.display = 'flex';
             });
-            document.getElementById('close-levels-btn').addEventListener('click', () => {
-              document.getElementById('levels-modal').style.display = 'none';
+            const closeLvlBtn = document.getElementById('close-levels-btn');
+            if (closeLvlBtn) closeLvlBtn.addEventListener('click', () => {
+              const modal = document.getElementById('levels-modal');
+              if (modal) modal.style.display = 'none';
             });
+
             document.querySelectorAll('.level-card').forEach(card => {
               card.addEventListener('click', () => {
                 SoundscapeEngine.init();
                 const lvl = card.getAttribute('data-level');
-                document.getElementById('levels-modal').style.display = 'none';
+                const modal = document.getElementById('levels-modal');
+                if (modal) modal.style.display = 'none';
                 this.loadGameMode(lvl);
                 showToast(`Načítaný ${LEVELS_CONFIG[lvl].badge}! Čas beží prvým kliknutím.`);
               });
             });
 
-            document.getElementById('leaderboard-btn').addEventListener('click', async () => {
-              document.getElementById('leaderboard-modal').style.display = 'flex';
+            const lbBtn = document.getElementById('leaderboard-btn');
+            if (lbBtn) lbBtn.addEventListener('click', async () => {
+              const modal = document.getElementById('leaderboard-modal');
+              if (modal) modal.style.display = 'flex';
               await CloudLeaderboard.renderTable();
             });
-            document.getElementById('close-lb-btn').addEventListener('click', () => {
-              document.getElementById('leaderboard-modal').style.display = 'none';
+            const closeLbBtn = document.getElementById('close-lb-btn');
+            if (closeLbBtn) closeLbBtn.addEventListener('click', () => {
+              const modal = document.getElementById('leaderboard-modal');
+              if (modal) modal.style.display = 'none';
             });
 
-            document.getElementById('challenge-btn').addEventListener('click', (e) => {
+            const chalBtn = document.getElementById('challenge-btn');
+            if (chalBtn) chalBtn.addEventListener('click', (e) => {
               if (!e.isTrusted) return;
               SoundscapeEngine.init();
               const cfg = LEVELS_CONFIG[_currentLevelKey];
@@ -1041,27 +1060,34 @@
               showToast("Virálna výzva skopírovaná do schránky!");
             });
 
-            document.getElementById('rage-btn').addEventListener('click', (e) => {
+            const rageBtn = document.getElementById('rage-btn');
+            if (rageBtn) rageBtn.addEventListener('click', (e) => {
               if (!e.isTrusted) return;
               this.loadGameMode(_currentLevelKey);
               showToast(`Hra reštartovaná (${LEVELS_CONFIG[_currentLevelKey].shortName}). Veľa šťastia, ${_player}!`);
             });
 
-            document.getElementById('close-cert-btn').addEventListener('click', () => {
-              document.getElementById('cert-modal').style.display = 'none';
+            const closeCertBtn = document.getElementById('close-cert-btn');
+            if (closeCertBtn) closeCertBtn.addEventListener('click', () => {
+              const modal = document.getElementById('cert-modal');
+              if (modal) modal.style.display = 'none';
             });
 
-            document.getElementById('next-level-cert-btn').addEventListener('click', () => {
-              document.getElementById('cert-modal').style.display = 'none';
+            const nextCertBtn = document.getElementById('next-level-cert-btn');
+            if (nextCertBtn) nextCertBtn.addEventListener('click', () => {
+              const modal = document.getElementById('cert-modal');
+              if (modal) modal.style.display = 'none';
               const nextKey = LEVELS_CONFIG[_currentLevelKey].nextLevel;
               this.loadGameMode(nextKey);
               showToast(`Štartuje ďalšia úroveň: ${LEVELS_CONFIG[nextKey].badge}! 🚀`);
             });
 
-            document.getElementById('download-cert-btn').addEventListener('click', () => {
+            const downCertBtn = document.getElementById('download-cert-btn');
+            if (downCertBtn) downCertBtn.addEventListener('click', () => {
               this.downloadCertificate();
             });
 
+            if (!this.renderer) return;
             const dom = this.renderer.domElement;
             let isInteracting = false, prevX = 0, prevY = 0, startX = 0, startY = 0;
 
@@ -1070,7 +1096,7 @@
               isInteracting = true; prevX = x; prevY = y; startX = x; startY = y;
             };
             const handleMove = (x, y) => {
-              if (!isInteracting) return;
+              if (!isInteracting || !this.polyGroup) return;
               this.polyGroup.rotation.y += (x - prevX) * 0.0085;
               this.polyGroup.rotation.x += (y - prevY) * 0.0085;
               prevX = x; prevY = y;
@@ -1172,7 +1198,8 @@
               const proofHash = await SecurityCore.generateProofHash(_player, cfg.shortName, _moves, finalTime, stateVector);
 
               if (cfg.ranked) {
-                document.getElementById('cert-subtitle').innerText = `Mriežka ${cfg.shortName} stabilizovaná! Skóre bolo odoslané do svetového rebríčka.`;
+                const subEl = document.getElementById('cert-subtitle');
+                if (subEl) subEl.innerText = `Mriežka ${cfg.shortName} stabilizovaná! Skóre bolo odoslané do svetového rebríčka.`;
                 await CloudLeaderboard.submitScore({
                   name: _player,
                   level: cfg.shortName,
@@ -1181,7 +1208,8 @@
                   hash: proofHash
                 });
               } else {
-                document.getElementById('cert-subtitle').innerText = `Tréningový stupeň ${cfg.shortName} dokončený! Odomkni Lvl 3 OMEGA pre zápis do svetového rebríčka.`;
+                const subEl = document.getElementById('cert-subtitle');
+                if (subEl) subEl.innerText = `Tréningový stupeň ${cfg.shortName} dokončený! Odomkni Lvl 3 OMEGA pre zápis do svetového rebríčka.`;
               }
 
               setTimeout(() => this.triggerVictory(proofHash, finalTime, cfg), 500);
@@ -1189,28 +1217,33 @@
           },
 
           updateHUD() {
-            const phasesFull = ["t₋₁ (Minulosť)", "t₀ (Prítomnosť)", "t₊₁ (Budúcnosť)"];
-            document.getElementById('phase-val').innerText = phasesFull[_timePhase + 1];
+            const phasesFull = ["t-1 (Minulosť)", "t0 (Prítomnosť)", "t+1 (Budúcnosť)"];
+            const phaseEl = document.getElementById('phase-val');
+            if (phaseEl) phaseEl.innerText = phasesFull[_timePhase + 1];
 
             const totalPercent = this.getTotalStabilization();
-            document.getElementById('stab-val').innerText = `${totalPercent}%`;
+            const stabEl = document.getElementById('stab-val');
+            if (stabEl) stabEl.innerText = `${totalPercent}%`;
 
-            // Nový pútavý údaj: Kvantová rezonancia synapsie
             const resonanceFactor = (1.0 + (totalPercent / 100) * 3.8 + (_moves * 0.05)).toFixed(1);
-            document.getElementById('resonance-val').innerText = `SYNAPSE ${resonanceFactor}x`;
+            const resEl = document.getElementById('resonance-val');
+            if (resEl) resEl.innerText = `SYNAPSE ${resonanceFactor}x`;
 
             const strain = Math.min(100, Math.max(15, _moves * 2.5));
             const iqVal = 185 - Math.floor(strain / 4);
-            document.getElementById('moves-val').innerHTML = `${_moves} <span style="color:#8a99ad;">(IQ ${iqVal})</span>`;
+            const movesEl = document.getElementById('moves-val');
+            if (movesEl) movesEl.innerHTML = `${_moves} <span style="color:#8a99ad;">(IQ ${iqVal})</span>`;
           },
 
           triggerVictory(proofHash, finalTime, cfg) {
-            document.getElementById('cert-modal').style.display = 'flex';
+            const modal = document.getElementById('cert-modal');
+            if (modal) modal.style.display = 'flex';
             this.build3DCertificate(proofHash, finalTime, cfg);
           },
 
           build3DCertificate(proofHash, finalTime, cfg) {
             const container = document.getElementById('cert-canvas-container');
+            if (!container) return;
             container.innerHTML = '';
 
             const canvas = document.createElement('canvas');
