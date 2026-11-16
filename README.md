@@ -73,6 +73,6 @@ cd chrono
 # Otvorte súbor index.html v prehliadači alebo cez lokálny server (napr. VS Code Live Server)
 
 
-<img width="1622" height="785" alt="2" src="https://github.com/user-attachments/assets/419101e1-4161-4c6d-a586-374310caf85f" />
 
  
+<img width="1622" height="785" alt="2" src="https://github.com/user-attachments/assets/f96f2207-ae6f-4382-9072-8d51af0df39f" />
