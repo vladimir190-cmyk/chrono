@@ -75,4 +75,4 @@ cd chrono
 
 
  
-![Ukážka hry](screenshot.png)
+<img width="1622" height="785" alt="2 – kópia" src="https://github.com/user-attachments/assets/8655aeb7-90ea-4026-9883-5ed3a71f6664" />
