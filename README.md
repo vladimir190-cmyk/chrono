@@ -75,7 +75,6 @@ cd chrono
 
 
 
-![Ukážka hry](2.png)
 
 
  
