@@ -73,7 +73,6 @@ cd chrono
 # Otvorte súbor index.html v prehliadači alebo cez lokálny server (napr. VS Code Live Server)
 
 
-![Ukážka hry](2.png)
-
+![Chrono-Polyhedron 3000 screenshot](2.jpg)
 
  
