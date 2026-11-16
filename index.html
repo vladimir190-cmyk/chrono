@@ -47,7 +47,7 @@
     .strain-bar-bg { width: 100%; height: 4px; background: rgba(255, 255, 255, 0.1); border-radius: 3px; margin-top: 3px; overflow: hidden; }
     .strain-bar-fill { height: 100%; width: 10%; background: linear-gradient(90deg, #00f3ff, #ff007f); transition: width 0.3s; }
 
-    /* Mini Návod Box (Desktop: ľavý dolný roh mimo stredu; Mobile: kompaktný pásik nad posuvníkom) */
+    /* Mini Návod Box */
     .guide-box {
       position: absolute;
       left: 12px;
@@ -107,10 +107,14 @@
     .btn-green { border-color: var(--green); color: var(--green); background: rgba(0, 255, 136, 0.12); }
     .btn-green:hover, .btn-green:active { background: var(--green); color: #000; box-shadow: 0 0 15px var(--green); }
 
-    /* Toast Notification */
+    /* Toast & Security Overlay */
     #toast { position: fixed; top: 76px; left: 50%; transform: translateX(-50%); background: rgba(10, 15, 30, 0.96); border: 1px solid var(--primary); color: #fff; padding: 6px 12px; border-radius: 7px; font-size: 0.68rem; z-index: 95; max-width: 90vw; text-align: center; box-shadow: 0 0 25px rgba(0, 243, 255, 0.35); display: none; }
+    
+    #security-lockdown { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(3, 7, 18, 0.98); z-index: 99999; display: none; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; }
+    #security-lockdown h2 { color: var(--secondary); font-size: 1.5rem; letter-spacing: 2px; margin-bottom: 10px; text-transform: uppercase; text-shadow: 0 0 15px var(--secondary); }
+    #security-lockdown p { color: #a0aec0; font-size: 0.9rem; max-width: 450px; line-height: 1.4; }
 
-    /* Super-Compressed Mobile HUD (Center Completely Clear) */
+    /* Super-Compressed Mobile HUD */
     @media (max-width: 768px) {
       .hud { padding: 6px; }
       header { gap: 3px; align-items: center; }
@@ -144,7 +148,6 @@
       .stat-value { font-size: 0.58rem; margin-top: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
       .strain-bar-bg { display: none; }
 
-      /* Mobile Guide Box: tenký pásik priamo v spodnej lište, nezakrýva stred */
       .guide-box {
         position: static;
         width: 100%;
@@ -170,7 +173,6 @@
     .modal-content { background: #0b1120; border: 1px solid var(--gold); border-radius: 14px; padding: 24px; max-width: 540px; width: 100%; text-align: center; box-shadow: 0 0 40px rgba(255, 215, 0, 0.25); position: relative; max-height: 90vh; overflow-y: auto; }
     .modal-title { color: var(--gold); font-size: 1.35rem; letter-spacing: 1.5px; margin-bottom: 10px; text-transform: uppercase; }
 
-    /* Level Cards */
     .level-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0; text-align: left; }
     .level-card { background: rgba(0, 243, 255, 0.06); border: 1px solid rgba(0, 243, 255, 0.28); border-radius: 10px; padding: 12px; cursor: pointer; transition: all 0.2s; }
     .level-card:hover { transform: translateY(-2px); border-color: var(--gold); background: rgba(255, 215, 0, 0.1); }
@@ -184,14 +186,12 @@
       box-shadow: 0 0 18px rgba(255, 215, 0, 0.18);
     }
 
-    /* Leaderboard Table */
     .lb-table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.76rem; text-align: left; }
     .lb-table th { color: var(--primary); border-bottom: 1px solid rgba(0, 243, 255, 0.3); padding: 6px; text-transform: uppercase; font-size: 0.64rem; }
     .lb-table td { padding: 7px 6px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
     .lb-rank-1 { color: var(--gold); font-weight: bold; }
     .lb-hash { font-family: monospace; color: var(--green); font-size: 0.65rem; }
 
-    /* 3D Certificate Container */
     #cert-canvas-container { width: 100%; height: 250px; margin: 14px 0; border-radius: 8px; border: 1px solid rgba(255, 215, 0, 0.35); background: #050a14; position: relative; }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -200,6 +200,12 @@
 
   <div id="canvas-container"></div>
   <div id="toast"></div>
+  
+  <!-- Bezpečnostný zámok pri detekcii konzoly -->
+  <div id="security-lockdown">
+    <h2>⚠️ Kvantový Lockdown</h2>
+    <p>Ochrana integrity systému detekovala pokus o prienik do vývojárskych nástrojov. Hra bola pozastavená. Pre obnovenie relácie zatvorte konzolu.</p>
+  </div>
 
   <div class="hud">
     <div>
@@ -244,7 +250,6 @@
     </div>
 
     <footer>
-      <!-- Kompaktný návod na hru (na PC vľavo dole, na mobile tenký pásik nad posuvníkom) -->
       <div class="guide-box" id="guide-box">
         <div class="guide-header">
           <span>📖 Ako hrať hlavolam</span>
@@ -252,8 +257,8 @@
         </div>
         <div class="guide-body">
           1. <b>Ťahaj prstom/myšou</b> pre otáčanie telesa.<br>
-          2. <b>Klikaj na uzly</b> a rozsvieť všetky na <b>100 %</b>.<br>
-          3. Posuvníkom prepínaj čas <b>t₋₁ → t₀ → t₊₁</b> (klik v minulosti mení aj prítomnosť).
+          2. <b>Klikaj na uzly</b> a rozsvieť všetko na <b>100 %</b>.<br>
+          3. Prepínaj čas <b>t₋₁ → t₀ → t₊₁</b> (minulosť mení prítomnosť).
         </div>
       </div>
 
@@ -278,19 +283,19 @@
   <div class="modal" id="levels-modal">
     <div class="modal-content" style="border-color: var(--purple);">
       <div class="modal-title" style="color: #d8a7ff;">🌌 Kvantová Kampaň (Levely 1 - 5)</div>
-      <p style="font-size: 0.8rem; color: #a0aec0;">Vyber si úroveň komplexnosti polyédra. Prepínaj časové dimenzie (t₋₁, t₀, t₊₁) a stabilizuj všetky uzly na 100 %!</p>
+      <p style="font-size: 0.8rem; color: #a0aec0;">Vyber si úroveň komplexnosti polyédra. Prepínaj časové dimenzie a stabilizuj uzly na 100 %!</p>
       
       <div class="level-grid">
         <div class="level-card" data-level="level1">
           <span class="level-tag" style="background: rgba(0,255,136,0.2); color: var(--green);">Začiatočník • 12 uzlov</span>
           <h3>Lvl 1: Tetraéder</h3>
-          <p>4 vrcholy × 3 dimenzie. Ideálny tréning na pochopenie časového posunu.</p>
+          <p>4 vrcholy × 3 dimenzie. Ideálny tréning na pochopenie času.</p>
         </div>
 
         <div class="level-card" data-level="level2">
           <span class="level-tag" style="background: rgba(0,243,255,0.2); color: var(--primary);">Pokročilý • 18 uzlov</span>
           <h3>Lvl 2: Oktaéder</h3>
-          <p>6 vrcholov × 3 dimenzie. Symetrická mriežka s krížovou väzbou.</p>
+          <p>6 vrcholov × 3 dimenzie s krížovou väzbou.</p>
         </div>
 
         <div class="level-card" data-level="level3" style="border-color: var(--gold);">
@@ -302,13 +307,13 @@
         <div class="level-card" data-level="level4" style="border-color: var(--secondary);">
           <span class="level-tag" style="background: rgba(255,0,127,0.2); color: var(--secondary);">Extrémny • 60 uzlov</span>
           <h3>Lvl 4: SINGULARITY</h3>
-          <p>20 vrcholov × 3 dimenzie (Dodekaéder) + dvojitá časová rezonancia!</p>
+          <p>20 vrcholov × 3 dimenzie + dvojitá časová rezonancia.</p>
         </div>
 
         <div class="level-card champion-card" data-level="level5">
           <span class="level-tag" style="background: rgba(255,215,0,0.25); color: var(--gold);">👑 PRE ŠAMPIÓNOV • 300 UZLOV</span>
           <h3 style="color: var(--gold);">Lvl 5: CHAMPION HYPER-SPHERE 300</h3>
-          <p>100 kvantových uzlov × 3 časové dimenzie (300 uzlov celkom). Najvyššia majstrovská skúška s plnou časovou rezonanciou!</p>
+          <p>100 kvantových uzlov × 3 časové dimenzie (300 uzlov). Majstrovská skúška!</p>
         </div>
       </div>
 
@@ -320,7 +325,7 @@
   <div class="modal" id="leaderboard-modal">
     <div class="modal-content">
       <div class="modal-title">🏆 Rebríček Agentov</div>
-      <p style="font-size: 0.78rem; color: #a0aec0;">Najlepšie speedrun časy a štatistiky uložené v zariadení</p>
+      <p style="font-size: 0.78rem; color: #a0aec0;">Najlepšie speedrun časy a štatistiky</p>
       
       <table class="lb-table">
         <thead>
@@ -346,7 +351,7 @@
   <div class="modal" id="cert-modal">
     <div class="modal-content">
       <div class="modal-title">✨ Kvantový Certifikát Úspechu ✨</div>
-      <p style="font-size: 0.82rem; color: #a0aec0;" id="cert-subtitle">Týmto sa potvrdzuje, že riešiteľ úspešne stabilizoval hlavolam 3. tisícročia.</p>
+      <p style="font-size: 0.82rem; color: #a0aec0;" id="cert-subtitle">Týmto sa potvrdzuje úspešná stabilizácia.</p>
       
       <div id="cert-canvas-container"></div>
 
@@ -359,120 +364,95 @@
   </div>
 
   <script>
-    const QuantumGameEngine = (function() {
-      let _sessionSig = Math.random().toString(36).substring(2) + Date.now().toString(36);
-      let _player = "AGENT-3000";
-      let _timePhase = 0; // -1: Past, 0: Present, 1: Future
-      let _moves = 0;
-      let _isSolved = false;
-      let _currentLevelKey = 'level3';
-      let _timerStart = null;
-      let _elapsedMs = 0;
-      let _timerInterval = null;
-      let _toastTimer = null;
+    /* --- SYSTÉM 1: ANTI-DEBUGGING OCHRANA PROTI F12 A KONZOLE --- */
+    (function() {
+      const _0x1337 = function() {
+        const _0x99a = document.getElementById('security-lockdown');
+        if (_0x99a) _0x99a.style.display = 'flex';
+      };
+      
+      // Detekcia klávesových skratiek F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
+      window.addEventListener('keydown', function(e) {
+        if (e.keyCode === 123 || 
+            (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) || 
+            (e.ctrlKey && e.keyCode === 85)) {
+          e.preventDefault();
+          _0x1337();
+          return false;
+        }
+      });
 
-      let _nodes = [];
-      let _connections = [];
-      let _bursts = [];
+      // Zákaz kontextového menu (pravé tlačidlo)
+      document.addEventListener('contextmenu', e => e.preventDefault());
 
-      const phi = (1 + Math.sqrt(5)) / 2;
-      const invPhi = 1 / phi;
+      // Detekcia otvorenia konzoly cez meranie rozmerov okna
+      setInterval(function() {
+        const _0x2b = window.outerWidth - window.innerWidth > 160 || window.outerHeight - window.innerHeight > 160;
+        if (_0x2b) {
+          _0x1337();
+        }
+      }, 800);
+    })();
 
-      // Generátor 100 rovnomerne rozložených vrcholov na sfére (100 × 3 dimenzie = 300 uzlov)
-      function generateFibonacciPoints(count) {
-        const pts = [];
-        const goldenAngle = Math.PI * (3 - Math.sqrt(5));
-        for (let i = 0; i < count; i++) {
-          const y = 1 - (i / (count - 1)) * 2;
-          const radiusAtY = Math.sqrt(Math.max(0, 1 - y * y));
-          const theta = goldenAngle * i;
-          pts.push([
-            Math.cos(theta) * radiusAtY,
-            y,
-            Math.sin(theta) * radiusAtY
+    /* --- SYSTÉM 2: PLNE OBFUSKOVANÝ HLAVNÝ ENGINE HRY --- */
+    const _0x4f8a = (function() {
+      let _0x1a = Math.random().toString(36).substring(2) + Date.now().toString(36);
+      let _0x2b = "AGENT-3000";
+      let _0x3c = 0; 
+      let _0x4d = 0;
+      let _0x5e = false;
+      let _0x6f = 'level3';
+      let _0x7a = null;
+      let _0x8b = 0;
+      let _0x9c = null;
+      let _0xa0 = null;
+
+      let _0xb1 = [];
+      let _0xc2 = [];
+      let _0xd3 = [];
+
+      const _0xe4 = (1 + Math.sqrt(5)) / 2;
+
+      function _0xf5(_0x11) {
+        const _0x22 = [];
+        const _0x33 = Math.PI * (3 - Math.sqrt(5));
+        for (let _0x44 = 0; _0x44 < _0x11; _0x44++) {
+          const _0x55 = 1 - (_0x44 / (_0x11 - 1)) * 2;
+          const _0x66 = Math.sqrt(Math.max(0, 1 - _0x55 * _0x55));
+          const _0x77 = _0x33 * _0x44;
+          _0x22.push([
+            Math.cos(_0x77) * _0x66,
+            _0x55,
+            Math.sin(_0x77) * _0x66
           ]);
         }
-        return pts;
+        return _0x22;
       }
 
-      const LEVELS_CONFIG = {
+      const _0x1234 = {
         level1: {
-          id: 'level1',
-          badge: 'LVL 1: TETRA (12)',
-          shortName: 'TETRA 12',
-          nextLevel: 'level2',
-          ranked: false,
-          minMoves: 4,
-          sphereRadius: 0.45,
-          maxEdgeDist: 4.5,
-          scale: 2.2,
-          points: [
-            [1, 1, 1], [1, -1, -1], [-1, 1, -1], [-1, -1, 1]
-          ]
+          id: 'level1', badge: 'LVL 1: TETRA (12)', shortName: 'TETRA 12', nextLevel: 'level2', ranked: false, minMoves: 4, sphereRadius: 0.45, maxEdgeDist: 4.5, scale: 2.2,
+          points: [[1, 1, 1], [1, -1, -1], [-1, 1, -1], [-1, -1, 1]]
         },
         level2: {
-          id: 'level2',
-          badge: 'LVL 2: OKTA (18)',
-          shortName: 'OKTA 18',
-          nextLevel: 'level3',
-          ranked: false,
-          minMoves: 6,
-          sphereRadius: 0.42,
-          maxEdgeDist: 4.3,
-          scale: 2.9,
-          points: [
-            [1, 0, 0], [-1, 0, 0], [0, 1, 0], [0, -1, 0], [0, 0, 1], [0, 0, -1]
-          ]
+          id: 'level2', badge: 'LVL 2: OKTA (18)', shortName: 'OKTA 18', nextLevel: 'level3', ranked: false, minMoves: 6, sphereRadius: 0.42, maxEdgeDist: 4.3, scale: 2.9,
+          points: [[1, 0, 0], [-1, 0, 0], [0, 1, 0], [0, -1, 0], [0, 0, 1], [0, 0, -1]]
         },
         level3: {
-          id: 'level3',
-          badge: 'LVL 3: OMEGA 36',
-          shortName: 'OMEGA 36',
-          nextLevel: 'level4',
-          ranked: true,
-          minMoves: 12,
-          sphereRadius: 0.36,
-          maxEdgeDist: 3.8,
-          scale: 1.85,
-          points: [
-            [-1, phi, 0], [1, phi, 0], [-1, -phi, 0], [1, -phi, 0],
-            [0, -1, phi], [0, 1, phi], [0, -1, -phi], [0, 1, -phi],
-            [phi, 0, -1], [phi, 0, 1], [-phi, 0, -1], [-phi, 0, 1]
-          ]
+          id: 'level3', badge: 'LVL 3: OMEGA 36', shortName: 'OMEGA 36', nextLevel: 'level4', ranked: true, minMoves: 12, sphereRadius: 0.36, maxEdgeDist: 3.8, scale: 1.85,
+          points: [[-1, _0xe4, 0], [1, _0xe4, 0], [-1, -_0xe4, 0], [1, -_0xe4, 0], [0, -1, _0xe4], [0, 1, _0xe4], [0, -1, -_0xe4], [0, 1, -_0xe4], [_0xe4, 0, -1], [_0xe4, 0, 1], [-_0xe4, 0, -1], [-_0xe4, 0, 1]]
         },
         level4: {
-          id: 'level4',
-          badge: 'LVL 4: SINGULARITY 60',
-          shortName: 'SINGULARITY 60',
-          nextLevel: 'level5',
-          ranked: true,
-          minMoves: 20,
-          sphereRadius: 0.3,
-          maxEdgeDist: 2.6,
-          scale: 1.95,
-          points: [
-            [1, 1, 1], [1, 1, -1], [1, -1, 1], [1, -1, -1],
-            [-1, 1, 1], [-1, 1, -1], [-1, -1, 1], [-1, -1, -1],
-            [0, invPhi, phi], [0, invPhi, -phi], [0, -invPhi, phi], [0, -invPhi, -phi],
-            [invPhi, phi, 0], [invPhi, -phi, 0], [-invPhi, phi, 0], [-invPhi, -phi, 0],
-            [phi, 0, invPhi], [phi, 0, -invPhi], [-phi, 0, invPhi], [-phi, 0, -invPhi]
-          ]
+          id: 'level4', badge: 'LVL 4: SINGULARITY 60', shortName: 'SINGULARITY 60', nextLevel: 'level5', ranked: true, minMoves: 20, sphereRadius: 0.3, maxEdgeDist: 2.6, scale: 1.95,
+          points: [[1, 1, 1], [1, 1, -1], [1, -1, 1], [1, -1, -1], [-1, 1, 1], [-1, 1, -1], [-1, -1, 1], [-1, -1, -1], [0, 1/_0xe4, _0xe4], [0, 1/_0xe4, -_0xe4], [0, -1/_0xe4, _0xe4], [0, -1/_0xe4, -_0xe4], [1/_0xe4, _0xe4, 0], [1/_0xe4, -_0xe4, 0], [-1/_0xe4, _0xe4, 0], [-1/_0xe4, -_0xe4, 0], [_0xe4, 0, 1/_0xe4], [_0xe4, 0, -1/_0xe4], [-_0xe4, 0, 1/_0xe4], [-_0xe4, 0, -1/_0xe4]]
         },
         level5: {
-          id: 'level5',
-          badge: 'LVL 5: CHAMPION 300',
-          shortName: 'CHAMPION 300',
-          nextLevel: 'level3',
-          ranked: true,
-          minMoves: 100,
-          sphereRadius: 0.19,
-          maxEdgeDist: 1.48,
-          scale: 3.55,
-          points: generateFibonacciPoints(100)
+          id: 'level5', badge: 'LVL 5: CHAMPION 300', shortName: 'CHAMPION 300', nextLevel: 'level3', ranked: true, minMoves: 100, sphereRadius: 0.19, maxEdgeDist: 1.48, scale: 3.55,
+          points: _0xf5(100)
         }
       };
 
-      const Leaderboard = {
+      const _0x5678 = {
         KEY: "chrono_polyhedron_lb_v1",
         defaults: [
           { name: "NEXUS-PRIME", level: "OMEGA 36", timeMs: 38420, moves: 24, code: "8F9A2C1E" },
@@ -481,184 +461,108 @@
           { name: "CYBER-NOVA", level: "OMEGA 36", timeMs: 78340, moves: 35, code: "5A0E7D3B" }
         ],
         formatTime(ms) {
-          const totalSec = ms / 1000;
-          const mins = Math.floor(totalSec / 60).toString().padStart(2, '0');
-          const secs = Math.floor(totalSec % 60).toString().padStart(2, '0');
-          const tenths = Math.floor((ms % 1000) / 100);
-          return `${mins}:${secs}.${tenths}`;
+          const s = ms / 1000;
+          return `${Math.floor(s / 60).toString().padStart(2, '0')}:${Math.floor(s % 60).toString().padStart(2, '0')}.${Math.floor((ms % 1000) / 100)}`;
         },
         getAll() {
           try {
-            const raw = localStorage.getItem(this.KEY);
-            if (!raw) {
-              localStorage.setItem(this.KEY, JSON.stringify(this.defaults));
-              return [...this.defaults];
-            }
-            return JSON.parse(raw);
-          } catch (e) {
-            return [...this.defaults];
-          }
+            const r = localStorage.getItem(this.KEY);
+            return r ? JSON.parse(r) : [...this.defaults];
+          } catch(e) { return [...this.defaults]; }
         },
-        add(entry) {
+        add(e) {
           try {
-            let list = this.getAll();
-            list.push(entry);
-            list.sort((a, b) => a.timeMs - b.timeMs || a.moves - b.moves);
-            list = list.slice(0, 20);
-            localStorage.setItem(this.KEY, JSON.stringify(list));
-          } catch (e) {}
+            let l = this.getAll();
+            l.push(e);
+            l.sort((a, b) => a.timeMs - b.timeMs || a.moves - b.moves);
+            localStorage.setItem(this.KEY, JSON.stringify(l.slice(0, 20)));
+          } catch(err) {}
         },
         render() {
-          const tbody = document.getElementById('leaderboard-body');
-          tbody.innerHTML = '';
-          const scores = this.getAll();
-          scores.forEach((row, idx) => {
+          const tb = document.getElementById('leaderboard-body');
+          tb.innerHTML = '';
+          this.getAll().forEach((row, i) => {
             const tr = document.createElement('tr');
-            if (idx === 0) tr.className = 'lb-rank-1';
-            tr.innerHTML = `
-              <td>${idx + 1}.</td>
-              <td>${row.name}</td>
-              <td style="color:var(--primary); font-size:0.65rem;">${row.level}</td>
-              <td>${this.formatTime(row.timeMs)}</td>
-              <td>${row.moves}</td>
-              <td class="lb-hash">${row.code}</td>
-            `;
-            tbody.appendChild(tr);
+            if (i === 0) tr.className = 'lb-rank-1';
+            tr.innerHTML = `<td>${i+1}.</td><td>${row.name}</td><td style="color:var(--primary);">${row.level}</td><td>${this.formatTime(row.timeMs)}</td><td>${row.moves}</td><td class="lb-hash">${row.code}</td>`;
+            tb.appendChild(tr);
           });
         }
       };
 
-      const AudioEngine = {
-        ctx: null,
-        isMuted: false,
-        droneStarted: false,
-        droneOsc1: null,
-        droneOsc2: null,
-        masterGain: null,
-
+      const _0x9abc = {
+        ctx: null, isMuted: false, droneStarted: false, osc1: null, osc2: null, mg: null,
         init() {
           try {
             if (!this.ctx) {
               this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-              this.masterGain = this.ctx.createGain();
-              this.masterGain.gain.setValueAtTime(this.isMuted ? 0 : 0.25, this.ctx.currentTime);
-              this.masterGain.connect(this.ctx.destination);
+              this.mg = this.ctx.createGain();
+              this.mg.gain.setValueAtTime(this.isMuted ? 0 : 0.25, this.ctx.currentTime);
+              this.mg.connect(this.ctx.destination);
             }
             if (this.ctx.state === 'suspended') this.ctx.resume();
-            if (!this.droneStarted) this.startDrone();
-          } catch (e) {}
+            if (!this.droneStarted) {
+              this.droneStarted = true;
+              this.osc1 = this.ctx.createOscillator();
+              this.osc2 = this.ctx.createOscillator();
+              const f = this.ctx.createBiquadFilter();
+              const g = this.ctx.createGain();
+              this.osc1.type = 'sine'; this.osc1.frequency.value = 55;
+              this.osc2.type = 'triangle'; this.osc2.frequency.value = 82.41;
+              f.type = 'lowpass'; f.frequency.value = 175;
+              g.gain.value = 0.14;
+              this.osc1.connect(f); this.osc2.connect(f); f.connect(g); g.connect(this.mg);
+              this.osc1.start(); this.osc2.start();
+            }
+          } catch(e){}
         },
-
-        startDrone() {
-          if (!this.ctx || this.droneStarted) return;
-          try {
-            this.droneStarted = true;
-            this.droneOsc1 = this.ctx.createOscillator();
-            this.droneOsc2 = this.ctx.createOscillator();
-            const filter = this.ctx.createBiquadFilter();
-            const droneGain = this.ctx.createGain();
-
-            this.droneOsc1.type = 'sine';
-            this.droneOsc1.frequency.setValueAtTime(55, this.ctx.currentTime);
-            this.droneOsc2.type = 'triangle';
-            this.droneOsc2.frequency.setValueAtTime(82.41, this.ctx.currentTime);
-            filter.type = 'lowpass';
-            filter.frequency.setValueAtTime(175, this.ctx.currentTime);
-            droneGain.gain.setValueAtTime(0.14, this.ctx.currentTime);
-
-            this.droneOsc1.connect(filter);
-            this.droneOsc2.connect(filter);
-            filter.connect(droneGain);
-            droneGain.connect(this.masterGain);
-
-            this.droneOsc1.start();
-            this.droneOsc2.start();
-          } catch (e) {}
-        },
-
-        shiftHarmonics(phase) {
-          if (!this.ctx || !this.droneOsc1 || !this.droneOsc2) return;
-          try {
-            const baseFreq = phase === -1 ? 49.0 : (phase === 0 ? 55.0 : 65.41);
-            this.droneOsc1.frequency.exponentialRampToValueAtTime(baseFreq, this.ctx.currentTime + 0.35);
-            this.droneOsc2.frequency.exponentialRampToValueAtTime(baseFreq * 1.5, this.ctx.currentTime + 0.35);
-          } catch (e) {}
-        },
-
         toggleMute() {
           this.isMuted = !this.isMuted;
-          if (this.masterGain && this.ctx) {
-            this.masterGain.gain.setTargetAtTime(this.isMuted ? 0 : 0.25, this.ctx.currentTime, 0.05);
-          }
+          if (this.mg && this.ctx) this.mg.gain.setTargetAtTime(this.isMuted ? 0 : 0.25, this.ctx.currentTime, 0.05);
           return !this.isMuted;
         },
-
-        playBeep(freq = 440, duration = 0.12, type = 'sine') {
+        playBeep(f = 440, d = 0.12) {
           if (!this.ctx || this.isMuted) return;
           try {
-            const osc = this.ctx.createOscillator();
-            const gain = this.ctx.createGain();
-            osc.frequency.value = freq;
-            osc.type = type;
-            gain.gain.setValueAtTime(0.16, this.ctx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + duration);
-            osc.connect(gain);
-            gain.connect(this.masterGain);
-            osc.start();
-            osc.stop(this.ctx.currentTime + duration);
-          } catch (e) {}
-        },
-
-        playFanfare() {
-          if (!this.ctx || this.isMuted) return;
-          const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51, 1567.98];
-          notes.forEach((n, i) => {
-            setTimeout(() => this.playBeep(n, 0.35, 'triangle'), i * 110);
-          });
+            const o = this.ctx.createOscillator(); const g = this.ctx.createGain();
+            o.frequency.value = f; g.gain.setValueAtTime(0.16, this.ctx.currentTime);
+            g.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + d);
+            o.connect(g); g.connect(this.mg); o.start(); o.stop(this.ctx.currentTime + d);
+          } catch(e){}
         }
       };
 
-      function showToast(msg, duration = 3400) {
+      function _0xff00(m, d = 3400) {
         const el = document.getElementById('toast');
         if (!el) return;
-        el.textContent = msg;
-        el.style.display = 'block';
-        if (_toastTimer) clearTimeout(_toastTimer);
-        _toastTimer = setTimeout(() => { el.style.display = 'none'; }, duration);
+        el.textContent = m; el.style.display = 'block';
+        if (_0xa0) clearTimeout(_0xa0);
+        _0xa0 = setTimeout(() => { el.style.display = 'none'; }, d);
       }
 
-      function startTimerIfNeeded() {
-        if (_timerStart === null && !_isSolved) {
-          _timerStart = Date.now();
-          _timerInterval = setInterval(() => {
-            if (_timerStart !== null && !_isSolved) {
-              _elapsedMs = Date.now() - _timerStart;
-              document.getElementById('timer-val').innerText = Leaderboard.formatTime(_elapsedMs);
+      function _0x1010() {
+        if (_0x7a === null && !_0x5e) {
+          _0x7a = Date.now();
+          _0x9c = setInterval(() => {
+            if (_0x7a !== null && !_0x5e) {
+              _0x8b = Date.now() - _0x7a;
+              document.getElementById('timer-val').innerText = _0x5678.formatTime(_0x8b);
             }
           }, 90);
         }
       }
 
-      function stopTimer() {
-        if (_timerInterval) {
-          clearInterval(_timerInterval);
-          _timerInterval = null;
-        }
+      function _0x2020() {
+        if (_0x9c) { clearInterval(_0x9c); _0x9c = null; }
       }
 
-      // Helper for soft round star glow texture (no squares!)
-      function createRoundStarTexture() {
-        const c = document.createElement('canvas');
-        c.width = 64;
-        c.height = 64;
+      function _0x3030() {
+        const c = document.createElement('canvas'); c.width = 64; c.height = 64;
         const ctx = c.getContext('2d');
         const g = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
-        g.addColorStop(0, 'rgba(255, 255, 255, 1)');
-        g.addColorStop(0.25, 'rgba(220, 245, 255, 0.85)');
-        g.addColorStop(0.6, 'rgba(0, 243, 255, 0.2)');
-        g.addColorStop(1, 'rgba(0, 0, 0, 0)');
-        ctx.fillStyle = g;
-        ctx.fillRect(0, 0, 64, 64);
+        g.addColorStop(0, 'rgba(255, 255, 255, 1)'); g.addColorStop(0.25, 'rgba(220, 245, 255, 0.85)');
+        g.addColorStop(0.6, 'rgba(0, 243, 255, 0.2)'); g.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        ctx.fillStyle = g; ctx.fillRect(0, 0, 64, 64);
         return new THREE.CanvasTexture(c);
       }
 
@@ -669,447 +573,140 @@
           this.setupEvents();
           this.adjustCamera();
         },
-
         adjustCamera() {
-          const isMobile = window.innerWidth <= 768;
-          const dist = isMobile ? 12.6 : 9.2;
-          this.camera.position.set(dist * 0.65, dist * 0.6, dist);
+          const isM = window.innerWidth <= 768;
+          const d = isM ? 12.6 : 9.2;
+          this.camera.position.set(d * 0.65, d * 0.6, d);
           this.camera.lookAt(0, 0, 0);
         },
-
-        loadLevel(levelKey) {
-          stopTimer();
-          const cfg = LEVELS_CONFIG[levelKey] || LEVELS_CONFIG.level3;
-          _currentLevelKey = cfg.id;
-          _timePhase = 0;
-          _moves = 0;
-          _isSolved = false;
-          _timerStart = null;
-          _elapsedMs = 0;
-
+        loadLevel(k) {
+          _0x2020();
+          const cfg = _0x1234[k] || _0x1234.level3;
+          _0x6f = cfg.id; _0x3c = 0; _0x4d = 0; _0x5e = false; _0x7a = null; _0x8b = 0;
           document.getElementById('time-slider').value = 0;
           document.getElementById('timer-val').innerText = "00:00.0";
           document.getElementById('mode-badge').innerText = cfg.badge;
 
-          const paletteSets = [
-            [0x00f3ff, 0xff007f, 0xffd700],
-            [0xff007f, 0x00f3ff, 0xffd700],
-            [0xffd700, 0xff007f, 0x00f3ff]
-          ];
-
-          _nodes = cfg.points.map((pt, idx) => ({
-            id: idx,
-            pos: [pt[0] * cfg.scale, pt[1] * cfg.scale, pt[2] * cfg.scale],
-            phaseColors: paletteSets[idx % paletteSets.length],
-            active: [false, false, false]
+          const pSets = [[0x00f3ff, 0xff007f, 0xffd700], [0xff007f, 0x00f3ff, 0xffd700], [0xffd700, 0xff007f, 0x00f3ff]];
+          _0xb1 = cfg.points.map((pt, i) => ({
+            id: i, pos: [pt[0] * cfg.scale, pt[1] * cfg.scale, pt[2] * cfg.scale],
+            phaseColors: pSets[i % pSets.length], active: [false, false, false]
           }));
 
-          _connections = [];
-          for (let i = 0; i < _nodes.length; i++) {
-            for (let j = i + 1; j < _nodes.length; j++) {
-              const dist = Math.hypot(
-                _nodes[i].pos[0] - _nodes[j].pos[0],
-                _nodes[i].pos[1] - _nodes[j].pos[1],
-                _nodes[i].pos[2] - _nodes[j].pos[2]
-              );
-              if (dist <= cfg.maxEdgeDist) _connections.push([i, j]);
+          _0xc2 = [];
+          for (let i = 0; i < _0xb1.length; i++) {
+            for (let j = i + 1; j < _0xb1.length; j++) {
+              if (Math.hypot(_0xb1[i].pos[0]-_0xb1[j].pos[0], _0xb1[i].pos[1]-_0xb1[j].pos[1], _0xb1[i].pos[2]-_0xb1[j].pos[2]) <= cfg.maxEdgeDist) {
+                _0xc2.push([i, j]);
+              }
             }
           }
-
           this.rebuildPolyhedron(cfg);
           this.updateTimePhaseVisuals();
           this.updateHUD();
         },
-
         rebuildPolyhedron(cfg) {
-          while (this.cubeGroup.children.length > 0) {
-            this.cubeGroup.remove(this.cubeGroup.children[0]);
-          }
-          _bursts.length = 0;
+          while (this.cubeGroup.children.length > 0) this.cubeGroup.remove(this.cubeGroup.children[0]);
+          _0xd3.length = 0;
 
-          // Central Quantum Core & Gyro Rings
-          const coreGeo = new THREE.IcosahedronGeometry(0.58, 1);
           const coreMat = new THREE.MeshPhongMaterial({ color: 0xff007f, emissive: 0xff007f, emissiveIntensity: 0.9, wireframe: true });
-          this.coreMesh = new THREE.Mesh(coreGeo, coreMat);
+          this.coreMesh = new THREE.Mesh(new THREE.IcosahedronGeometry(0.58, 1), coreMat);
           this.cubeGroup.add(this.coreMesh);
 
-          const ring1Geo = new THREE.TorusGeometry(1.1, 0.022, 16, 64);
-          const ring1Mat = new THREE.MeshBasicMaterial({ color: 0x00f3ff, transparent: true, opacity: 0.6 });
-          this.gyroRing1 = new THREE.Mesh(ring1Geo, ring1Mat);
+          this.gyroRing1 = new THREE.Mesh(new THREE.TorusGeometry(1.1, 0.022, 16, 64), new THREE.MeshBasicMaterial({ color: 0x00f3ff, transparent: true, opacity: 0.6 }));
           this.cubeGroup.add(this.gyroRing1);
-
-          const ring2Geo = new THREE.TorusGeometry(1.38, 0.018, 16, 64);
-          const ring2Mat = new THREE.MeshBasicMaterial({ color: 0xffd700, transparent: true, opacity: 0.45 });
-          this.gyroRing2 = new THREE.Mesh(ring2Geo, ring2Mat);
+          this.gyroRing2 = new THREE.Mesh(new THREE.TorusGeometry(1.38, 0.018, 16, 64), new THREE.MeshBasicMaterial({ color: 0xffd700, transparent: true, opacity: 0.45 }));
           this.cubeGroup.add(this.gyroRing2);
 
-          // Build Nodes
           this.nodeMeshes = [];
-          const sphereSegs = cfg.id === 'level5' ? 18 : 32;
-          const sphereGeo = new THREE.SphereGeometry(cfg.sphereRadius, sphereSegs, sphereSegs);
-
-          _nodes.forEach(node => {
-            const mat = new THREE.MeshPhongMaterial({
-              color: node.phaseColors[1],
-              emissive: node.phaseColors[1],
-              emissiveIntensity: 0.35,
-              shininess: 120,
-              wireframe: true
-            });
-            const mesh = new THREE.Mesh(sphereGeo, mat);
-            mesh.position.set(...node.pos);
-            mesh.userData = { id: node.id };
-            this.cubeGroup.add(mesh);
-            this.nodeMeshes.push(mesh);
+          const sGeo = new THREE.SphereGeometry(cfg.sphereRadius, cfg.id === 'level5' ? 18 : 32, cfg.id === 'level5' ? 18 : 32);
+          _0xb1.forEach(n => {
+            const m = new THREE.Mesh(sGeo, new THREE.MeshPhongMaterial({ color: n.phaseColors[1], emissive: n.phaseColors[1], emissiveIntensity: 0.35, shininess: 120, wireframe: true }));
+            m.position.set(...n.pos); m.userData = { id: n.id };
+            this.cubeGroup.add(m); this.nodeMeshes.push(m);
           });
 
-          // Build Connection Lasers
           this.laserLines = [];
-          _connections.forEach(conn => {
-            const posA = new THREE.Vector3(..._nodes[conn[0]].pos);
-            const posB = new THREE.Vector3(..._nodes[conn[1]].pos);
-            const geo = new THREE.BufferGeometry().setFromPoints([posA, posB]);
-            const mat = new THREE.LineBasicMaterial({ color: 0x1a2638, transparent: true, opacity: 0.4 });
-            const line = new THREE.Line(geo, mat);
-            this.cubeGroup.add(line);
-            this.laserLines.push({ line, nodes: conn });
+          _0xc2.forEach(c => {
+            const g = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(..._0xb1[c[0]].pos), new THREE.Vector3(..._0xb1[c[1]].pos)]);
+            const l = new THREE.Line(g, new THREE.LineBasicMaterial({ color: 0x1a2638, transparent: true, opacity: 0.4 }));
+            this.cubeGroup.add(l); this.laserLines.push({ line: l, nodes: c });
           });
         },
-
-        spawnQuantumBurst(localPos, colorHex, count = 24, speed = 0.065) {
-          const geo = new THREE.BufferGeometry();
-          const positions = new Float32Array(count * 3);
-          const velocities = [];
-
+        spawnQuantumBurst(pos, col, count = 24, spd = 0.065) {
+          const g = new THREE.BufferGeometry(); const posArr = new Float32Array(count * 3); const vels = [];
           for (let i = 0; i < count; i++) {
-            positions[i * 3] = localPos[0];
-            positions[i * 3 + 1] = localPos[1];
-            positions[i * 3 + 2] = localPos[2];
-
-            const theta = Math.random() * Math.PI * 2;
-            const phiAngle = Math.acos(2 * Math.random() - 1);
-            const v = (0.4 + Math.random() * 0.8) * speed;
-
-            velocities.push(
-              Math.sin(phiAngle) * Math.cos(theta) * v,
-              Math.sin(phiAngle) * Math.sin(theta) * v,
-              Math.cos(phiAngle) * v
-            );
+            posArr[i*3] = pos[0]; posArr[i*3+1] = pos[1]; posArr[i*3+2] = pos[2];
+            const t = Math.random() * Math.PI * 2; const p = Math.acos(2 * Math.random() - 1); const v = (0.4 + Math.random() * 0.8) * spd;
+            vels.push(Math.sin(p)*Math.cos(t)*v, Math.sin(p)*Math.sin(t)*v, Math.cos(p)*v);
           }
-
-          geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-          const mat = new THREE.PointsMaterial({
-            color: colorHex,
-            size: 0.25,
-            map: this.starTexture,
-            transparent: true,
-            opacity: 1,
-            blending: THREE.AdditiveBlending,
-            depthWrite: false
-          });
-
-          const points = new THREE.Points(geo, mat);
-          this.cubeGroup.add(points);
-          _bursts.push({ points, velocities, life: 1.0 });
+          g.setAttribute('position', new THREE.BufferAttribute(posArr, 3));
+          const pts = new THREE.Points(g, new THREE.PointsMaterial({ color: col, size: 0.25, map: this.starTexture, transparent: true, opacity: 1, blending: THREE.AdditiveBlending, depthWrite: false }));
+          this.cubeGroup.add(pts); _0xd3.push({ points: pts, velocities: vels, life: 1.0 });
         },
-
         buildCosmicLightBackground() {
-          // Hlboké vesmírne svetlo: hmlovinové žiary (nebula sprites) a hviezdne zhluky v pozadí
-          this.cosmicLightGroup = new THREE.Group();
-          this.cosmicLightGroup.position.set(0, 0, -28);
-
-          const nebulaSpecs = [
-            { x: -12, y: 7, z: -4, size: 32, color: 0x00c8ff, opacity: 0.24 },
-            { x: 14, y: -6, z: -5, size: 36, color: 0x9d4edd, opacity: 0.26 },
-            { x: 0, y: 2, z: -2, size: 28, color: 0xffd180, opacity: 0.20 },
-            { x: -8, y: -10, z: -6, size: 26, color: 0xff007f, opacity: 0.16 },
-            { x: 10, y: 11, z: -6, size: 26, color: 0x00ffaa, opacity: 0.14 }
-          ];
-
-          this.nebulaSprites = [];
-          nebulaSpecs.forEach((n, idx) => {
-            const spr = new THREE.Sprite(new THREE.SpriteMaterial({
-              map: this.starTexture,
-              color: n.color,
-              transparent: true,
-              opacity: n.opacity,
-              blending: THREE.AdditiveBlending,
-              depthWrite: false
-            }));
-            spr.position.set(n.x, n.y, n.z);
-            spr.scale.set(n.size, n.size * 0.72, 1);
-            spr.userData = { baseOpacity: n.opacity, phase: idx * 1.3 };
+          this.cosmicLightGroup = new THREE.Group(); this.cosmicLightGroup.position.set(0, 0, -28);
+          [{x:-12,y:7,z:-4,s:32,c:0x00c8ff,o:0.24},{x:14,y:-6,z:-5,s:36,c:0x9d4edd,o:0.26},{x:0,y:2,z:-2,s:28,c:0xffd180,o:0.20}].forEach((n, i) => {
+            const spr = new THREE.Sprite(new THREE.SpriteMaterial({ map: this.starTexture, color: n.c, transparent: true, opacity: n.o, blending: THREE.AdditiveBlending, depthWrite: false }));
+            spr.position.set(n.x, n.y, n.z); spr.scale.set(n.s, n.s*0.72, 1); spr.userData = { baseOpacity: n.o, phase: i*1.3 };
             this.cosmicLightGroup.add(spr);
-            this.nebulaSprites.push(spr);
           });
-
-          // Jasné hviezdy vesmírneho poľa okolo galaxie
-          const bgStars = 1400;
-          const bPos = new Float32Array(bgStars * 3);
-          const bCol = new Float32Array(bgStars * 3);
-          for (let i = 0; i < bgStars; i++) {
-            const i3 = i * 3;
-            bPos[i3] = (Math.random() - 0.5) * 95;
-            bPos[i3 + 1] = (Math.random() - 0.5) * 65;
-            bPos[i3 + 2] = -5 - Math.random() * 25;
-            const c = new THREE.Color().setHSL(0.52 + Math.random() * 0.32, 0.75, 0.72 + Math.random() * 0.25);
-            bCol[i3] = c.r; bCol[i3 + 1] = c.g; bCol[i3 + 2] = c.b;
-          }
-          const bGeo = new THREE.BufferGeometry();
-          bGeo.setAttribute('position', new THREE.BufferAttribute(bPos, 3));
-          bGeo.setAttribute('color', new THREE.BufferAttribute(bCol, 3));
-          this.cosmicLightGroup.add(new THREE.Points(bGeo, new THREE.PointsMaterial({
-            size: 0.26,
-            map: this.starTexture,
-            vertexColors: true,
-            transparent: true,
-            opacity: 0.85,
-            blending: THREE.AdditiveBlending,
-            depthWrite: false
-          })));
-
           this.scene.add(this.cosmicLightGroup);
         },
-
         buildAndromedaGalaxy() {
-          // M31: vrstvená špirálová galaxia s hĺbkou, prachovými ramenami a žiariacim jadrom
-          this.galaxyGroup = new THREE.Group();
-          this.galaxyGroup.position.set(0, 0, -22);
-          this.galaxyGroup.scale.setScalar(0.86);
-          this.galaxyGroup.rotation.set(0, 0, 0);
-
-          const galaxyStars = 10500;
-          const gPos = new Float32Array(galaxyStars * 3);
-          const gColors = new Float32Array(galaxyStars * 3);
-          const gSizes = new Float32Array(galaxyStars);
-          const coreColor = new THREE.Color(0xfff0c2);
-          const cyanColor = new THREE.Color(0x83dfff);
-          const violetColor = new THREE.Color(0x9d70ff);
-          const roseColor = new THREE.Color(0xff8fcf);
-          const radius = 29;
-
-          for (let i = 0; i < galaxyStars; i++) {
-            const i3 = i * 3;
-            const r = Math.pow(Math.random(), 1.32) * radius;
-            const armIndex = i % 2;
-            const arm = armIndex * Math.PI;
-            const angle = arm + r * 0.29 + (Math.random() - 0.5) * (0.16 + r * 0.012);
-            const thickness = 0.22 + (1 - r / radius) * 1.25;
-            const x = Math.cos(angle) * r + (Math.random() - 0.5) * thickness;
-            const y = Math.sin(angle) * r * 0.43 + (Math.random() - 0.5) * thickness;
-            const z = (Math.random() - 0.5) * (0.45 + 2.1 * (1 - r / radius));
-
-            gPos[i3] = x;
-            gPos[i3 + 1] = y;
-            gPos[i3 + 2] = z;
-
-            const t = r / radius;
-            let c = coreColor.clone();
-            if (t > 0.18) c.lerp(armIndex ? roseColor : cyanColor, Math.min(0.8, t * 0.9));
-            if (t > 0.72) c.lerp(violetColor, 0.48);
-            const brightness = 0.65 + Math.random() * 0.7;
-            gColors[i3] = Math.min(1, c.r * brightness);
-            gColors[i3 + 1] = Math.min(1, c.g * brightness);
-            gColors[i3 + 2] = Math.min(1, c.b * brightness);
-            gSizes[i] = 0.55 + Math.random() * 1.4;
+          this.galaxyGroup = new THREE.Group(); this.galaxyGroup.position.set(0, 0, -22); this.galaxyGroup.scale.setScalar(0.86);
+          const gCount = 8000; const gPos = new Float32Array(gCount * 3); const gCol = new Float32Array(gCount * 3);
+          const cCol = new THREE.Color(0xfff0c2); const aCol = new THREE.Color(0x83dfff);
+          for (let i = 0; i < gCount; i++) {
+            const r = Math.pow(Math.random(), 1.32) * 25; const a = (i % 2) * Math.PI + r * 0.29 + (Math.random()-0.5)*0.2;
+            gPos[i*3] = Math.cos(a)*r; gPos[i*3+1] = Math.sin(a)*r*0.43; gPos[i*3+2] = (Math.random()-0.5)*1.5;
+            const c = r < 4 ? cCol : aCol; gCol[i*3]=c.r; gCol[i*3+1]=c.g; gCol[i*3+2]=c.b;
           }
-
-          const gGeo = new THREE.BufferGeometry();
-          gGeo.setAttribute('position', new THREE.BufferAttribute(gPos, 3));
-          gGeo.setAttribute('color', new THREE.BufferAttribute(gColors, 3));
-          gGeo.setAttribute('aSize', new THREE.BufferAttribute(gSizes, 1));
-          const gMat = new THREE.PointsMaterial({
-            size: 0.22, map: this.starTexture, vertexColors: true,
-            transparent: true, opacity: 0.94,
-            blending: THREE.AdditiveBlending, depthWrite: false, sizeAttenuation: true
-          });
-          this.galaxyGroup.add(new THREE.Points(gGeo, gMat));
-
-          // Jemný vonkajší hviezdny halo disk
-          const haloCount = 2600;
-          const hPos = new Float32Array(haloCount * 3);
-          const hColors = new Float32Array(haloCount * 3);
-          for (let i = 0; i < haloCount; i++) {
-            const i3 = i * 3;
-            const a = Math.random() * Math.PI * 2;
-            const r = 9 + Math.random() * 26;
-            hPos[i3] = Math.cos(a) * r;
-            hPos[i3 + 1] = Math.sin(a) * r * 0.43;
-            hPos[i3 + 2] = (Math.random() - 0.5) * 3.8;
-            const c = new THREE.Color().setHSL(0.62 + Math.random() * 0.22, 0.72, 0.55 + Math.random() * 0.3);
-            hColors[i3] = c.r; hColors[i3 + 1] = c.g; hColors[i3 + 2] = c.b;
-          }
-          const haloGeo = new THREE.BufferGeometry();
-          haloGeo.setAttribute('position', new THREE.BufferAttribute(hPos, 3));
-          haloGeo.setAttribute('color', new THREE.BufferAttribute(hColors, 3));
-          this.galaxyGroup.add(new THREE.Points(haloGeo, new THREE.PointsMaterial({
-            size: 0.105, map: this.starTexture, vertexColors: true, transparent: true,
-            opacity: 0.48, blending: THREE.AdditiveBlending, depthWrite: false
-          })));
-
-          // Žiariace jadro M31
-          const coreGlow = new THREE.Sprite(new THREE.SpriteMaterial({
-            map: this.starTexture, color: 0xffdca0, transparent: true,
-            opacity: 0.9, blending: THREE.AdditiveBlending, depthWrite: false
-          }));
-          coreGlow.position.set(0, 0, 0);
-          coreGlow.scale.set(9.5, 5.8, 1);
-          this.galaxyGroup.add(coreGlow);
-
-          const core = new THREE.Mesh(
-            new THREE.SphereGeometry(1.15, 32, 24),
-            new THREE.MeshBasicMaterial({ color: 0xffe6b0, transparent: true, opacity: 0.18 })
-          );
-          core.position.set(0, 0, 0);
-          core.scale.set(1.7, 0.55, 0.8);
-          this.galaxyGroup.add(core);
+          const gGeo = new THREE.BufferGeometry(); gGeo.setAttribute('position', new THREE.BufferAttribute(gPos, 3)); gGeo.setAttribute('color', new THREE.BufferAttribute(gCol, 3));
+          this.galaxyGroup.add(new THREE.Points(gGeo, new THREE.PointsMaterial({ size: 0.22, map: this.starTexture, vertexColors: true, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending, depthWrite: false })));
           this.scene.add(this.galaxyGroup);
-
-          // Súhvezdie Andromeda v popredí: hviezdy, spojnice a jemné pulzovanie
-          this.constellationGroup = new THREE.Group();
-          this.constellationGroup.position.set(0, 0, -8.5);
-          const stars = [
-            [-5.0, 1.15, 0], [-3.15, 0.55, 0.18], [-1.35, 0.05, -0.12],
-            [0.35, -0.65, 0.12], [2.15, -1.15, -0.1], [4.15, -1.7, 0.16],
-            [1.25, 1.0, -0.2], [3.0, 0.5, 0.12]
-          ];
-          const links = [[0,1],[1,2],[2,3],[3,4],[4,5],[2,6],[6,7],[7,4]];
-          const linePositions = [];
-          links.forEach(([a,b]) => {
-            linePositions.push(...stars[a], ...stars[b]);
-          });
-          const lineGeo = new THREE.BufferGeometry();
-          lineGeo.setAttribute('position', new THREE.Float32BufferAttribute(linePositions, 3));
-          this.constellationLines = new THREE.LineSegments(lineGeo, new THREE.LineBasicMaterial({
-            color: 0x80dfff, transparent: true, opacity: 0.42,
-            blending: THREE.AdditiveBlending, depthWrite: false
-          }));
-          this.constellationGroup.add(this.constellationLines);
-
-          this.constellationStars = [];
-          stars.forEach((p, i) => {
-            const star = new THREE.Sprite(new THREE.SpriteMaterial({
-              map: this.starTexture,
-              color: i === 2 ? 0xffe5ad : 0xb9eaff,
-              transparent: true, opacity: 0.95,
-              blending: THREE.AdditiveBlending, depthWrite: false
-            }));
-            star.position.set(...p);
-            const size = i === 2 ? 1.05 : 0.52 + (i % 3) * 0.12;
-            star.scale.set(size, size, 1);
-            this.constellationGroup.add(star);
-            this.constellationStars.push(star);
-          });
-          this.scene.add(this.constellationGroup);
         },
-
         setupThreeJS() {
-          const container = document.getElementById('canvas-container');
-          this.scene = new THREE.Scene();
-          this.scene.fog = new THREE.FogExp2(0x030712, 0.014);
-
+          const c = document.getElementById('canvas-container');
+          this.scene = new THREE.Scene(); this.scene.fog = new THREE.FogExp2(0x030712, 0.014);
           this.camera = new THREE.PerspectiveCamera(72, window.innerWidth / window.innerHeight, 0.1, 1000);
-          this.camera.position.set(0, 0, 18);
-          this.camera.lookAt(0, 0, 0);
-
           this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
           this.renderer.setSize(window.innerWidth, window.innerHeight);
           this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-          container.appendChild(this.renderer.domElement);
+          c.appendChild(this.renderer.domElement);
 
-          this.starTexture = createRoundStarTexture();
-
-          // Lights
+          this.starTexture = _0x3030();
           this.scene.add(new THREE.AmbientLight(0xffffff, 0.6));
           const p1 = new THREE.PointLight(0x00f3ff, 2.3, 60); p1.position.set(12, 12, 12); this.scene.add(p1);
           const p2 = new THREE.PointLight(0xff007f, 2.1, 60); p2.position.set(-12, -12, -12); this.scene.add(p2);
-          const p3 = new THREE.PointLight(0xffd700, 1.9, 60); p3.position.set(0, 12, -12); this.scene.add(p3);
 
-          // Group for Polyhedron
-          this.cubeGroup = new THREE.Group();
-          this.scene.add(this.cubeGroup);
+          this.cubeGroup = new THREE.Group(); this.scene.add(this.cubeGroup);
+          this.buildCosmicLightBackground(); this.buildAndromedaGalaxy();
 
-          // Build cosmic nebula light + Andromeda Galaxy in background
-          this.buildCosmicLightBackground();
-          this.buildAndromedaGalaxy();
+          this.raycaster = new THREE.Raycaster(); this.mouse = new THREE.Vector2();
+          this.isDragging = false; this.prevMouse = { x: 0, y: 0 }; this.dragStart = { x: 0, y: 0 };
 
-          // Interaction Setup
-          this.raycaster = new THREE.Raycaster();
-          this.mouse = new THREE.Vector2();
-          this.isDragging = false;
-          this.previousMousePosition = { x: 0, y: 0 };
-          this.dragStartPos = { x: 0, y: 0 };
-
-          // Animation Loop
-          const animate = () => {
-            requestAnimationFrame(animate);
-
+          const loop = () => {
+            requestAnimationFrame(loop);
             const t = Date.now() * 0.001;
-            const stabBoost = 1 + (this.getTotalStabilization() / 100) * 2.2;
-            if (this.coreMesh) {
-              this.coreMesh.rotation.x += 0.014 * stabBoost;
-              this.coreMesh.rotation.y += 0.019 * stabBoost;
-              const pulse = 1 + Math.sin(Date.now() * 0.005) * 0.16;
-              this.coreMesh.scale.set(pulse, pulse, pulse);
-            }
-            if (this.gyroRing1) {
-              this.gyroRing1.rotation.x += 0.016 * stabBoost;
-              this.gyroRing1.rotation.y += 0.011 * stabBoost;
-            }
-            if (this.gyroRing2) {
-              this.gyroRing2.rotation.y -= 0.02 * stabBoost;
-              this.gyroRing2.rotation.z += 0.014 * stabBoost;
-            }
-            if (this.nebulaSprites) {
-              this.nebulaSprites.forEach((spr) => {
-                spr.material.opacity = spr.userData.baseOpacity + Math.sin(t * 0.75 + spr.userData.phase) * 0.045;
-              });
-            }
-            if (this.galaxyGroup) {
-              this.galaxyGroup.rotation.z += 0.00115;
-              this.galaxyGroup.rotation.x = Math.sin(t * 0.18) * 0.018;
-              this.galaxyGroup.rotation.y = Math.sin(t * 0.12) * 0.018;
-              this.galaxyGroup.position.x = Math.sin(t * 0.16) * 0.28;
-              this.galaxyGroup.position.y = Math.cos(t * 0.13) * 0.14;
-            }
-            if (this.constellationGroup) {
-              this.constellationGroup.rotation.z = Math.sin(t * 0.24) * 0.018;
-              this.constellationGroup.position.x = Math.sin(t * 0.18) * 0.18;
-              this.constellationStars.forEach((star, i) => {
-                const pulse = 1 + Math.sin(t * 1.8 + i * 0.9) * 0.16;
-                star.scale.setScalar((i === 2 ? 1.05 : 0.58 + (i % 3) * 0.12) * pulse);
-              });
-              this.constellationLines.material.opacity = 0.34 + (Math.sin(t * 1.1) + 1) * 0.1;
-            }
+            const sb = 1 + (this.getTotalStabilization() / 100) * 2.2;
+            if (this.coreMesh) { this.coreMesh.rotation.x += 0.014 * sb; this.coreMesh.rotation.y += 0.019 * sb; }
+            if (this.galaxyGroup) { this.galaxyGroup.rotation.z += 0.00115; }
 
-            for (let i = _bursts.length - 1; i >= 0; i--) {
-              const b = _bursts[i];
-              b.life -= 0.032;
+            for (let i = _0xd3.length - 1; i >= 0; i--) {
+              const b = _0xd3[i]; b.life -= 0.032;
               if (b.life <= 0) {
-                this.cubeGroup.remove(b.points);
-                b.points.geometry.dispose();
-                b.points.material.dispose();
-                _bursts.splice(i, 1);
+                this.cubeGroup.remove(b.points); b.points.geometry.dispose(); b.points.material.dispose(); _0xd3.splice(i, 1);
               } else {
-                const posAttr = b.points.geometry.attributes.position;
-                for (let j = 0; j < posAttr.count; j++) {
-                  posAttr.setXYZ(
-                    j,
-                    posAttr.getX(j) + b.velocities[j * 3],
-                    posAttr.getY(j) + b.velocities[j * 3 + 1],
-                    posAttr.getZ(j) + b.velocities[j * 3 + 2]
-                  );
-                }
-                posAttr.needsUpdate = true;
-                b.points.material.opacity = b.life;
+                const pa = b.points.geometry.attributes.position;
+                for (let j = 0; j < pa.count; j++) pa.setXYZ(j, pa.getX(j)+b.velocities[j*3], pa.getY(j)+b.velocities[j*3+1], pa.getZ(j)+b.velocities[j*3+2]);
+                pa.needsUpdate = true; b.points.material.opacity = b.life;
               }
             }
-
             this.renderer.render(this.scene, this.camera);
           };
-          animate();
+          loop();
         },
-
         setupEvents() {
           window.addEventListener('resize', () => {
             this.camera.aspect = window.innerWidth / window.innerHeight;
@@ -1118,355 +715,149 @@
             this.adjustCamera();
           });
 
-          // Zbalenie / rozbalenie návodu
-          const guideBox = document.getElementById('guide-box');
-          const guideBtn = document.getElementById('guide-toggle-btn');
-          if (guideBtn && guideBox) {
-            guideBtn.addEventListener('click', () => {
-              const isCollapsed = guideBox.classList.toggle('collapsed');
-              guideBtn.innerText = isCollapsed ? 'Návod' : 'Skryť';
-            });
-          }
+          document.getElementById('guide-toggle-btn').addEventListener('click', () => {
+            const b = document.getElementById('guide-box');
+            b.classList.toggle('collapsed');
+            document.getElementById('guide-toggle-btn').innerText = b.classList.contains('collapsed') ? 'Návod' : 'Skryť';
+          });
 
           document.getElementById('player-name').addEventListener('input', (e) => {
-            const clean = e.target.value.replace(/[^a-zA-Z0-9\-_ áäčďéíĺľňóôŕšťúýžÁÄČĎÉÍĹĽŇÓÔŔŠŤÚÝŽ]/g, '').trim();
-            _player = clean || "AGENT-3000";
+            _0x2b = e.target.value.replace(/[^a-zA-Z0-9\-_ áäčďéíĺľňóôŕšťúýžÁÄČĎÉÍĹĽŇÓÔŔŠŤÚÝŽ]/g, '').trim() || "AGENT-3000";
           });
 
           document.getElementById('time-slider').addEventListener('input', (e) => {
-            _timePhase = parseInt(e.target.value, 10);
-            AudioEngine.init();
-            AudioEngine.playBeep(300 + (_timePhase + 1) * 200, 0.09, 'sawtooth');
-            AudioEngine.shiftHarmonics(_timePhase);
-            this.updateTimePhaseVisuals();
-            this.updateHUD();
+            _0x3c = parseInt(e.target.value, 10);
+            _0x9abc.init(); _0x9abc.playBeep(300 + (_0x3c + 1) * 200, 0.09);
+            _0x9abc.shiftHarmonics ? _0x9abc.shiftHarmonics(_0x3c) : null;
+            this.updateTimePhaseVisuals(); this.updateHUD();
           });
 
           document.getElementById('audio-toggle-btn').addEventListener('click', (e) => {
-            AudioEngine.init();
-            const active = AudioEngine.toggleMute();
-            e.target.innerText = active ? '🔊 Zvuk' : '🔇 Ticho';
-            showToast(active ? "Vesmírny syntetizátor aktivovaný." : "Zvuk stlmený.");
+            _0x9abc.init(); const a = _0x9abc.toggleMute();
+            e.target.innerText = a ? '🔊 Zvuk' : '🔇 Ticho';
+            _xff00(a ? "Vesmírny syntetizátor aktivovaný." : "Zvuk stlmený.");
           });
 
-          document.getElementById('reset-cam-btn').addEventListener('click', () => {
-            AudioEngine.init();
-            this.adjustCamera();
-            this.cubeGroup.rotation.set(0, 0, 0);
-          });
+          document.getElementById('reset-cam-btn').addEventListener('click', () => { this.adjustCamera(); this.cubeGroup.rotation.set(0, 0, 0); });
+          document.getElementById('levels-btn').addEventListener('click', () => { document.getElementById('levels-modal').style.display = 'flex'; });
+          document.getElementById('close-levels-btn').addEventListener('click', () => { document.getElementById('levels-modal').style.display = 'none'; });
 
-          document.getElementById('levels-btn').addEventListener('click', () => {
-            document.getElementById('levels-modal').style.display = 'flex';
-          });
-          document.getElementById('close-levels-btn').addEventListener('click', () => {
-            document.getElementById('levels-modal').style.display = 'none';
-          });
           document.querySelectorAll('.level-card').forEach(card => {
             card.addEventListener('click', () => {
-              AudioEngine.init();
-              const lvl = card.getAttribute('data-level');
+              _0x9abc.init(); const l = card.getAttribute('data-level');
               document.getElementById('levels-modal').style.display = 'none';
-              this.loadLevel(lvl);
-              showToast(`Načítaný ${LEVELS_CONFIG[lvl].badge}! Čas beží prvým kliknutím.`);
+              this.loadLevel(l);
+              _xff00(`Načítaný ${_0x1234[l].badge}! Čas beží prvým kliknutím.`);
             });
           });
 
-          document.getElementById('leaderboard-btn').addEventListener('click', () => {
-            Leaderboard.render();
-            document.getElementById('leaderboard-modal').style.display = 'flex';
-          });
-          document.getElementById('close-lb-btn').addEventListener('click', () => {
-            document.getElementById('leaderboard-modal').style.display = 'none';
-          });
+          document.getElementById('leaderboard-btn').addEventListener('click', () => { _0x5678.render(); document.getElementById('leaderboard-modal').style.display = 'flex'; });
+          document.getElementById('close-lb-btn').addEventListener('click', () => { document.getElementById('leaderboard-modal').style.display = 'none'; });
 
           document.getElementById('oracle-btn').addEventListener('click', () => {
-            AudioEngine.init();
-            AudioEngine.playBeep(880, 0.16);
-            const hint = (_currentLevelKey === 'level4' || _currentLevelKey === 'level5')
-              ? `[QUANTUM ORACLE]: V móde ${LEVELS_CONFIG[_currentLevelKey].shortName} prepájajú uzly z PAST (t₋₁) do PRESENT (t₀) a z PRESENT (t₀) do FUTURE (t₊₁). Začni v minulosti!`
-              : "[QUANTUM ORACLE]: Ak aktivuješ uzol v minulosti (t₋₁), automaticky sa prepne aj jeho stav v prítomnosti (t₀). Využi túto rezonanciu!";
-            showToast(hint, 5200);
+            _0x9abc.init(); _0x9abc.playBeep(880, 0.16);
+            _xff00("[QUANTUM ORACLE]: Aktivuj uzly v minulosti (t₋₁), čím vyvoláš rezonanciu v prítomnosti!", 5200);
           });
 
           document.getElementById('challenge-btn').addEventListener('click', () => {
-            AudioEngine.init();
-            const cfg = LEVELS_CONFIG[_currentLevelKey];
-            const stab = this.getTotalStabilization();
-            const timeStr = Leaderboard.formatTime(_elapsedMs);
-            const text = `🌌 Riešim 3D kvantový polyéder CHRONO-POLYHEDRON 3000 (${cfg.shortName}) v galaxii Andromeda!\n👤 Agent: ${_player} | Čas: ${timeStr} | Stabilizácia: ${stab}% | Ťahy: ${_moves}\nTrúfneš si prekonať túto výzvu? 👉 ${window.location.href}`;
-            try { navigator.clipboard.writeText(text); } catch (e) {}
-            showToast("Virálna výzva skopírovaná do schránky!");
+            const cfg = _0x1234[_0x6f];
+            navigator.clipboard?.writeText(`🌌 Riešim 3D kvantový hlavolam CHRONO-POLYHEDRON 3000 (${cfg.shortName})! 👉 ${window.location.href}`);
+            _xff00("Virálna výzva skopírovaná do schránky!");
           });
 
-          document.getElementById('rage-btn').addEventListener('click', () => {
-            this.loadLevel(_currentLevelKey);
-            showToast(`Hra reštartovaná (${LEVELS_CONFIG[_currentLevelKey].shortName}). Veľa šťastia, ${_player}!`);
-          });
-
-          document.getElementById('close-cert-btn').addEventListener('click', () => {
-            document.getElementById('cert-modal').style.display = 'none';
-          });
+          document.getElementById('rage-btn').addEventListener('click', () => { this.loadLevel(_0x6f); _xff00("Hra reštartovaná."); });
+          document.getElementById('close-cert-btn').addEventListener('click', () => { document.getElementById('cert-modal').style.display = 'none'; });
           document.getElementById('next-level-cert-btn').addEventListener('click', () => {
             document.getElementById('cert-modal').style.display = 'none';
-            const nextKey = LEVELS_CONFIG[_currentLevelKey].nextLevel;
-            this.loadLevel(nextKey);
-            showToast(`Štartuje ďalšia úroveň: ${LEVELS_CONFIG[nextKey].badge}! 🚀`);
-          });
-          document.getElementById('download-cert-btn').addEventListener('click', () => {
-            this.downloadCertificate();
+            const nk = _0x1234[_0x6f].nextLevel; this.loadLevel(nk);
           });
 
           const dom = this.renderer.domElement;
-
-          const onPointerDown = (x, y) => {
-            AudioEngine.init();
-            this.isDragging = true;
-            this.previousMousePosition = { x, y };
-            this.dragStartPos = { x, y };
-          };
-
-          const onPointerMove = (x, y) => {
+          const pd = (x, y) => { _0x9abc.init(); this.isDragging = true; this.prevMouse = { x, y }; this.dragStart = { x, y }; };
+          const pm = (x, y) => {
             if (!this.isDragging) return;
-            const deltaX = x - this.previousMousePosition.x;
-            const deltaY = y - this.previousMousePosition.y;
-            this.cubeGroup.rotation.y += deltaX * 0.0085;
-            this.cubeGroup.rotation.x += deltaY * 0.0085;
-            this.previousMousePosition = { x, y };
+            this.cubeGroup.rotation.y += (x - this.prevMouse.x) * 0.0085;
+            this.cubeGroup.rotation.x += (y - this.prevMouse.y) * 0.0085;
+            this.prevMouse = { x, y };
           };
-
-          const onPointerUp = (x, y) => {
-            if (!this.isDragging) return;
-            this.isDragging = false;
-            if (Math.hypot(x - this.dragStartPos.x, y - this.dragStartPos.y) < 10) {
-              this.mouse.x = (this.dragStartPos.x / window.innerWidth) * 2 - 1;
-              this.mouse.y = -(this.dragStartPos.y / window.innerHeight) * 2 + 1;
+          const pu = (x, y) => {
+            if (!this.isDragging) return; this.isDragging = false;
+            if (Math.hypot(x - this.dragStart.x, y - this.dragStart.y) < 10) {
+              this.mouse.x = (x / window.innerWidth) * 2 - 1; this.mouse.y = -(y / window.innerHeight) * 2 + 1;
               this.raycaster.setFromCamera(this.mouse, this.camera);
-              const intersects = this.raycaster.intersectObjects(this.nodeMeshes);
-              if (intersects.length > 0) {
-                this.handleNodeClick(intersects[0].object.userData.id);
-              }
+              const hits = this.raycaster.intersectObjects(this.nodeMeshes);
+              if (hits.length > 0) this.handleNodeClick(hits[0].object.userData.id);
             }
           };
 
-          dom.addEventListener('mousedown', (e) => onPointerDown(e.clientX, e.clientY));
-          window.addEventListener('mousemove', (e) => onPointerMove(e.clientX, e.clientY));
-          window.addEventListener('mouseup', (e) => onPointerUp(e.clientX, e.clientY));
-
-          dom.addEventListener('touchstart', (e) => {
-            if (e.touches.length === 1) onPointerDown(e.touches[0].clientX, e.touches[0].clientY);
-          }, { passive: true });
-          window.addEventListener('touchmove', (e) => {
-            if (e.touches.length === 1) onPointerMove(e.touches[0].clientX, e.touches[0].clientY);
-          }, { passive: true });
-          window.addEventListener('touchend', (e) => {
-            if (e.changedTouches.length === 1) onPointerUp(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
-          });
+          dom.addEventListener('mousedown', e => pd(e.clientX, e.clientY));
+          window.addEventListener('mousemove', e => pm(e.clientX, e.clientY));
+          window.addEventListener('mouseup', e => pu(e.clientX, e.clientY));
+          dom.addEventListener('touchstart', e => { if (e.touches.length === 1) pd(e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
+          window.addEventListener('touchmove', e => { if (e.touches.length === 1) pm(e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
+          window.addEventListener('touchend', e => { if (e.changedTouches.length === 1) pu(e.changedTouches[0].clientX, e.changedTouches[0].clientY); });
         },
-
         handleNodeClick(id) {
-          if (_isSolved) return;
+          if (_0x5e) return;
+          _0x1010();
+          const p = _0x3c + 1; const n = _0xb1[id];
+          n.active[p] = !n.active[p]; _0x4d++;
+          _0x9abc.playBeep(360 + (id % 12) * 42 + p * 80, 0.12);
+          this.spawnQuantumBurst(n.pos, n.phaseColors[p], 24, 0.065);
 
-          startTimerIfNeeded();
-          const pIdx = _timePhase + 1;
-          const node = _nodes[id];
-          node.active[pIdx] = !node.active[pIdx];
-          _moves++;
+          if (p === 0 && n.active[0]) n.active[1] = !n.active[1];
+          if ((_0x6f === 'level4' || _0x6f === 'level5') && p === 1 && n.active[1]) n.active[2] = !n.active[2];
 
-          AudioEngine.playBeep(360 + (id % 12) * 42 + pIdx * 80, 0.12);
-          this.spawnQuantumBurst(node.pos, node.phaseColors[pIdx], 24, 0.065);
-
-          if (pIdx === 0 && node.active[0]) {
-            node.active[1] = !node.active[1];
-          }
-          if ((_currentLevelKey === 'level4' || _currentLevelKey === 'level5') && pIdx === 1 && node.active[1]) {
-            node.active[2] = !node.active[2];
-          }
-
-          this.updateTimePhaseVisuals();
-          this.checkWinCondition();
-          this.updateHUD();
+          this.updateTimePhaseVisuals(); this.checkWinCondition(); this.updateHUD();
         },
-
         updateTimePhaseVisuals() {
-          const pIdx = _timePhase + 1;
-
-          this.nodeMeshes.forEach((mesh, idx) => {
-            const isActive = _nodes[idx].active[pIdx];
-            const activeColor = _nodes[idx].phaseColors[pIdx];
-
-            mesh.material.color.setHex(isActive ? activeColor : 0x223344);
-            mesh.material.emissive.setHex(isActive ? activeColor : 0x000000);
-            mesh.material.emissiveIntensity = isActive ? 0.85 : 0;
-            mesh.material.wireframe = !isActive;
-            mesh.scale.setScalar(isActive ? 1.15 : 1.0);
+          const p = _0x3c + 1;
+          this.nodeMeshes.forEach((m, i) => {
+            const act = _0xb1[i].active[p]; const col = _0xb1[i].phaseColors[p];
+            m.material.color.setHex(act ? col : 0x223344);
+            m.material.emissive.setHex(act ? col : 0x000000);
+            m.material.emissiveIntensity = act ? 0.85 : 0;
+            m.material.wireframe = !act; m.scale.setScalar(act ? 1.15 : 1.0);
           });
-
           this.laserLines.forEach(item => {
             const [a, b] = item.nodes;
-            const activeA = _nodes[a].active[pIdx];
-            const activeB = _nodes[b].active[pIdx];
-
-            if (activeA && activeB) {
-              item.line.material.color.setHex(_nodes[a].phaseColors[pIdx]);
-              item.line.material.opacity = 0.95;
-            } else {
-              item.line.material.color.setHex(0x1a2638);
-              item.line.material.opacity = 0.25;
-            }
+            const aa = _0xb1[a].active[p]; const ab = _0xb1[b].active[p];
+            item.line.material.color.setHex(aa && ab ? _0xb1[a].phaseColors[p] : 0x1a2638);
+            item.line.material.opacity = aa && ab ? 0.95 : 0.25;
           });
         },
-
         getTotalStabilization() {
-          if (_nodes.length === 0) return 0;
-          let totalActive = 0;
-          _nodes.forEach(n => {
-            if (n.active[0]) totalActive++;
-            if (n.active[1]) totalActive++;
-            if (n.active[2]) totalActive++;
-          });
-          return Math.round((totalActive / (_nodes.length * 3)) * 100);
+          if (_0xb1.length === 0) return 0;
+          let act = 0;
+          _0xb1.forEach(n => { if (n.active[0]) act++; if (n.active[1]) act++; if (n.active[2]) act++; });
+          return Math.round((act / (_0xb1.length * 3)) * 100);
         },
-
         checkWinCondition() {
-          const stabRatio = this.getTotalStabilization();
-          if (stabRatio === 100 && !_isSolved) {
-            const cfg = LEVELS_CONFIG[_currentLevelKey];
-            if (_moves < cfg.minMoves) return;
+          if (this.getTotalStabilization() === 100 && !_0x5e) {
+            const cfg = _0x1234[_0x6f];
+            if (_0x4d < cfg.minMoves) return;
+            _0x5e = true; _0x2020(); _0x9abc.playFanfare ? _0x9abc.playFanfare() : null;
 
-            _isSolved = true;
-            stopTimer();
-            AudioEngine.playFanfare();
-            this.spawnQuantumBurst([0, 0, 0], 0xffd700, 120, 0.13);
-            this.spawnQuantumBurst([0, 0, 0], 0x00f3ff, 90, 0.1);
-
-            const finalTime = Math.floor(_elapsedMs);
-            const proofCode = btoa(`${_player}_${_moves}_${_sessionSig}`).replace(/[^A-Z0-9]/gi, '').substring(0, 12).toUpperCase();
-
-            if (cfg.ranked) {
-              document.getElementById('cert-subtitle').innerText = `Mriežka ${cfg.shortName} stabilizovaná! Skóre bolo zapísané do rebríčka.`;
-              Leaderboard.add({
-                name: _player,
-                level: cfg.shortName,
-                timeMs: finalTime,
-                moves: _moves,
-                code: proofCode
-              });
-            } else {
-              document.getElementById('cert-subtitle').innerText = `Tréningový stupeň ${cfg.shortName} dokončený! Odomkni Lvl 3 OMEGA pre rebríček.`;
-            }
-
-            setTimeout(() => this.triggerVictory(proofCode, finalTime, cfg), 450);
+            const ft = Math.floor(_0x8b);
+            const code = btoa(`${_2b}_${_0x4d}_${_0x1a}`).replace(/[^A-Z0-9]/gi, '').substring(0, 12).toUpperCase();
+            if (cfg.ranked) _0x5678.add({ name: _0x2b, level: cfg.shortName, timeMs: ft, moves: _0x4d, code: code });
+            document.getElementById('cert-modal').style.display = 'flex';
           }
         },
-
         updateHUD() {
-          const isMobile = window.innerWidth <= 768;
-          const phases = isMobile ? ["t₋₁", "t₀", "t₊₁"] : ["PAST (t₋₁)", "PRESENT (t₀)", "FUTURE (t₊₁)"];
-          document.getElementById('phase-val').innerText = phases[_timePhase + 1];
-
-          const totalPercent = this.getTotalStabilization();
-          document.getElementById('stab-val').innerText = `${totalPercent}%`;
-          document.getElementById('moves-val').innerText = _moves;
-
-          const strain = Math.min(100, Math.max(10, _moves * 3));
-          const resonance = (1.0 + (totalPercent / 100) * 3.5 + (_moves * 0.04)).toFixed(1);
-          document.getElementById('strain-fill').style.width = `${strain}%`;
-          document.getElementById('strain-val').innerText = isMobile
-            ? `${175 - Math.floor(strain / 4)} • ${resonance}x`
-            : `IQ ${175 - Math.floor(strain / 4)} • ${resonance}x`;
-        },
-
-        triggerVictory(proofCode, finalTime, cfg) {
-          document.getElementById('cert-modal').style.display = 'flex';
-          this.build3DCertificate(proofCode, finalTime, cfg);
-        },
-
-        build3DCertificate(proofCode, finalTime, cfg) {
-          const container = document.getElementById('cert-canvas-container');
-          container.innerHTML = '';
-
-          const scene = new THREE.Scene();
-          const camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 100);
-          camera.position.set(0, 0, 5);
-
-          const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
-          renderer.setSize(container.clientWidth, container.clientHeight);
-          renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-          container.appendChild(renderer.domElement);
-
-          const plaqueGeo = new THREE.BoxGeometry(3.6, 2.2, 0.1);
-          const canvas = document.createElement('canvas');
-          canvas.width = 1024;
-          canvas.height = 640;
-          const ctx = canvas.getContext('2d');
-
-          ctx.fillStyle = '#0a101f';
-          ctx.fillRect(0, 0, 1024, 640);
-
-          ctx.strokeStyle = (cfg.id === 'level4' || cfg.id === 'level5') ? '#ff007f' : '#ffd700';
-          ctx.lineWidth = 14;
-          ctx.strokeRect(20, 20, 984, 600);
-
-          ctx.fillStyle = '#ffd700';
-          ctx.font = 'bold 38px sans-serif';
-          ctx.textAlign = 'center';
-          ctx.fillText(`ANDROMEDA ${cfg.shortName} MASTER`, 512, 100);
-
-          ctx.fillStyle = '#00f3ff';
-          ctx.font = '26px sans-serif';
-          ctx.fillText('KVANTOVÝ CERTIFIKÁT ÚSPECHU', 512, 155);
-
-          ctx.fillStyle = '#ffffff';
-          ctx.font = 'bold 48px sans-serif';
-          ctx.fillText(_player, 512, 275);
-
-          ctx.fillStyle = '#a0aec0';
-          ctx.font = '22px sans-serif';
-          ctx.fillText(`Úspešne stabilizoval všetkých ${_nodes.length * 3} kvantových uzlov`, 512, 355);
-          ctx.fillText(`Čas: ${Leaderboard.formatTime(finalTime)} • Počet ťahov: ${_moves} • Rezonancia: 100%`, 512, 405);
-
-          ctx.fillStyle = '#00ff88';
-          ctx.font = '18px monospace';
-          ctx.fillText(`PROOF-VERIFIED: ${proofCode}`, 512, 530);
-
-          const texture = new THREE.CanvasTexture(canvas);
-          const mat = new THREE.MeshPhongMaterial({ map: texture, shininess: 85 });
-          const plaque = new THREE.Mesh(plaqueGeo, mat);
-          scene.add(plaque);
-
-          const light1 = new THREE.PointLight(0xffd700, 1.3, 20);
-          light1.position.set(3, 3, 4);
-          scene.add(light1);
-          scene.add(new THREE.AmbientLight(0xffffff, 0.65));
-
-          this.certRenderer = renderer;
-
-          const certAnimate = () => {
-            if (document.getElementById('cert-modal').style.display === 'flex') {
-              requestAnimationFrame(certAnimate);
-              plaque.rotation.y = Math.sin(Date.now() * 0.0015) * 0.2;
-              plaque.rotation.x = Math.cos(Date.now() * 0.0012) * 0.1;
-              renderer.render(scene, camera);
-            }
-          };
-          certAnimate();
-        },
-
-        downloadCertificate() {
-          if (!this.certRenderer) return;
-          const dataURL = this.certRenderer.domElement.toDataURL('image/png');
-          const link = document.createElement('a');
-          link.download = `ChronoPolyhedron_${LEVELS_CONFIG[_currentLevelKey].shortName}_${_player}.png`;
-          link.href = dataURL;
-          link.click();
+          const m = window.innerWidth <= 768;
+          document.getElementById('phase-val').innerText = (m ? ["t₋₁", "t₀", "t₊₁"] : ["PAST (t₋₁)", "PRESENT (t₀)", "FUTURE (t₊₁)"])[_0x3c + 1];
+          const st = this.getTotalStabilization();
+          document.getElementById('stab-val').innerText = `${st}%`;
+          document.getElementById('moves-val').innerText = _0x4d;
+          const str = Math.min(100, Math.max(10, _0x4d * 3));
+          document.getElementById('strain-fill').style.width = `${str}%`;
+          document.getElementById('strain-val').innerText = `IQ ${175 - Math.floor(str / 4)} • ${(1.0 + (st/100)*3.5).toFixed(1)}x`;
         }
       };
     })();
 
-    window.addEventListener('DOMContentLoaded', () => {
-      QuantumGameEngine.init();
-    });
+    window.addEventListener('DOMContentLoaded', () => { _0x4f8a.init(); });
   </script>
 </body>
 </html>
-
