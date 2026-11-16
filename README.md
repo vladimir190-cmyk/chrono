@@ -73,9 +73,8 @@ cd chrono
 
 
 
-![Chrono-Polyhedron 3000 screenshot](2.png)
 
-
+![Ukážka hry](2.png)
 
 
  
