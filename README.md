@@ -1,3 +1,4 @@
+<img width="1622" height="785" alt="2" src="https://github.com/user-attachments/assets/69aefe56-f79d-4b01-9b6a-6a9d65798f83" />
 <div align="center">
 
 # 🌌 CHRONO-POLYHEDRON 3000: Supernova Edition
