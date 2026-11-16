@@ -17,9 +17,7 @@
 
 ---
 
-<p align="center">
-  <img src="hra.jpg" alt="Chrono-Polyhedron 3000 screenshot" width="100%">
-</p>
+
 
 ---
 
