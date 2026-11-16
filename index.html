@@ -201,7 +201,6 @@
   <div id="canvas-container"></div>
   <div id="toast"></div>
   
-  <!-- Bezpečnostný zámok pri detekcii konzoly -->
   <div id="security-lockdown">
     <h2>⚠️ Kvantový Lockdown</h2>
     <p>Ochrana integrity systému detekovala pokus o prienik do vývojárskych nástrojov. Hra bola pozastavená. Pre obnovenie relácie zatvorte konzolu.</p>
@@ -371,7 +370,6 @@
         if (_0x99a) _0x99a.style.display = 'flex';
       };
       
-      // Detekcia klávesových skratiek F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
       window.addEventListener('keydown', function(e) {
         if (e.keyCode === 123 || 
             (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) || 
@@ -382,15 +380,11 @@
         }
       });
 
-      // Zákaz kontextového menu (pravé tlačidlo)
       document.addEventListener('contextmenu', e => e.preventDefault());
 
-      // Detekcia otvorenia konzoly cez meranie rozmerov okna
       setInterval(function() {
         const _0x2b = window.outerWidth - window.innerWidth > 160 || window.outerHeight - window.innerHeight > 160;
-        if (_0x2b) {
-          _0x1337();
-        }
+        if (_0x2b) { _0x1337(); }
       }, 800);
     })();
 
@@ -447,7 +441,7 @@
           points: [[1, 1, 1], [1, 1, -1], [1, -1, 1], [1, -1, -1], [-1, 1, 1], [-1, 1, -1], [-1, -1, 1], [-1, -1, -1], [0, 1/_0xe4, _0xe4], [0, 1/_0xe4, -_0xe4], [0, -1/_0xe4, _0xe4], [0, -1/_0xe4, -_0xe4], [1/_0xe4, _0xe4, 0], [1/_0xe4, -_0xe4, 0], [-1/_0xe4, _0xe4, 0], [-1/_0xe4, -_0xe4, 0], [_0xe4, 0, 1/_0xe4], [_0xe4, 0, -1/_0xe4], [-_0xe4, 0, 1/_0xe4], [-_0xe4, 0, -1/_0xe4]]
         },
         level5: {
-          id: 'level5', badge: 'LVL 5: CHAMPION 300', shortName: 'CHAMPION 300', nextLevel: 'level3', ranked: true, minMoves: 100, sphereRadius: 0.19, maxEdgeDist: 1.48, scale: 3.55,
+          id: 'level5', badge: 'LVL 5: CHAMPION 300', shortName: 'CHAMPION 300', nextLevel: 'level3', ranked: true, minMoves: 100, sphereRadius: 0.24, maxEdgeDist: 1.48, scale: 3.55,
           points: _0xf5(100)
         }
       };
@@ -780,13 +774,43 @@
             this.cubeGroup.rotation.x += (y - this.prevMouse.y) * 0.0085;
             this.prevMouse = { x, y };
           };
+          
+          // OPRAVENÉ: Inteligentné kliknutie / ťuknutie s presným rect výpočtom a blízkou detekciou uzlov (proximity)
           const pu = (x, y) => {
-            if (!this.isDragging) return; this.isDragging = false;
-            if (Math.hypot(x - this.dragStart.x, y - this.dragStart.y) < 10) {
-              this.mouse.x = (x / window.innerWidth) * 2 - 1; this.mouse.y = -(y / window.innerHeight) * 2 + 1;
+            if (!this.isDragging) return; 
+            this.isDragging = false;
+            if (Math.hypot(x - this.dragStart.x, y - this.dragStart.y) < 14) {
+              const rect = dom.getBoundingClientRect();
+              this.mouse.x = ((x - rect.left) / rect.width) * 2 - 1;
+              this.mouse.y = -((y - rect.top) / rect.height) * 2 + 1;
               this.raycaster.setFromCamera(this.mouse, this.camera);
-              const hits = this.raycaster.intersectObjects(this.nodeMeshes);
-              if (hits.length > 0) this.handleNodeClick(hits[0].object.userData.id);
+              
+              let hits = this.raycaster.intersectObjects(this.nodeMeshes);
+              if (hits.length > 0) {
+                this.handleNodeClick(hits[0].object.userData.id);
+              } else {
+                // Proximity fallback pre mobily – ak lúč tesne minul malý uzol, vyberie najbližší v okruhu 45 px
+                let closestId = null;
+                let minDist = 45;
+                const clickX = x - rect.left;
+                const clickY = y - rect.top;
+
+                this.nodeMeshes.forEach((mesh) => {
+                  const v = mesh.position.clone();
+                  v.project(this.camera);
+                  const sx = (v.x + 1) * rect.width / 2;
+                  const sy = (-v.y + 1) * rect.height / 2;
+                  const dist = Math.hypot(clickX - sx, clickY - sy);
+                  if (dist < minDist) {
+                    minDist = dist;
+                    closestId = mesh.userData.id;
+                  }
+                });
+
+                if (closestId !== null) {
+                  this.handleNodeClick(closestId);
+                }
+              }
             }
           };
 
@@ -839,7 +863,7 @@
             _0x5e = true; _0x2020(); _0x9abc.playFanfare ? _0x9abc.playFanfare() : null;
 
             const ft = Math.floor(_0x8b);
-            const code = btoa(`${_2b}_${_0x4d}_${_0x1a}`).replace(/[^A-Z0-9]/gi, '').substring(0, 12).toUpperCase();
+            const code = btoa(`${_0x2b}_${_0x4d}_${_0x1a}`).replace(/[^A-Z0-9]/gi, '').substring(0, 12).toUpperCase();
             if (cfg.ranked) _0x5678.add({ name: _0x2b, level: cfg.shortName, timeMs: ft, moves: _0x4d, code: code });
             document.getElementById('cert-modal').style.display = 'flex';
           }
