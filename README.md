@@ -71,10 +71,11 @@ git clone [https://github.com/vladimir190-cmyk/chrono.git](https://github.com/vl
 cd chrono
 # Otvorte súbor index.html v prehliadači alebo cez lokálny server (napr. VS Code Live Server)
 
+
+
 ![Chrono-Polyhedron 3000 screenshot](2.jpg)
 
 
-<img width="1622" height="785" alt="2" src="https://github.com/user-attachments/assets/2ba0a017-3710-436c-a684-7d2d8b79c99c" />
 
 
  
