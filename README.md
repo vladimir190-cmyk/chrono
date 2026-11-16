@@ -75,6 +75,5 @@ cd chrono
 
 ![Ukážka hry](2.png)
 
-<img width="1622" height="785" alt="2" src="https://github.com/user-attachments/assets/2aa8d395-0332-4ef8-914d-824b9d123679" />
 
  
