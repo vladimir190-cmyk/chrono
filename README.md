@@ -64,3 +64,9 @@ Cieľom je stabilizovať všetky uzly naprieč všetkými časovými líniami na
  
  Zdrojový kód: 
  https://github.com/vladimir190-cmyk/chrono
+
+
+
+<img width="1622" height="785" alt="2" src="https://github.com/user-attachments/assets/419101e1-4161-4c6d-a586-374310caf85f" />
+
+ 
