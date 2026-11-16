@@ -1,6 +1,10 @@
 <img width="1622" height="785" alt="2" src="https://github.com/user-attachments/assets/69aefe56-f79d-4b01-9b6a-6a9d65798f83" />
 <div align="center">
 
+
+
+<div align="center">
+
 # 🌌 CHRONO-POLYHEDRON 3000: Supernova Edition
 
 **Futuristický 3D kvantový hlavolam zasadený do hlbokého vesmíru s galaxiou Andromeda (M31), poháňaný cez Three.js, WebGL a Web Audio API.**
@@ -14,7 +18,7 @@
 ---
 
 <p align="center">
-  <img src="2.jpg" alt="Chrono-Polyhedron 3000 screenshot" width="100%">
+  <img src="hra.jpg" alt="Chrono-Polyhedron 3000 screenshot" width="100%">
 </p>
 
 ---
@@ -71,10 +75,5 @@ Každý zásah v minulosti vyvoláva kaskádovú kvantovú rezonanciu, ktorá ok
 git clone [https://github.com/vladimir190-cmyk/chrono.git](https://github.com/vladimir190-cmyk/chrono.git)
 cd chrono
 # Otvorte súbor index.html v prehliadači alebo cez lokálny server (napr. VS Code Live Server)
-
-
-
-
-
 
  
