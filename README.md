@@ -73,7 +73,7 @@ cd chrono
 
 
 
-![Chrono-Polyhedron 3000 screenshot](2.jpg)
+![Chrono-Polyhedron 3000 screenshot](2.png)
 
 
 
